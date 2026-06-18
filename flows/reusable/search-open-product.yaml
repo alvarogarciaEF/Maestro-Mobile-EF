@@ -1,5 +1,5 @@
 # Proposito: buscar un producto y abrir su detalle desde Home.
-# Precondiciones: ciudad configurada; PRODUCT_SEARCH_TERM y PRODUCT_NAME vigentes.
+# Precondiciones: Home visible y ciudad configurada; PRODUCT_SEARCH_TERM y PRODUCT_NAME vigentes.
 # Valida: listado de resultados y PDP con bloques criticos visibles.
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 env:
@@ -10,7 +10,6 @@ env:
   PRODUCT_NAME: ${PRODUCT_NAME || "Clásico Amor con 24 Rosas Rojas"}
 name: Reusable - Search Open Product
 ---
-- runFlow: ensure-home.yaml
 - tapOn:
     id: "toolbar_search"
 - extendedWaitUntil:

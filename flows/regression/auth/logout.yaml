@@ -12,7 +12,6 @@ tags:
 - clearState
 - runFlow: ../../reusable/ensure-logged-in.yaml
 - runFlow: ../../reusable/logout.yaml
-- runFlow: ../../reusable/navigate-account-tab.yaml
 - assertVisible:
     text: "Iniciar sesión"
 - assertNotVisible:

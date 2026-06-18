@@ -15,8 +15,6 @@ name: Reusable - Login From Onboarding
     commands:
       - tapOn:
           id: "have_account_button"
-      - waitForAnimationToEnd:
-          timeout: 2000
 - runFlow:
     when:
       visible:
@@ -31,6 +29,4 @@ name: Reusable - Login From Onboarding
       - hideKeyboard
       - tapOn:
           id: "start_button"
-      - waitForAnimationToEnd:
-          timeout: 8000
       - runFlow: close-pre-login-prompts.yaml

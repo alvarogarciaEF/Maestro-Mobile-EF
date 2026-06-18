@@ -14,6 +14,5 @@ tags:
     when:
       visible: "Iniciar sesión"
     file: ../reusable/login-valid-user.yaml
-- runFlow: ../reusable/close-modals.yaml
 - assertVisible:
     text: "Mi perfil|Direcciones|Mis pedidos|Cerrar sesión"

@@ -23,6 +23,7 @@ tags:
 - hideKeyboard
 - tapOn:
     id: "start_button"
+# wait-justification: el rechazo de credenciales depende de red y no expone un estado de carga accesible.
 - waitForAnimationToEnd:
     timeout: 15000
 - assertVisible:

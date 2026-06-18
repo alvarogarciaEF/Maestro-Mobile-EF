@@ -6,8 +6,6 @@ name: Reusable - Complete OXXO Purchase
 ---
 - tapOn:
     id: "continueProcessBtn"
-- waitForAnimationToEnd:
-    timeout: 8000
 - extendedWaitUntil:
     visible:
       id: "reference_oxxo"

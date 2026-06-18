@@ -10,12 +10,11 @@ tags:
 ---
 - clearState
 - runFlow: ../../reusable/setup-cart-with-product.yaml
-- tapOn:
-    id: "toolbar_arrow_left"
+- runFlow: ../../reusable/navigate-home-tab.yaml
 - openLink:
     link: ${DEEPLINK_CART}
     autoVerify: true
-- runFlow: ../../reusable/after-deeplink-launch.yaml
+- runFlow: ../../reusable/close-modals.yaml
 - extendedWaitUntil:
     visible:
       id: "cl_shopping_cart"

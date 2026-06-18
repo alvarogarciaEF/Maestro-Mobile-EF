@@ -74,6 +74,49 @@ else
 fi
 
 echo
+echo "Validando grafo de subflows"
+if ruby scripts/validate-flow-graph.rb; then
+  pass "Grafo de subflows valido"
+else
+  fail "Grafo de subflows invalido"
+fi
+
+echo
+echo "Validando politica de esperas"
+wait_policy_report="$(
+  ruby -e '
+    Dir.glob("flows/**/*.yaml").sort.each do |file|
+      lines = File.readlines(file)
+      lines.each_with_index do |line, index|
+        if line.match?(/^\s*- waitForAnimationToEnd:/)
+          justification = index.positive? ? lines[index - 1] : ""
+          unless justification.match?(/^\s*# wait-justification:\s+\S/)
+            puts "#{file}:#{index + 1}: waitForAnimationToEnd requiere un comentario # wait-justification"
+          end
+        end
+
+        next unless line.match?(/^\s*- extendedWaitUntil:/)
+
+        timeout_line = Array(lines[index + 1, 6]).find { |candidate| candidate.match?(/^\s+timeout:\s*\d+/) }
+        next unless timeout_line
+
+        timeout = timeout_line[/\d+/].to_i
+        if timeout <= 7000
+          puts "#{file}:#{index + 1}: usar assertVisible/assertNotVisible para esperas de hasta 7000 ms"
+        end
+      end
+    end
+  '
+)"
+
+if [[ -n "$wait_policy_report" ]]; then
+  printf '%s\n' "$wait_policy_report"
+  fail "Se encontraron esperas sin justificacion"
+else
+  pass "Esperas explicitas justificadas"
+fi
+
+echo
 echo "Validando comentarios iniciales"
 for file in "${yaml_files[@]}"; do
   first_line="$(sed -n '1p' "$file")"

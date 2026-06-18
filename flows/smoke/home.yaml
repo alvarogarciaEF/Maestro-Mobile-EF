@@ -17,9 +17,10 @@ tags:
 - assertVisible:
     id: "toolbar_search"
 - assertVisible:
-    id: "toolbar_shoppingcart"
+    id: "action_cart"
 - assertVisible:
     id: "bottom_nav_view"
 - assertVisible: "Inicio"
 - assertVisible: "Categorías"
+- assertVisible: "Carrito"
 - assertVisible: "Mi cuenta"

@@ -20,8 +20,6 @@ tags:
     text: "Completar compra"
 - doubleTapOn:
     id: "continueProcessBtn"
-- waitForAnimationToEnd:
-    timeout: 8000
 - runFlow: ../../reusable/recover-app-context.yaml
 - extendedWaitUntil:
     visible:

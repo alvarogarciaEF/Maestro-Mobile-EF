@@ -14,11 +14,6 @@ name: Reusable - Ensure Logged In
 ---
 - launchApp:
     stopApp: true
-- waitForAnimationToEnd:
-    timeout: 3000
-- runFlow: close-pre-login-prompts.yaml
-- waitForAnimationToEnd:
-    timeout: 1000
 - runFlow: close-pre-login-prompts.yaml
 - runFlow:
     when:
@@ -61,13 +56,6 @@ name: Reusable - Ensure Logged In
                 env:
                   APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
                   GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
-            - runFlow: recover-app-context.yaml
-            - runFlow:
-                file: navigate-account-tab.yaml
-                env:
-                  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
-                  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
-                  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
 - extendedWaitUntil:
     visible:
       text: "Mi perfil|Direcciones|Mis pedidos|Cerrar sesión"

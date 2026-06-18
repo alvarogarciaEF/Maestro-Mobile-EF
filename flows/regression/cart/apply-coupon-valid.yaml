@@ -88,8 +88,6 @@ tags:
           text: "MOACYR15"
 - assertNotVisible:
     id: "tv_coupon_error"
-- waitForAnimationToEnd:
-    timeout: 3000
 - scrollUntilVisible:
     element:
       text: "Resumen del pedido|Cupón|Total"

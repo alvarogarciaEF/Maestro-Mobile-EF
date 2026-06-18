@@ -13,7 +13,7 @@ tags:
 - openLink:
     link: ${DEEPLINK_FAQ}
     autoVerify: true
-- runFlow: ../../reusable/after-deeplink-launch.yaml
+- runFlow: ../../reusable/close-modals.yaml
 - extendedWaitUntil:
     visible:
       id: "help_center_rcv"

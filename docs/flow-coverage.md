@@ -91,7 +91,6 @@ Mapa de cobertura actual para saber que valida cada flow, que tan estable deberi
 | `flows/reusable/advance-checkout-to-payment.yaml` | Pasos checkout hasta pago | Medio-alto |
 | `flows/reusable/open-login-dialog.yaml` | Abrir dialogo de login desde Home | Bajo |
 | `flows/reusable/search-open-product.yaml` | Buscar y abrir PDP desde Home | Medio |
-| `flows/reusable/after-deeplink-launch.yaml` | Esperar animacion y cerrar modales tras deeplink | Bajo |
 | `flows/utils/clear-state.yaml` | Limpiar estado local | Alto si se usa dentro de flows con sesion |
 
 ## Orden Recomendado Para Primera Ejecucion

@@ -47,14 +47,11 @@ tags:
           text: "${ADDRESS_RECIPIENT_NAME}"
       - tapOn:
           id: "btn_edit_address"
-      - waitForAnimationToEnd:
-          timeout: 1500
       - scrollUntilVisible:
           element:
             text: "Eliminar dirección|Eliminar direccion"
           direction: DOWN
           visibilityPercentage: 20
-          waitToSettleTimeoutMs: 500
           timeout: 8000
       - tapOn:
           id: "btn_delete_address"
@@ -63,8 +60,6 @@ tags:
             visible: "Eliminar"
           commands:
             - tapOn: "Eliminar"
-      - waitForAnimationToEnd:
-          timeout: 2000
       - extendedWaitUntil:
           visible:
             text: "Agregar una nueva dirección"
@@ -105,65 +100,50 @@ tags:
 - tapOn:
     id: "neighborhoodEditText"
 - inputText: ${ADDRESS_NEIGHBORHOOD}
-- runFlow:
-    file: ../../reusable/select-address-dropdown-option.yaml
-    env:
-      DROPDOWN_CONTAINER_ID: dropdown_state_container
-      OPTION_TEXT: ${DEFAULT_STATE || "Nuevo León"}
+- scrollUntilVisible:
+    element:
+      id: "dropdown_state_container"
+    direction: DOWN
+    visibilityPercentage: 40
+    timeout: 15000
+- tapOn:
+    id: "dropdown_state_container"
+- scrollUntilVisible:
+    element:
+      id: "android:id/text1"
+      text: "${DEFAULT_STATE}"
+    direction: DOWN
+    speed: 55
+    visibilityPercentage: 10
+    timeout: 20000
+- tapOn:
+    id: "android:id/text1"
+    text: "${DEFAULT_STATE}"
 - assertVisible:
     id: "state_text"
     text: "${DEFAULT_STATE}"
-- waitForAnimationToEnd:
-    timeout: 2000
 - scrollUntilVisible:
     element:
       id: "dropdown_city_container"
     direction: DOWN
     visibilityPercentage: 40
-    waitToSettleTimeoutMs: 500
     timeout: 15000
 - tapOn:
     id: "dropdown_city_container"
-- waitForAnimationToEnd:
-    timeout: 1500
-- extendedWaitUntil:
-    visible:
+- scrollUntilVisible:
+    element:
       id: "android:id/text1"
-    timeout: 10000
-- runFlow:
-    when:
-      visible:
-        id: "android:id/text1"
-        text: "${DEFAULT_CITY}"
-    commands:
-      - tapOn:
-          id: "android:id/text1"
-          text: "${DEFAULT_CITY}"
-- runFlow:
-    when:
-      visible:
-        id: "android:id/text1"
-      notVisible:
-        id: "android:id/text1"
-        text: "${DEFAULT_CITY}"
-    commands:
-      - scrollUntilVisible:
-          element:
-            id: "android:id/text1"
-            text: "${DEFAULT_CITY}"
-          direction: DOWN
-          speed: 55
-          visibilityPercentage: 10
-          waitToSettleTimeoutMs: 600
-          timeout: 20000
-      - tapOn:
-          id: "android:id/text1"
-          text: "${DEFAULT_CITY}"
+      text: "${DEFAULT_CITY}"
+    direction: DOWN
+    speed: 55
+    visibilityPercentage: 10
+    timeout: 20000
+- tapOn:
+    id: "android:id/text1"
+    text: "${DEFAULT_CITY}"
 - assertVisible:
     id: "city_text"
     text: "${DEFAULT_CITY}"
-- waitForAnimationToEnd:
-    timeout: 1000
 - scrollUntilVisible:
     element:
       id: "zipEditText"
@@ -174,8 +154,6 @@ tags:
 - eraseText
 - inputText: ${ADDRESS_ZIP}
 - hideKeyboard
-- waitForAnimationToEnd:
-    timeout: 1000
 - scrollUntilVisible:
     element:
       text: "Casa"
@@ -185,8 +163,6 @@ tags:
     id: "rcv_address_types"
 - tapOn:
     text: "Casa"
-- waitForAnimationToEnd:
-    timeout: 1000
 - scrollUntilVisible:
     element:
       id: "referencesEditText"
@@ -196,19 +172,14 @@ tags:
     id: "referencesEditText"
 - inputText: ${ADDRESS_REFERENCES}
 - hideKeyboard
-- waitForAnimationToEnd:
-    timeout: 800
 - scrollUntilVisible:
     element:
       id: "btn_continue_address_container"
     direction: DOWN
     visibilityPercentage: 40
-    waitToSettleTimeoutMs: 500
     timeout: 10000
 - tapOn:
     id: "btn_continue_address_container"
-- waitForAnimationToEnd:
-    timeout: 4000
 - runFlow:
     when:
       visible: "Solo faltan unos detalles"
@@ -224,15 +195,11 @@ tags:
           timeout: 30000
       - tapOn:
           id: "btn_confirm_address_container"
-      - waitForAnimationToEnd:
-          timeout: 5000
 - runFlow:
     when:
       visible: "¡Casi lo tenemos!|No logramos ubicar la dirección exacta"
     commands:
       - tapOn: "Entendido"
-      - waitForAnimationToEnd:
-          timeout: 2000
       - scrollUntilVisible:
           element:
             id: "btn_continue_address_container"
@@ -241,16 +208,12 @@ tags:
           timeout: 10000
       - tapOn:
           id: "btn_continue_address_container"
-      - waitForAnimationToEnd:
-          timeout: 4000
       - extendedWaitUntil:
           visible:
             id: "btn_confirm_address_container"
           timeout: 30000
       - tapOn:
           id: "btn_confirm_address_container"
-      - waitForAnimationToEnd:
-          timeout: 5000
 - extendedWaitUntil:
     visible:
       text: "${ADDRESS_RECIPIENT_NAME}"
@@ -263,28 +226,21 @@ tags:
     commands:
       - tapOn:
           id: "btn_edit_address"
-      - waitForAnimationToEnd:
-          timeout: 1500
       - scrollUntilVisible:
           element:
             text: "Eliminar dirección|Eliminar direccion"
           direction: DOWN
           visibilityPercentage: 20
-          waitToSettleTimeoutMs: 500
           timeout: 8000
       - tapOn:
           id: "btn_delete_address"
-      - extendedWaitUntil:
-          visible:
-            id: "tv_title"
-          timeout: 6000
+      - assertVisible:
+          id: "tv_title"
       - runFlow:
           when:
             visible: "Eliminar"
           commands:
             - tapOn: "Eliminar"
-      - waitForAnimationToEnd:
-          timeout: 2000
 - extendedWaitUntil:
     visible:
       text: "Agregar una nueva dirección"

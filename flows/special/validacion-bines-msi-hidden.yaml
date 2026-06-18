@@ -78,22 +78,7 @@ tags:
 - tapOn:
     id: "add_card_last_name_edit_text"
 - eraseText
-- inputText: "G"
-- waitForAnimationToEnd:
-    timeout: 1000
-- inputText: "a"
-- waitForAnimationToEnd:
-    timeout: 1000
-- inputText: "r"
-- waitForAnimationToEnd:
-    timeout: 1000
-- inputText: "c"
-- waitForAnimationToEnd:
-    timeout: 1000
-- inputText: "i"
-- waitForAnimationToEnd:
-    timeout: 1000
-- inputText: "a"
+- inputText: ${BIN_CARD_LAST_NAME}
 - tapOn:
     id: "add_card_card_number_edit_text"
 - eraseText
@@ -101,31 +86,20 @@ tags:
 - tapOn:
     id: "add_card_month_year_edit_text"
 - eraseText
-- inputText: "1"
-- waitForAnimationToEnd:
-    timeout: 1000
-- inputText: "2"
-- waitForAnimationToEnd:
-    timeout: 1000
-- inputText: "3"
-- waitForAnimationToEnd:
-    timeout: 1000
-- inputText: "0"
+- inputText: ${BIN_CARD_EXPIRY}
 - assertVisible:
     text: "12/30"
 - tapOn:
     text: "Usar esta tarjeta"
 - runFlow: ../reusable/enter-card-security-if-needed.yaml
-- waitForAnimationToEnd:
-    timeout: 10000
-- takeScreenshot:
-    path: "bines-msi-hidden-${BIN_NUMBER}"
 - assertVisible:
     text: "Completa el pago"
 - assertVisible:
     text: ".*Contado.*|.*Pago de contado.*|.*De contado.*"
 - assertNotVisible:
     text: ".*3 meses.*|.*3 MSI.*|.*3 mensualidades.*|.*6 meses.*|.*6 MSI.*|.*6 mensualidades.*"
+- takeScreenshot:
+    path: "bines-msi-hidden-${BIN_NUMBER}"
 # Importante: no confirmar pago real desde flows automatizados.
 - assertVisible:
     id: "continueProcessBtn"

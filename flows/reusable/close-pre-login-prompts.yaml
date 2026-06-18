@@ -9,24 +9,18 @@ name: Reusable - Close Pre Login Prompts
     commands:
       - tapOn:
           text: "Español / Spanish"
-      - waitForAnimationToEnd:
-          timeout: 1500
       - runFlow:
           when:
             visible: "Elige un idioma / Choose a language"
           commands:
             - tapOn:
                 text: "Español / Spanish"
-            - waitForAnimationToEnd:
-                timeout: 1500
 - runFlow:
     when:
       visible: "Confirm|Confirmar|Aceptar"
     commands:
       - tapOn:
           text: "Confirm|Confirmar|Aceptar"
-      - waitForAnimationToEnd:
-          timeout: 1500
 - runFlow:
     when:
       visible: "Allow|ALLOW|Permitir|Mientras la app está en uso|While using the app"

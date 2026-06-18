@@ -38,8 +38,6 @@ tags:
 - hideKeyboard
 - tapOn:
     text: "Usar esta tarjeta"
-- waitForAnimationToEnd:
-    timeout: 15000
 - runFlow: ../../reusable/enter-card-security-if-needed.yaml
 - extendedWaitUntil:
     visible:

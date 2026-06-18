@@ -13,7 +13,7 @@ tags:
 - openLink:
     link: ${DEEPLINK_CATEGORY}
     autoVerify: true
-- runFlow: ../../reusable/after-deeplink-launch.yaml
+- runFlow: ../../reusable/close-modals.yaml
 - extendedWaitUntil:
     visible:
       id: "rcv_category_products"

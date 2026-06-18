@@ -15,7 +15,7 @@ tags:
 - openLink:
     link: ${DEEPLINK_PERSONALIZED_PRODUCT}
     autoVerify: true
-- runFlow: ../../reusable/after-deeplink-launch.yaml
+- runFlow: ../../reusable/close-modals.yaml
 - extendedWaitUntil:
     visible:
       id: "productImagesViewPager"

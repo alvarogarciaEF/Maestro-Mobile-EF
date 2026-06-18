@@ -16,6 +16,7 @@ tags:
 - tapOn:
     text: "Completar compra"
 - runFlow: ../reusable/enter-card-security-if-needed.yaml
+# wait-justification: se captura la respuesta externa del procesador, cuyo resultado visual puede variar.
 - waitForAnimationToEnd:
     timeout: 20000
 - takeScreenshot:

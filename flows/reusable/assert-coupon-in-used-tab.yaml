@@ -10,8 +10,6 @@ name: Reusable - Assert Coupon In Used Tab
     text: "Usados"
 - tapOn:
     text: "Usados"
-- waitForAnimationToEnd:
-    timeout: 2000
 - extendedWaitUntil:
     visible:
       text: "Código: ${COUPON_CODE}"

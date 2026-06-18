@@ -67,6 +67,29 @@ Ejemplo aceptable:
     text: "Mi cuenta"
 ```
 
+## Sincronizacion
+
+- Preferir `assertVisible` y `assertNotVisible`: ambos reintentan automaticamente hasta 7 segundos.
+- Usar `extendedWaitUntil` solo cuando el comportamiento esperado pueda superar 7 segundos.
+- No agregar `waitForAnimationToEnd` antes de una asercion, `scrollUntilVisible` o `extendedWaitUntil`.
+- Cada `waitForAnimationToEnd` excepcional debe tener un comentario inmediato `# wait-justification: ...`.
+
+Ejemplo excepcional:
+
+```yaml
+# wait-justification: transicion entre el selector de cuenta del sistema y la app nativa.
+- waitForAnimationToEnd:
+    timeout: 10000
+```
+
+## Subflows
+
+- Usar un archivo reusable cuando encapsule una operacion de negocio compartida, no como alias de una sola llamada.
+- El llamador debe cumplir las precondiciones documentadas; el reusable no debe repetir navegacion que todos sus consumidores ya realizaron.
+- Mantener una profundidad maxima de cinco archivos y evitar ciclos.
+- Todo archivo en `flows/reusable/` debe tener al menos un consumidor.
+- `runFlow.when` puede usarse para condiciones locales y no cuenta como otra dependencia de archivo.
+
 ## Variables
 
 - Toda variable `${VARIABLE}` usada en flows debe existir en `.env.example`.

@@ -16,16 +16,9 @@ tags:
     text: ${PRODUCT_NAME}
 - assertVisible:
     text: "${DEFAULT_CITY}"
-- tapOn:
-    id: "toolbar_arrow_left"
 - runFlow: ../../reusable/navigate-home-tab.yaml
 - runFlow: ../../reusable/select-alternate-city.yaml
-- tapOn:
-    id: "toolbar_shoppingcart"
-- extendedWaitUntil:
-    visible:
-      id: "cl_shopping_cart"
-    timeout: 30000
+- runFlow: ../../reusable/navigate-cart-tab.yaml
 - runFlow:
     when:
       visible:

@@ -16,7 +16,6 @@ name: Reusable - Select Alternate City
       notVisible:
         text: "${ALTERNATE_CITY}"
     commands:
-      - runFlow: navigate-home-tab.yaml
       - tapOn:
           id: "state_and_city_container"
       - extendedWaitUntil:
@@ -30,8 +29,6 @@ name: Reusable - Select Alternate City
             - tapOn:
                 id: "txt_title"
                 text: "${ALTERNATE_STATE}"
-            - waitForAnimationToEnd:
-                timeout: 3000
       - extendedWaitUntil:
           visible:
             id: "search_store_and_city_input"
@@ -54,8 +51,6 @@ name: Reusable - Select Alternate City
           commands:
             - tapOn:
                 text: "${ALTERNATE_CITY}"
-            - waitForAnimationToEnd:
-                timeout: 5000
             - runFlow:
                 when:
                   visible:

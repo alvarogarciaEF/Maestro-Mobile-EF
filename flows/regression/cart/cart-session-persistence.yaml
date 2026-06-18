@@ -18,24 +18,12 @@ tags:
     text: ${PRODUCT_NAME}
 - launchApp:
     stopApp: false
-- waitForAnimationToEnd:
-    timeout: 5000
 - runFlow: ../../reusable/close-modals.yaml
-- tapOn:
-    id: "toolbar_shoppingcart"
-- extendedWaitUntil:
-    visible:
-      id: "cl_shopping_cart"
-    timeout: 30000
+- runFlow: ../../reusable/navigate-cart-tab.yaml
 - assertVisible:
     text: ${PRODUCT_NAME}
 - runFlow: ../../reusable/logout.yaml
 - runFlow: ../../reusable/login-email-password.yaml
-- tapOn:
-    id: "toolbar_shoppingcart"
-- extendedWaitUntil:
-    visible:
-      id: "cl_shopping_cart"
-    timeout: 30000
+- runFlow: ../../reusable/navigate-cart-tab.yaml
 - assertVisible:
     text: ${PRODUCT_NAME}

@@ -39,8 +39,6 @@ tags:
     commands:
       - tapOn:
           id: "start_button"
-- waitForAnimationToEnd:
-    timeout: 5000
 - extendedWaitUntil:
     visible:
       text: "ya está registrado|correo ya existe|cuenta existente|ya tiene una cuenta|ya en uso|correo.*en uso"

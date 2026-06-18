@@ -19,12 +19,8 @@ name: Reusable - Navigate Home Tab
                     id: "search_product_input"
                 commands:
                   - pressKey: Back
-                  - waitForAnimationToEnd:
-                      timeout: 800
       - tapOn:
           id: "action_main"
-      - waitForAnimationToEnd:
-          timeout: 1500
 - runFlow:
     when:
       visible:
@@ -34,14 +30,6 @@ name: Reusable - Navigate Home Tab
     commands:
       - tapOn:
           id: "action_main"
-      - waitForAnimationToEnd:
-          timeout: 1000
-- runFlow:
-    when:
-      visible:
-        text: "¿A dónde quieres enviar?"
-    commands:
-      - runFlow: select-city.yaml
 - runFlow:
     when:
       notVisible:
@@ -49,25 +37,22 @@ name: Reusable - Navigate Home Tab
     commands:
       - launchApp:
           stopApp: false
-      - waitForAnimationToEnd:
-          timeout: 2000
       - runFlow: close-startup-prompts.yaml
       - runFlow:
           when:
             visible:
               id: "bottom_nav_view"
+            notVisible:
+              id: "toolbar_search"
           commands:
             - tapOn:
                 id: "action_main"
-            - waitForAnimationToEnd:
-                timeout: 1000
 - runFlow:
     when:
       visible:
         text: "¿A dónde quieres enviar?"
     commands:
       - runFlow: select-city.yaml
-- runFlow: close-startup-prompts.yaml
 - extendedWaitUntil:
     visible:
       id: "toolbar_search"

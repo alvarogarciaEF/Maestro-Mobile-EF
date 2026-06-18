@@ -16,8 +16,6 @@ name: Reusable - Reach Cart Checkout Ready
     commands:
       - tapOn:
           id: "btn_plus_quantity"
-      - waitForAnimationToEnd:
-          timeout: 1500
 - runFlow:
     when:
       notVisible:
@@ -25,8 +23,6 @@ name: Reusable - Reach Cart Checkout Ready
     commands:
       - tapOn:
           id: "btn_plus_quantity"
-      - waitForAnimationToEnd:
-          timeout: 1500
 - runFlow:
     when:
       notVisible:
@@ -34,8 +30,6 @@ name: Reusable - Reach Cart Checkout Ready
     commands:
       - tapOn:
           id: "btn_plus_quantity"
-      - waitForAnimationToEnd:
-          timeout: 1500
 - runFlow:
     when:
       notVisible:
@@ -43,8 +37,6 @@ name: Reusable - Reach Cart Checkout Ready
     commands:
       - tapOn:
           id: "btn_plus_quantity"
-      - waitForAnimationToEnd:
-          timeout: 1500
 - scrollUntilVisible:
     element:
       id: "btn_continue_shoppig_container"

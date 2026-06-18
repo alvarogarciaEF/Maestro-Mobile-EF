@@ -17,8 +17,6 @@ name: Reusable - Select OXXO Payment
     id: "payment_holder"
     below: "Otros métodos de pago"
     index: 0
-- waitForAnimationToEnd:
-    timeout: 1500
 - runFlow:
     when:
       notVisible:
@@ -29,8 +27,6 @@ name: Reusable - Select OXXO Payment
           id: "payment_holder"
           below: "Otros métodos de pago"
           index: 1
-      - waitForAnimationToEnd:
-          timeout: 1500
 - runFlow:
     when:
       notVisible:
@@ -41,8 +37,6 @@ name: Reusable - Select OXXO Payment
           id: "payment_holder"
           below: "Otros métodos de pago"
           index: 2
-      - waitForAnimationToEnd:
-          timeout: 1500
 - runFlow:
     when:
       notVisible:
@@ -53,8 +47,6 @@ name: Reusable - Select OXXO Payment
           id: "payment_holder"
           below: "Otros métodos de pago"
           index: 3
-      - waitForAnimationToEnd:
-          timeout: 1500
 - assertVisible:
     id: "tv_expiration_date"
     text: "Menciona el número de referencia y paga en cualquier OXXO."

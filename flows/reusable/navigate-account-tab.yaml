@@ -10,17 +10,15 @@ name: Reusable - Navigate Account Tab
       notVisible:
         id: "bottom_nav_view"
     commands:
-      - runFlow: recover-app-context.yaml
-      - runFlow: navigate-home-tab.yaml
+      - launchApp:
+          stopApp: false
+      - runFlow: close-startup-prompts.yaml
 - extendedWaitUntil:
     visible:
       id: "bottom_nav_view"
     timeout: 15000
 - tapOn:
     id: "action_account"
-- waitForAnimationToEnd:
-    timeout: 1500
-- runFlow: close-startup-prompts.yaml
 - extendedWaitUntil:
     visible:
       text: "Iniciar sesión|Mi perfil|Direcciones|Mis pedidos|Cerrar sesión"

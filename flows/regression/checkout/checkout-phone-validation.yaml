@@ -23,6 +23,7 @@ tags:
 - hideKeyboard
 - tapOn:
     id: "continueProcessBtn"
+# wait-justification: la validacion negativa conserva la pantalla y no expone un estado nuevo accesible.
 - waitForAnimationToEnd:
     timeout: 5000
 - assertVisible:

@@ -16,38 +16,18 @@ name: Reusable - Ensure Home
     commands:
       - launchApp:
           stopApp: false
-      - waitForAnimationToEnd:
-          timeout: 3000
-      - runFlow: close-startup-prompts.yaml
-      - waitForAnimationToEnd:
-          timeout: 1000
-      - runFlow: close-startup-prompts.yaml
-      - waitForAnimationToEnd:
-          timeout: 1000
+- runFlow: close-startup-prompts.yaml
 - runFlow:
     when:
       visible:
-        id: "layout_main"
+        id: "bottom_nav_view"
+      notVisible:
+        id: "toolbar_search"
     commands:
-      - runFlow: close-startup-prompts.yaml
+      - tapOn:
+          id: "action_main"
 - runFlow:
     when:
-      visible:
-        text: "¿A dónde quieres enviar?"
-    commands:
-      - runFlow:
-          file: select-city.yaml
-          env:
-            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
-            DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
-            DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
-      - waitForAnimationToEnd:
-          timeout: 1000
-      - runFlow: close-startup-prompts.yaml
-- runFlow:
-    when:
-      visible:
-        id: "layout_main"
       notVisible:
         text: '${DEFAULT_CITY || "Monterrey"}'
     commands:
@@ -57,28 +37,6 @@ name: Reusable - Ensure Home
             APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
             DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
             DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
-      - waitForAnimationToEnd:
-          timeout: 1000
-      - runFlow: close-pre-login-prompts.yaml
-- runFlow: close-startup-prompts.yaml
-- runFlow:
-    when:
-      visible:
-        text: "¿A dónde quieres enviar?"
-    commands:
-      - runFlow:
-          file: select-city.yaml
-          env:
-            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
-            DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
-            DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
-      - waitForAnimationToEnd:
-          timeout: 1000
-      - runFlow: close-startup-prompts.yaml
-- extendedWaitUntil:
-    visible:
-      id: "layout_main"
-    timeout: 15000
 - runFlow:
     when:
       notVisible:
@@ -86,16 +44,20 @@ name: Reusable - Ensure Home
     commands:
       - launchApp:
           stopApp: true
-      - waitForAnimationToEnd:
-          timeout: 3000
       - runFlow: close-startup-prompts.yaml
-      - waitForAnimationToEnd:
-          timeout: 1000
-      - runFlow: close-startup-prompts.yaml
-      - extendedWaitUntil:
-          visible:
-            id: "layout_main"
-          timeout: 15000
+- runFlow:
+    when:
+      visible:
+        id: "bottom_nav_view"
+      notVisible:
+        id: "toolbar_search"
+    commands:
+      - tapOn:
+          id: "action_main"
+- extendedWaitUntil:
+    visible:
+      id: "layout_main"
+    timeout: 15000
 - assertVisible:
     id: "main_toolbar"
 - assertVisible:

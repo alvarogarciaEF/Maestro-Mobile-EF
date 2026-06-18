@@ -14,8 +14,6 @@ tags:
 - runFlow: ../../reusable/ensure-logged-in.yaml
 - tapOn:
     id: "action_main"
-- waitForAnimationToEnd:
-    timeout: 3000
 - extendedWaitUntil:
     visible:
       id: "toolbar_search"
@@ -30,8 +28,6 @@ tags:
     text: "Cerrar sesión"
 - tapOn:
     id: "action_main"
-- waitForAnimationToEnd:
-    timeout: 3000
 - extendedWaitUntil:
     visible:
       id: "toolbar_search"

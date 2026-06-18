@@ -33,7 +33,5 @@ tags:
           commands:
             - tapOn:
                 text: "Enviar|Continuar|Reportar|Submit|Send"
-            - waitForAnimationToEnd:
-                timeout: 3000
             - assertNotVisible:
                 text: "Reporte enviado|Gracias por tu reporte|Ticket creado|Report submitted|Thank you"

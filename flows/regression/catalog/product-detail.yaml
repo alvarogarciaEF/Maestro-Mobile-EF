@@ -9,6 +9,7 @@ tags:
   - product-detail
 ---
 - clearState
+- runFlow: ../../reusable/ensure-home.yaml
 - runFlow: ../../reusable/search-open-product.yaml
 - assertVisible:
     id: "productImagesViewPager"

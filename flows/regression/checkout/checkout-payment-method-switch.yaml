@@ -23,8 +23,6 @@ tags:
 - tapOn:
     id: "payment_holder"
     below: "Otros métodos de pago"
-- waitForAnimationToEnd:
-    timeout: 3000
 - scrollUntilVisible:
     element:
       id: "ll_add_new_card"
@@ -32,8 +30,6 @@ tags:
     timeout: 30000
 - tapOn:
     id: "ll_add_new_card"
-- waitForAnimationToEnd:
-    timeout: 3000
 - assertVisible:
     text: "Agregar una nueva tarjeta|Número de tarjeta|Tarjeta"
 - assertVisible:

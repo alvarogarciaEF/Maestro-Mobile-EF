@@ -13,7 +13,7 @@ tags:
 - openLink:
     link: ${DEEPLINK_CART}
     autoVerify: true
-- runFlow: ../../reusable/after-deeplink-launch.yaml
+- runFlow: ../../reusable/close-modals.yaml
 - extendedWaitUntil:
     visible:
       text: "Tu carrito está vacío"

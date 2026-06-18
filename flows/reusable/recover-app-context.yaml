@@ -7,6 +7,4 @@ name: Reusable - Recover App Context
 - pressKey: Back
 - launchApp:
     stopApp: false
-- waitForAnimationToEnd:
-    timeout: 3000
 - runFlow: close-modals.yaml

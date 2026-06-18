@@ -1,9 +1,0 @@
-# Proposito: estabilizar la app despues de abrir un deeplink.
-# Precondiciones: la app ya recibio openLink y esta en primer plano.
-# Valida: cierre de modales comunes sin asumir pantalla destino.
-appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
-name: Reusable - After Deeplink Launch
----
-- waitForAnimationToEnd:
-    timeout: 10000
-- runFlow: close-modals.yaml

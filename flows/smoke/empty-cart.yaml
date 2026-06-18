@@ -11,9 +11,6 @@ tags:
 - runFlow: ../reusable/ensure-home.yaml
 - assertVisible:
     id: "layout_main"
-- tapOn:
-    id: "toolbar_shoppingcart"
-- assertVisible:
-    id: "cl_shopping_cart"
+- runFlow: ../reusable/navigate-cart-tab.yaml
 - assertVisible:
     text: "Tu carrito está vacío"

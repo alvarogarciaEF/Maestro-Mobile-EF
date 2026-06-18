@@ -11,8 +11,6 @@ name: Reusable - Login Valid User
 - tapOn:
     id: "google_login"
     retryTapIfNoChange: false
-- waitForAnimationToEnd:
-    timeout: 5000
 - extendedWaitUntil:
     visible:
       id: "android:id/button1"
@@ -31,6 +29,7 @@ name: Reusable - Login Valid User
       - tapOn:
           text: "${GOOGLE_ACCOUNT_EMAIL}"
           retryTapIfNoChange: false
+# wait-justification: cambio de contexto entre el selector de cuenta, Chrome y la app nativa.
 - waitForAnimationToEnd:
     timeout: 10000
 - runFlow:
@@ -44,7 +43,6 @@ name: Reusable - Login Valid User
 - tapOn:
     text: "Mi cuenta"
     optional: true
-- runFlow: close-modals.yaml
 - extendedWaitUntil:
     visible:
       text: "Mi perfil|Direcciones|Mis pedidos|Cerrar sesión"

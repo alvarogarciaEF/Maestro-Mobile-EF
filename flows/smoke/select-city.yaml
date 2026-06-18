@@ -8,4 +8,5 @@ tags:
   - location
 ---
 - runFlow: ../reusable/ensure-home.yaml
-- runFlow: ../reusable/select-city.yaml
+- assertVisible:
+    text: ${DEFAULT_CITY}

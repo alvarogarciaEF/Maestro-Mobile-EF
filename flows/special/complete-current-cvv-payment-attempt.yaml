@@ -12,6 +12,7 @@ tags:
 - assertVisible:
     text: "Ingresa el CVV|CVV|CVC"
 - runFlow: ../reusable/enter-card-security-if-needed.yaml
+# wait-justification: se captura la respuesta externa del procesador, cuyo resultado visual puede variar.
 - waitForAnimationToEnd:
     timeout: 25000
 - takeScreenshot:

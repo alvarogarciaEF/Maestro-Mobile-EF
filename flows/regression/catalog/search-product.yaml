@@ -12,6 +12,7 @@ tags:
   - search
 ---
 - clearState
+- runFlow: ../../reusable/ensure-home.yaml
 - runFlow: ../../reusable/search-open-product.yaml
 - assertVisible:
     id: "rcv_category_products"

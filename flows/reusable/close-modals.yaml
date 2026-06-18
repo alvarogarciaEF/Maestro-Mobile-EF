@@ -31,16 +31,12 @@ name: Reusable - Close Common Modals
     commands:
       - tapOn:
           text: "Español / Spanish"
-      - waitForAnimationToEnd:
-          timeout: 2000
       - runFlow:
           when:
             visible: "Elige un idioma / Choose a language"
           commands:
             - tapOn:
                 text: "Español / Spanish"
-            - waitForAnimationToEnd:
-                timeout: 2000
 - runFlow:
     when:
       visible: "Confirm|Confirmar|Aceptar"
@@ -65,8 +61,6 @@ name: Reusable - Close Common Modals
             - tapOn:
                 id: "txt_title"
                 text: "${DEFAULT_CITY}"
-            - waitForAnimationToEnd:
-                timeout: 3000
             - runFlow:
                 when:
                   visible:
@@ -81,8 +75,6 @@ name: Reusable - Close Common Modals
       - tapOn:
           id: "txt_title"
           text: "${DEFAULT_STATE}"
-      - waitForAnimationToEnd:
-          timeout: 3000
 - runFlow:
     when:
       visible:

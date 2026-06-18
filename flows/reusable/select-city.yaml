@@ -1,5 +1,5 @@
 # Proposito: seleccionar estado y ciudad desde el selector de Home.
-# Precondiciones: DEFAULT_STATE y DEFAULT_CITY configurados.
+# Precondiciones: prompts de arranque cerrados; DEFAULT_STATE y DEFAULT_CITY configurados.
 # Valida: que la ciudad elegida quede visible y Home listo para buscar/navegar.
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 env:
@@ -8,7 +8,6 @@ env:
   DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
 name: Reusable - Select City
 ---
-- runFlow: close-startup-prompts.yaml
 - runFlow:
     when:
       visible:
@@ -16,8 +15,6 @@ name: Reusable - Select City
     commands:
       - tapOn:
           text: "${DEFAULT_STATE}"
-      - waitForAnimationToEnd:
-          timeout: 1000
 - runFlow:
     when:
       visible:
@@ -28,16 +25,12 @@ name: Reusable - Select City
       - eraseText
       - inputText: ${DEFAULT_CITY}
       - hideKeyboard
-      - extendedWaitUntil:
-          visible:
-            id: "txt_title"
-            text: "${DEFAULT_CITY}"
-          timeout: 7000
+      - assertVisible:
+          id: "txt_title"
+          text: "${DEFAULT_CITY}"
       - tapOn:
           id: "txt_title"
           text: "${DEFAULT_CITY}"
-      - waitForAnimationToEnd:
-          timeout: 1000
 - runFlow:
     when:
       visible:
@@ -50,8 +43,6 @@ name: Reusable - Select City
           commands:
             - tapOn:
                 text: "${DEFAULT_CITY}"
-            - waitForAnimationToEnd:
-                timeout: 1000
       - runFlow:
           when:
             visible:
@@ -68,10 +59,8 @@ name: Reusable - Select City
     commands:
       - tapOn:
           id: "state_and_city_container"
-      - extendedWaitUntil:
-          visible:
-            text: "¿A dónde quieres enviar?"
-          timeout: 7000
+      - assertVisible:
+          text: "¿A dónde quieres enviar?"
       - runFlow:
           when:
             visible:
@@ -79,27 +68,19 @@ name: Reusable - Select City
           commands:
             - tapOn:
                 text: "${DEFAULT_STATE}"
-            - waitForAnimationToEnd:
-                timeout: 1000
-      - extendedWaitUntil:
-          visible:
-            id: "search_store_and_city_input"
-          timeout: 7000
+      - assertVisible:
+          id: "search_store_and_city_input"
       - tapOn:
           id: "search_store_and_city_input"
       - eraseText
       - inputText: ${DEFAULT_CITY}
       - hideKeyboard
-      - extendedWaitUntil:
-          visible:
-            id: "txt_title"
-            text: "${DEFAULT_CITY}"
-          timeout: 7000
+      - assertVisible:
+          id: "txt_title"
+          text: "${DEFAULT_CITY}"
       - tapOn:
           id: "txt_title"
           text: "${DEFAULT_CITY}"
-      - waitForAnimationToEnd:
-          timeout: 1000
       - runFlow:
           when:
             visible:

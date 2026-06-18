@@ -41,6 +41,7 @@ tags:
     timeout: 10000
 - tapOn:
     id: "btn_save_cl"
+# wait-justification: la validacion negativa no cambia de pantalla ni expone un mensaje estable.
 - waitForAnimationToEnd:
     timeout: 5000
 - assertVisible:

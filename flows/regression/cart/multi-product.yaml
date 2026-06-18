@@ -13,7 +13,6 @@ tags:
 - runFlow: ../../reusable/ensure-home.yaml
 - runFlow: ../../reusable/empty-cart-if-needed.yaml
 - runFlow: ../../reusable/add-product-from-search.yaml
-- runFlow: ../../reusable/navigate-home-tab.yaml
 - runFlow: ../../reusable/add-second-product-from-category.yaml
 - tapOn:
     text: "Ir al carrito"

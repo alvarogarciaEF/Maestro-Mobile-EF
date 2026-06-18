@@ -1,0 +1,25 @@
+# Proposito: abrir el carrito desde el bottom nav.
+# Precondiciones: app en primer plano; si no hay bottom nav intenta volver a Home.
+# Valida: pantalla de carrito visible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Navigate Cart Tab
+---
+- runFlow:
+    when:
+      notVisible:
+        id: "bottom_nav_view"
+    commands:
+      - runFlow: navigate-home-tab.yaml
+- runFlow:
+    when:
+      visible:
+        id: "bottom_nav_view"
+      notVisible:
+        id: "cl_shopping_cart"
+    commands:
+      - tapOn:
+          id: "action_cart"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 30000
