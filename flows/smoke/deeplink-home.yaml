@@ -1,0 +1,17 @@
+# Proposito: valida que el deep link base abra la app y llegue a Home.
+# Precondiciones: DEEPLINK_HOME configurado, app instalada y scheme registrado.
+# Valida: layout principal, toolbar y bottom navigation tras abrir el link.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Smoke - Deeplink Home
+tags:
+  - smoke
+  - deeplink
+---
+- openLink: ${DEEPLINK_HOME}
+- runFlow: ../reusable/close-modals.yaml
+- assertVisible:
+    id: "layout_main"
+- assertVisible:
+    id: "main_toolbar"
+- assertVisible:
+    id: "bottom_nav_view"

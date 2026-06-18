@@ -1,0 +1,28 @@
+# Proposito: validar eliminacion de producto desde carrito.
+# Precondiciones: carrito ya contiene al menos un producto.
+# Valida: accion eliminar y estado de carrito vacio.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Remove Product From Cart
+tags:
+  - regression
+  - cart
+---
+- clearState
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- extendedWaitUntil:
+    visible:
+      id: "btn_delete"
+    timeout: 20000
+- tapOn:
+    id: "btn_delete"
+- runFlow:
+    when:
+      visible: "Eliminar"
+    commands:
+      - tapOn: "Eliminar"
+- extendedWaitUntil:
+    visible:
+      text: "Tu carrito está vacío"
+    timeout: 20000
+- assertVisible:
+    text: "Tu carrito está vacío"

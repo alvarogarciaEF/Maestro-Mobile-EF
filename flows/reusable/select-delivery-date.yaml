@@ -1,0 +1,13 @@
+# Proposito: confirmar fecha de entrega cuando el detalle abre el calendario.
+# Precondiciones: modal de calendario visible tras tocar agregar al carrito.
+# Valida: que se cierre el calendario y el flow pueda continuar.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Select Delivery Date
+---
+- runFlow:
+    when:
+      visible: "¿Cuándo lo entregamos?"
+    commands:
+      - tapOn:
+          id: "confirm_button"
+

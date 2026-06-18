@@ -1,0 +1,67 @@
+# Proposito: validar busqueda combinada con ordenamiento y filtro de precio.
+# Web parity: tests/regression/catalog/search-then-filter-combined.spec.js
+# Precondiciones: PRODUCT_SEARCH_TERM con resultados; SORT_ORDER_DESC y PRICE_FILTER_RANGE_HIGH vigentes.
+# Valida: resultados de busqueda, sort descendente y filtro de precio sobre el mismo listado.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Search Then Filter Combined
+tags:
+  - regression
+  - catalog
+  - search
+  - filter
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- tapOn:
+    id: "toolbar_search"
+- assertVisible:
+    id: "search_product_input"
+- inputText: ${PRODUCT_SEARCH_TERM}
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    text: "Resultados|Resultados para"
+- assertVisible:
+    id: "ll_filter_and_sort"
+- tapOn:
+    id: "ll_filter_and_sort"
+- extendedWaitUntil:
+    visible:
+      text: "Ordenar por"
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: ${SORT_ORDER_DESC}
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: ${SORT_ORDER_DESC}
+- scrollUntilVisible:
+    element:
+      id: "filter_price"
+    direction: DOWN
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: ${PRICE_FILTER_RANGE_HIGH}
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 50
+- tapOn:
+    text: ${PRICE_FILTER_RANGE_HIGH}
+- tapOn:
+    id: "apply_button"
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    id: "ll_filter_and_sort"
+- assertVisible:
+    text: ".* productos"

@@ -1,0 +1,19 @@
+# Proposito: validar busqueda por termino de catalogo.
+# Precondiciones: PRODUCT_SEARCH_TERM y PRODUCT_NAME disponibles para la ciudad.
+# Valida: entrada a resultados y presencia del producto esperado.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  PRODUCT_SEARCH_TERM: ${PRODUCT_SEARCH_TERM || "rosas"}
+  PRODUCT_NAME: ${PRODUCT_NAME || "Clásico Amor con 24 Rosas Rojas"}
+name: Regression - Search Product
+tags:
+  - regression
+  - catalog
+  - search
+---
+- clearState
+- runFlow: ../../reusable/search-open-product.yaml
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    text: ${PRODUCT_NAME}

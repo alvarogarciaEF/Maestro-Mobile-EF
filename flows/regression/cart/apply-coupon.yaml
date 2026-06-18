@@ -1,0 +1,40 @@
+# Proposito: validar aplicacion de cupon invalido desde carrito.
+# Precondiciones: carrito con producto y cupon QA invalido configurado.
+# Valida: mensaje de cupon inexistente sin confirmar compra.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Apply Coupon Invalid
+tags:
+  - regression
+  - cart
+  - coupon
+  - negative
+---
+- clearState
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- scrollUntilVisible:
+    element:
+      text: "Cupón de descuento"
+    direction: DOWN
+    timeout: 45000
+- tapOn:
+    text: "Cupón de descuento"
+- extendedWaitUntil:
+    visible:
+      id: "et_coupon_code"
+    timeout: 15000
+- tapOn:
+    id: "et_coupon_code"
+- inputText: ${INVALID_COUPON_CODE}
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: "btn_apply_coupon"
+    timeout: 15000
+- tapOn:
+    id: "btn_apply_coupon"
+- extendedWaitUntil:
+    visible:
+      id: "tv_coupon_error"
+    timeout: 30000
+- assertVisible:
+    id: "tv_coupon_error"

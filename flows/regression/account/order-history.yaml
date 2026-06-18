@@ -1,0 +1,29 @@
+# Proposito: validar acceso a historial de pedidos desde Mi cuenta.
+# Precondiciones: usuario QA autenticado.
+# Valida: pantalla Mis pedidos y mensaje vacio cuando no hay pedidos.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Order History
+tags:
+  - regression
+  - account
+  - orders
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- scrollUntilVisible:
+    element:
+      text: "Mis pedidos"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: "Mis pedidos"
+- assertVisible:
+    id: "my_orders_fragment_compose_view"
+- assertVisible:
+    text: "Mis pedidos"
+- runFlow:
+    when:
+      visible: "Tus regalos son los mejores"
+    commands:
+      - assertVisible:
+          text: "Aquí podrás encontrar los pedidos que hagas"

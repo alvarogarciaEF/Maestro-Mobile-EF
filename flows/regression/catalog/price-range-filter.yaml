@@ -1,0 +1,45 @@
+# Proposito: validar filtro de rango de precio en listado de categoria.
+# Precondiciones: CATEGORY_NAME con productos; PRICE_FILTER_RANGE coincide con opciones del dialogo.
+# Valida: aplicar un rango de precio y conservar listado con conteo de productos.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Price Range Filter
+tags:
+  - regression
+  - catalog
+  - filter
+  - price
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/open-category-listing-from-tab.yaml
+- tapOn:
+    id: "ll_filter_and_sort"
+- extendedWaitUntil:
+    visible:
+      text: "Precio"
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: "filter_price"
+    direction: DOWN
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: ${PRICE_FILTER_RANGE}
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 50
+- tapOn:
+    text: ${PRICE_FILTER_RANGE}
+- tapOn:
+    id: "apply_button"
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    id: "ll_filter_and_sort"
+- assertVisible:
+    text: ".* productos"

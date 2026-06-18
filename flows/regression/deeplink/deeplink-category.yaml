@@ -1,0 +1,26 @@
+# Proposito: validar apertura de categoria por deeplink HTTPS.
+# Precondiciones: DEEPLINK_CATEGORY apunta a categoria activa (ideal con estado/ciudad en path).
+# Valida: listado de productos y controles de catalogo visibles.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Deeplink Category
+tags:
+  - regression
+  - deeplink
+  - catalog
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- openLink:
+    link: ${DEEPLINK_CATEGORY}
+    autoVerify: true
+- runFlow: ../../reusable/after-deeplink-launch.yaml
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 45000
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    id: "ll_filter_and_sort"
+- assertVisible:
+    text: "Filtrar y ordenar|.* productos"

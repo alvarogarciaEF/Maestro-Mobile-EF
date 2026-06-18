@@ -1,0 +1,53 @@
+# Proposito: avanzar checkout desde carrito hasta revision de pedido con OXXO seleccionado.
+# Precondiciones: usuario autenticado con carrito listo; checkout abierto o carrito con CTA continuar.
+# Valida: pantalla "Revisa tu pedido" lista para completar compra OXXO.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Advance Checkout To OXXO Review
+---
+- runFlow:
+    when:
+      visible: "Confirma tu teléfono"
+    commands:
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Elige a quién enviarlo|Escoge un horario|Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Elige a quién enviarlo"
+    commands:
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Escoge un horario|Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Escoge un horario"
+    commands:
+      - tapOn:
+          point: "93%,50%"
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Dedicatoria"
+    commands:
+      - tapOn:
+          id: "checkbox_without_message"
+      - tapOn:
+          id: "checkbox_anonymous"
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Completa el pago"
+          timeout: 30000
+- runFlow: select-oxxo-payment.yaml

@@ -1,0 +1,70 @@
+# Proposito: seleccionar OXXO en checkout y avanzar a revision de pedido.
+# Precondiciones: pantalla "Completa el pago" visible.
+# Valida: instrucciones OXXO visibles y pantalla "Revisa tu pedido" con CTA continueProcessBtn.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Select OXXO Payment
+---
+- assertVisible:
+    text: "Completa el pago"
+- scrollUntilVisible:
+    element:
+      text: "Otros métodos de pago"
+    direction: DOWN
+    timeout: 30000
+- assertVisible:
+    text: "Otros métodos de pago"
+- tapOn:
+    id: "payment_holder"
+    below: "Otros métodos de pago"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 1500
+- runFlow:
+    when:
+      notVisible:
+        id: "tv_expiration_date"
+        text: "Menciona el número de referencia y paga en cualquier OXXO."
+    commands:
+      - tapOn:
+          id: "payment_holder"
+          below: "Otros métodos de pago"
+          index: 1
+      - waitForAnimationToEnd:
+          timeout: 1500
+- runFlow:
+    when:
+      notVisible:
+        id: "tv_expiration_date"
+        text: "Menciona el número de referencia y paga en cualquier OXXO."
+    commands:
+      - tapOn:
+          id: "payment_holder"
+          below: "Otros métodos de pago"
+          index: 2
+      - waitForAnimationToEnd:
+          timeout: 1500
+- runFlow:
+    when:
+      notVisible:
+        id: "tv_expiration_date"
+        text: "Menciona el número de referencia y paga en cualquier OXXO."
+    commands:
+      - tapOn:
+          id: "payment_holder"
+          below: "Otros métodos de pago"
+          index: 3
+      - waitForAnimationToEnd:
+          timeout: 1500
+- assertVisible:
+    id: "tv_expiration_date"
+    text: "Menciona el número de referencia y paga en cualquier OXXO."
+- tapOn:
+    id: "continueProcessBtn"
+- extendedWaitUntil:
+    visible:
+      text: "Revisa tu pedido"
+    timeout: 45000
+- assertVisible:
+    text: "Revisa tu pedido"
+- assertVisible:
+    id: "continueProcessBtn"

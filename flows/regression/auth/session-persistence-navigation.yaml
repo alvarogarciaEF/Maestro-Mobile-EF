@@ -1,0 +1,48 @@
+# Proposito: validar que la sesion autenticada persiste tras navegacion multi-paso.
+# Web parity: tests/regression/auth/session-persistence-across-navigation.spec.js
+# Precondiciones: USER_EMAIL/USER_PASSWORD validos.
+# Valida: senales de sesion activa tras Home -> cuenta -> Home -> cuenta (sin relanzar app).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Session Persistence Navigation
+tags:
+  - regression
+  - auth
+  - session
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- tapOn:
+    id: "action_main"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible:
+      id: "toolbar_search"
+    timeout: 45000
+- runFlow: ../../reusable/navigate-account-tab.yaml
+- scrollUntilVisible:
+    element:
+      text: "Cerrar sesión"
+    direction: DOWN
+    timeout: 45000
+- assertVisible:
+    text: "Cerrar sesión"
+- tapOn:
+    id: "action_main"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible:
+      id: "toolbar_search"
+    timeout: 45000
+- runFlow: ../../reusable/navigate-account-tab.yaml
+- scrollUntilVisible:
+    element:
+      text: "Cerrar sesión"
+    direction: DOWN
+    timeout: 45000
+- assertVisible:
+    text: "Cerrar sesión"
+- assertNotVisible:
+    text: "Iniciar sesión"

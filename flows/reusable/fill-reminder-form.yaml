@@ -1,0 +1,30 @@
+# Proposito: completar formulario de nuevo recordatorio.
+# Precondiciones: dialogo de recordatorio abierto; REMINDER_TITLE configurado.
+# Valida: formulario listo para guardar.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Fill Reminder Form
+---
+- extendedWaitUntil:
+    visible:
+      id: "et_title"
+    timeout: 15000
+- tapOn:
+    id: "et_title"
+- inputText: ${REMINDER_TITLE}
+- tapOn:
+    id: "dropdown_occasion_container"
+- tapOn:
+    text: "Cumpleaños|Birthday"
+- tapOn:
+    id: "dropdown_recipient_name_container"
+- tapOn:
+    text: "Amigo|Amiga|Mamá|Papá|Pareja|Otro|Friend|Other"
+- tapOn:
+    id: "dropdown_month_container"
+- tapOn:
+    text: "Julio|July"
+- tapOn:
+    id: "dropdown_day_container"
+- tapOn:
+    text: "7"
+- hideKeyboard

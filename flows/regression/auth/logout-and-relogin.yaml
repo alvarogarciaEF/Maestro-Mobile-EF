@@ -1,0 +1,30 @@
+# Proposito: validar ciclo login -> logout -> re-login en la misma sesion.
+# Web parity: tests/regression/auth/logout-and-relogin.spec.js
+# Precondiciones: USER_EMAIL y USER_PASSWORD validos.
+# Valida: estado invitado tras logout y sesion autenticada restaurada tras re-login.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Logout And Relogin
+tags:
+  - regression
+  - auth
+  - login
+  - logout
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/logout.yaml
+- assertVisible:
+    text: "Iniciar sesión"
+- assertNotVisible:
+    text: "Cerrar sesión"
+- runFlow: ../../reusable/login-email-password.yaml
+- scrollUntilVisible:
+    element:
+      text: "Cerrar sesión"
+    direction: DOWN
+    timeout: 45000
+- assertVisible:
+    text: "Cerrar sesión"
+- assertNotVisible:
+    text: "Iniciar sesión"

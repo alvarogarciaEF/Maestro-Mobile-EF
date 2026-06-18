@@ -1,0 +1,35 @@
+# Proposito: abrir detalle de un pedido con accion de ocultar (p. ej. cancelado).
+# Precondiciones: usuario autenticado; historial con al menos un pedido cancelado o finalizado.
+# Valida: detalle de pedido visible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open Hideable Order Detail
+---
+- scrollUntilVisible:
+    element:
+      text: "Mis pedidos"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: "Mis pedidos"
+- extendedWaitUntil:
+    visible:
+      id: "my_orders_fragment_compose_view"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: "Pedido: [0-9]+"
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: "Cancelado|Cancelled|Entregado|Delivered"
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    text: "Cancelado|Cancelled|Entregado|Delivered"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: "Pedido #[0-9]+|Datos de envío|Pedido realizado:|Shipping details"
+    timeout: 30000
+- assertVisible:
+    text: "Pedido #[0-9]+|Datos de envío|Pedido realizado:|Shipping details"

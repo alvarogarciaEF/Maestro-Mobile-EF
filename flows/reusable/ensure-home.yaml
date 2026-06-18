@@ -1,0 +1,102 @@
+# Proposito: dejar la app en Home lista para continuar un flow.
+# Precondiciones: app instalada y APP_ID_ANDROID configurado.
+# Valida: layout principal, toolbar y bottom navigation visibles.
+# Nota: solo hace launchApp si Home no esta visible (evita cerrar/abrir de mas).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+name: Reusable - Ensure Home
+---
+- runFlow:
+    when:
+      notVisible:
+        id: "layout_main"
+    commands:
+      - launchApp:
+          stopApp: false
+      - waitForAnimationToEnd:
+          timeout: 3000
+      - runFlow: close-startup-prompts.yaml
+      - waitForAnimationToEnd:
+          timeout: 1000
+      - runFlow: close-startup-prompts.yaml
+      - waitForAnimationToEnd:
+          timeout: 1000
+- runFlow:
+    when:
+      visible:
+        id: "layout_main"
+    commands:
+      - runFlow: close-startup-prompts.yaml
+- runFlow:
+    when:
+      visible:
+        text: "¿A dónde quieres enviar?"
+    commands:
+      - runFlow:
+          file: select-city.yaml
+          env:
+            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+            DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+            DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+      - waitForAnimationToEnd:
+          timeout: 1000
+      - runFlow: close-startup-prompts.yaml
+- runFlow:
+    when:
+      visible:
+        id: "layout_main"
+      notVisible:
+        text: '${DEFAULT_CITY || "Monterrey"}'
+    commands:
+      - runFlow:
+          file: select-city.yaml
+          env:
+            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+            DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+            DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+      - waitForAnimationToEnd:
+          timeout: 1000
+      - runFlow: close-pre-login-prompts.yaml
+- runFlow: close-startup-prompts.yaml
+- runFlow:
+    when:
+      visible:
+        text: "¿A dónde quieres enviar?"
+    commands:
+      - runFlow:
+          file: select-city.yaml
+          env:
+            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+            DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+            DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+      - waitForAnimationToEnd:
+          timeout: 1000
+      - runFlow: close-startup-prompts.yaml
+- extendedWaitUntil:
+    visible:
+      id: "layout_main"
+    timeout: 15000
+- runFlow:
+    when:
+      notVisible:
+        id: "layout_main"
+    commands:
+      - launchApp:
+          stopApp: true
+      - waitForAnimationToEnd:
+          timeout: 3000
+      - runFlow: close-startup-prompts.yaml
+      - waitForAnimationToEnd:
+          timeout: 1000
+      - runFlow: close-startup-prompts.yaml
+      - extendedWaitUntil:
+          visible:
+            id: "layout_main"
+          timeout: 15000
+- assertVisible:
+    id: "main_toolbar"
+- assertVisible:
+    id: "bottom_nav_view"

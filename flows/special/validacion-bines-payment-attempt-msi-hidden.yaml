@@ -1,0 +1,20 @@
+# Proposito: validar contado sin MSI y ejecutar intento de pago esperado como no exitoso.
+# Precondiciones: BIN_CARD_NUMBER debe ser una tarjeta QA completa y el carrito debe superar mil pesos.
+# Nota: solo usar con BINes marcados como "SI, No exitoso" para observar POST de pago.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Validacion de bines - intento de pago sin MSI
+tags:
+  - special
+  - checkout
+  - payment
+  - bines
+  - msi
+---
+- runFlow: validacion-bines-payment-options-msi-hidden.yaml
+- tapOn:
+    text: "Confirmar"
+- runFlow: ../reusable/enter-card-security-if-needed.yaml
+- waitForAnimationToEnd:
+    timeout: 15000
+- takeScreenshot:
+    path: "bines-payment-attempt-${BIN_NUMBER}"

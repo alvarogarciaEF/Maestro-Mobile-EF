@@ -1,0 +1,44 @@
+# Proposito: validar apertura y aplicacion basica de ordenamiento en categoria.
+# Precondiciones: CATEGORY_NAME tiene productos y filtros disponibles.
+# Valida: dialogo de filtros, aplicar orden menor a mayor y volver al listado.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Filter Category
+tags:
+  - regression
+  - catalog
+  - filter
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- tapOn:
+    text: "Categorías"
+- assertVisible:
+    id: "recyclerViewCategory"
+- tapOn:
+    text: ${CATEGORY_NAME}
+- tapOn:
+    text: "Ver todo"
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    id: "ll_filter_and_sort"
+- tapOn:
+    id: "ll_filter_and_sort"
+- extendedWaitUntil:
+    visible:
+      text: "Ordenar por"
+    timeout: 15000
+- tapOn:
+    id: "ll_min_to_max"
+- tapOn:
+    id: "apply_button"
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    id: "ll_filter_and_sort"
+- assertVisible:
+    text: ".* productos"

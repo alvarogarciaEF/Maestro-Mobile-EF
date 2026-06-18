@@ -1,0 +1,50 @@
+# Proposito: avanzar checkout hasta el paso de dedicatoria.
+# Precondiciones: checkout abierto desde carrito.
+# Valida: pantalla de dedicatoria con campos de mensaje y firma.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Advance Checkout To Dedicatoria
+---
+- runFlow:
+    when:
+      visible: "Confirma tu teléfono"
+    commands:
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Elige a quién enviarlo|Escoge un horario|Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Elige a quién enviarlo"
+    commands:
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Escoge un horario|Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Escoge un horario"
+    commands:
+      - tapOn:
+          point: "93%,50%"
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Dedicatoria|Completa el pago"
+          timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: "Dedicatoria"
+    timeout: 30000
+- assertVisible:
+    text: "Dedicatoria"
+- assertVisible:
+    id: "et_message"
+- assertVisible:
+    id: "et_signature"
+- assertVisible:
+    text: "¿Necesitas ayuda con tu mensaje?"

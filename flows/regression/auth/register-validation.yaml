@@ -1,0 +1,51 @@
+# Proposito: validar reglas basicas del formulario de registro.
+# Web parity: tests/regression/auth/register-validation.spec.js (parcial)
+# Precondiciones: flujo "Crear cuenta" disponible en app QA.
+# Valida: error al registrar email ya existente (USER_EMAIL).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Register Validation
+tags:
+  - regression
+  - auth
+  - register
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/navigate-account-tab.yaml
+- tapOn:
+    text: "Iniciar sesión"
+- extendedWaitUntil:
+    visible:
+      text: "Crear cuenta"
+    timeout: 15000
+- tapOn:
+    text: "Crear cuenta"
+- extendedWaitUntil:
+    visible:
+      text: "Crear cuenta|Registrarme|Nombre|Correo"
+    timeout: 15000
+- tapOn:
+    id: "loginEmailEditText"
+- inputText: ${USER_EMAIL}
+- hideKeyboard
+- tapOn:
+    text: "Crear cuenta|Registrarme|Continuar|Siguiente|start_button"
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: "start_button"
+    commands:
+      - tapOn:
+          id: "start_button"
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      text: "ya está registrado|correo ya existe|cuenta existente|ya tiene una cuenta|ya en uso|correo.*en uso"
+    timeout: 20000
+- assertVisible:
+    text: "ya está registrado|correo ya existe|cuenta existente|ya tiene una cuenta|ya en uso|correo.*en uso"
+- assertNotVisible:
+    text: "Cerrar sesión"

@@ -1,0 +1,25 @@
+# Proposito: valida elementos criticos visibles en Home.
+# Precondiciones: app instalada y ciudad inicial disponible.
+# Valida: toolbar, selector de ciudad, busqueda, carrito y tabs principales.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Smoke - Home
+tags:
+  - smoke
+  - home
+---
+- runFlow: ../reusable/ensure-home.yaml
+- assertVisible:
+    id: "main_toolbar"
+- assertVisible:
+    id: "location_date_holder"
+- assertVisible:
+    id: "state_and_city_container"
+- assertVisible:
+    id: "toolbar_search"
+- assertVisible:
+    id: "toolbar_shoppingcart"
+- assertVisible:
+    id: "bottom_nav_view"
+- assertVisible: "Inicio"
+- assertVisible: "Categorías"
+- assertVisible: "Mi cuenta"

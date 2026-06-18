@@ -1,0 +1,22 @@
+# Proposito: validar deeplink de carrito cuando no hay productos agregados.
+# Precondiciones: DEEPLINK_CART registrado en la app; sesion sin items en carrito.
+# Valida: pantalla de carrito y estado vacio.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Deeplink Cart Empty
+tags:
+  - regression
+  - deeplink
+  - cart
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- openLink:
+    link: ${DEEPLINK_CART}
+    autoVerify: true
+- runFlow: ../../reusable/after-deeplink-launch.yaml
+- extendedWaitUntil:
+    visible:
+      text: "Tu carrito está vacío"
+    timeout: 45000
+- assertVisible:
+    text: "Tu carrito está vacío"

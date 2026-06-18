@@ -1,0 +1,293 @@
+# Proposito: validar agregar una direccion nueva desde Mi cuenta.
+# Precondiciones: usuario QA autenticado (enviafloresQA@mailinator.com).
+# Valida: guardado exitoso y regreso a la libreta de direcciones.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+  USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+  GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+  ADDRESS_RECIPIENT_NAME: ${ADDRESS_RECIPIENT_NAME || "QA Maestro"}
+  ADDRESS_PHONE: ${ADDRESS_PHONE || "8112345678"}
+  ADDRESS_STREET: ${ADDRESS_STREET || "Padre Mier"}
+  ADDRESS_NUMBER: ${ADDRESS_NUMBER || "100"}
+  ADDRESS_NEIGHBORHOOD: ${ADDRESS_NEIGHBORHOOD || "Centro"}
+  ADDRESS_ZIP: ${ADDRESS_ZIP || "64000"}
+  ADDRESS_REFERENCES: ${ADDRESS_REFERENCES || "Direccion automatizada QA Maestro"}
+name: Regression - Address Book Add And Delete
+tags:
+  - regression
+  - account
+  - address
+---
+- clearState
+- runFlow:
+    file: ../../reusable/ensure-logged-in.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+      USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+      GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- scrollUntilVisible:
+    element:
+      text: "Direcciones de envío|Direcciones"
+    direction: DOWN
+    timeout: 7000
+- tapOn:
+    text: "Direcciones de envío|Direcciones"
+- runFlow:
+    when:
+      visible: "${ADDRESS_RECIPIENT_NAME}"
+    commands:
+      - tapOn:
+          text: "${ADDRESS_RECIPIENT_NAME}"
+      - tapOn:
+          id: "btn_edit_address"
+      - waitForAnimationToEnd:
+          timeout: 1500
+      - scrollUntilVisible:
+          element:
+            text: "Eliminar dirección|Eliminar direccion"
+          direction: DOWN
+          visibilityPercentage: 20
+          waitToSettleTimeoutMs: 500
+          timeout: 8000
+      - tapOn:
+          id: "btn_delete_address"
+      - runFlow:
+          when:
+            visible: "Eliminar"
+          commands:
+            - tapOn: "Eliminar"
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - extendedWaitUntil:
+          visible:
+            text: "Agregar una nueva dirección"
+          timeout: 10000
+- tapOn:
+    text: "Agregar una nueva dirección"
+- extendedWaitUntil:
+    visible:
+      id: "recipentNameEditText"
+    timeout: 10000
+- tapOn:
+    id: "recipentNameEditText"
+- inputText: ${ADDRESS_RECIPIENT_NAME}
+- tapOn:
+    id: "add_phone_edit_text"
+- inputText: ${ADDRESS_PHONE}
+- scrollUntilVisible:
+    element:
+      id: "streetEditText"
+    direction: DOWN
+    timeout: 6000
+- tapOn:
+    id: "streetEditText"
+- inputText: ${ADDRESS_STREET}
+- scrollUntilVisible:
+    element:
+      id: "add_home_number_edit_text"
+    direction: DOWN
+    timeout: 6000
+- tapOn:
+    id: "add_home_number_edit_text"
+- inputText: ${ADDRESS_NUMBER}
+- scrollUntilVisible:
+    element:
+      id: "neighborhoodEditText"
+    direction: DOWN
+    timeout: 6000
+- tapOn:
+    id: "neighborhoodEditText"
+- inputText: ${ADDRESS_NEIGHBORHOOD}
+- runFlow:
+    file: ../../reusable/select-address-dropdown-option.yaml
+    env:
+      DROPDOWN_CONTAINER_ID: dropdown_state_container
+      OPTION_TEXT: ${DEFAULT_STATE || "Nuevo León"}
+- assertVisible:
+    id: "state_text"
+    text: "${DEFAULT_STATE}"
+- waitForAnimationToEnd:
+    timeout: 2000
+- scrollUntilVisible:
+    element:
+      id: "dropdown_city_container"
+    direction: DOWN
+    visibilityPercentage: 40
+    waitToSettleTimeoutMs: 500
+    timeout: 15000
+- tapOn:
+    id: "dropdown_city_container"
+- waitForAnimationToEnd:
+    timeout: 1500
+- extendedWaitUntil:
+    visible:
+      id: "android:id/text1"
+    timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: "android:id/text1"
+        text: "${DEFAULT_CITY}"
+    commands:
+      - tapOn:
+          id: "android:id/text1"
+          text: "${DEFAULT_CITY}"
+- runFlow:
+    when:
+      visible:
+        id: "android:id/text1"
+      notVisible:
+        id: "android:id/text1"
+        text: "${DEFAULT_CITY}"
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: "android:id/text1"
+            text: "${DEFAULT_CITY}"
+          direction: DOWN
+          speed: 55
+          visibilityPercentage: 10
+          waitToSettleTimeoutMs: 600
+          timeout: 20000
+      - tapOn:
+          id: "android:id/text1"
+          text: "${DEFAULT_CITY}"
+- assertVisible:
+    id: "city_text"
+    text: "${DEFAULT_CITY}"
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      id: "zipEditText"
+    direction: DOWN
+    timeout: 6000
+- tapOn:
+    id: "zipEditText"
+- eraseText
+- inputText: ${ADDRESS_ZIP}
+- hideKeyboard
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      text: "Casa"
+    direction: DOWN
+    timeout: 6000
+- tapOn:
+    id: "rcv_address_types"
+- tapOn:
+    text: "Casa"
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      id: "referencesEditText"
+    direction: DOWN
+    timeout: 6000
+- tapOn:
+    id: "referencesEditText"
+- inputText: ${ADDRESS_REFERENCES}
+- hideKeyboard
+- waitForAnimationToEnd:
+    timeout: 800
+- scrollUntilVisible:
+    element:
+      id: "btn_continue_address_container"
+    direction: DOWN
+    visibilityPercentage: 40
+    waitToSettleTimeoutMs: 500
+    timeout: 10000
+- tapOn:
+    id: "btn_continue_address_container"
+- waitForAnimationToEnd:
+    timeout: 4000
+- runFlow:
+    when:
+      visible: "Solo faltan unos detalles"
+    commands:
+      - tapOn: "Aceptar|Entendido|OK|Cerrar"
+- runFlow:
+    when:
+      notVisible: "${ADDRESS_RECIPIENT_NAME}"
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "btn_confirm_address_container"
+          timeout: 30000
+      - tapOn:
+          id: "btn_confirm_address_container"
+      - waitForAnimationToEnd:
+          timeout: 5000
+- runFlow:
+    when:
+      visible: "¡Casi lo tenemos!|No logramos ubicar la dirección exacta"
+    commands:
+      - tapOn: "Entendido"
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - scrollUntilVisible:
+          element:
+            id: "btn_continue_address_container"
+          direction: DOWN
+          visibilityPercentage: 40
+          timeout: 10000
+      - tapOn:
+          id: "btn_continue_address_container"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - extendedWaitUntil:
+          visible:
+            id: "btn_confirm_address_container"
+          timeout: 30000
+      - tapOn:
+          id: "btn_confirm_address_container"
+      - waitForAnimationToEnd:
+          timeout: 5000
+- extendedWaitUntil:
+    visible:
+      text: "${ADDRESS_RECIPIENT_NAME}"
+    timeout: 18000
+- assertVisible:
+    text: "${ADDRESS_RECIPIENT_NAME}"
+- runFlow:
+    when:
+      visible: "${ADDRESS_RECIPIENT_NAME}"
+    commands:
+      - tapOn:
+          id: "btn_edit_address"
+      - waitForAnimationToEnd:
+          timeout: 1500
+      - scrollUntilVisible:
+          element:
+            text: "Eliminar dirección|Eliminar direccion"
+          direction: DOWN
+          visibilityPercentage: 20
+          waitToSettleTimeoutMs: 500
+          timeout: 8000
+      - tapOn:
+          id: "btn_delete_address"
+      - extendedWaitUntil:
+          visible:
+            id: "tv_title"
+          timeout: 6000
+      - runFlow:
+          when:
+            visible: "Eliminar"
+          commands:
+            - tapOn: "Eliminar"
+      - waitForAnimationToEnd:
+          timeout: 2000
+- extendedWaitUntil:
+    visible:
+      text: "Agregar una nueva dirección"
+    timeout: 10000
+- assertNotVisible:
+    text: "${ADDRESS_RECIPIENT_NAME}"

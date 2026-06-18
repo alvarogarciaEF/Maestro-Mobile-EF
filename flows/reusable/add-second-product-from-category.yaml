@@ -1,0 +1,37 @@
+# Proposito: agregar un segundo producto al carrito desde listado de categoria.
+# Precondiciones: SECOND_CATEGORY_NAME existe; al menos un producto en el listado.
+# Valida: accion "Ir al carrito" visible tras confirmar fecha de entrega.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Add Second Product From Category
+---
+- runFlow: navigate-home-tab.yaml
+- tapOn:
+    id: "action_category"
+- extendedWaitUntil:
+    visible:
+      id: "recyclerViewCategory"
+    timeout: 30000
+- tapOn:
+    text: ${SECOND_CATEGORY_NAME}
+- tapOn:
+    text: "Ver todo"
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- tapOn:
+    point: "50%,45%"
+- extendedWaitUntil:
+    visible:
+      id: "dateNdeliveryContainer"
+    timeout: 45000
+- scrollUntilVisible:
+    element:
+      id: "addToCartButton"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: "addToCartButton"
+- runFlow: select-delivery-date.yaml
+- assertVisible:
+    text: "Ir al carrito"

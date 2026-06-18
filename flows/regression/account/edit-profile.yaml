@@ -1,0 +1,61 @@
+# Proposito: validar edicion basica de nombre y apellido en perfil.
+# Precondiciones: usuario QA autenticado; los datos pueden ser modificados.
+# Valida: guardado exitoso con mensaje de actualizacion de nombre.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  USER_EMAIL: ${USER_EMAIL}
+  USER_PASSWORD: ${USER_PASSWORD}
+  GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+name: Regression - Edit Profile
+tags:
+  - regression
+  - account
+---
+- clearState
+- runFlow:
+    file: ../../reusable/ensure-logged-in.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      USER_EMAIL: ${USER_EMAIL}
+      USER_PASSWORD: ${USER_PASSWORD}
+      GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- scrollUntilVisible:
+    element:
+      text: "Mi perfil"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: "Mi perfil"
+- extendedWaitUntil:
+    visible:
+      text: "Nombre"
+    timeout: 30000
+- tapOn:
+    text: "Nombre"
+- extendedWaitUntil:
+    visible:
+      id: "nameEditText"
+    timeout: 15000
+- tapOn:
+    id: "nameEditText"
+- eraseText
+- inputText: "QA"
+- tapOn:
+    id: "lastnameEditText"
+- eraseText
+- inputText: "Automation"
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: "btn_save_cl"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "btn_save_cl"
+- assertVisible:
+    text: "QA Automation|¡Listo! Actualizaste tu nombre"

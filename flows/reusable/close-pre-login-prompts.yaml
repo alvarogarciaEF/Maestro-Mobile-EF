@@ -1,0 +1,47 @@
+# Proposito: cerrar prompts previos al login sin avanzar por "Comenzar".
+# Precondiciones: app en primer plano.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Close Pre Login Prompts
+---
+- runFlow:
+    when:
+      visible: "Elige un idioma / Choose a language"
+    commands:
+      - tapOn:
+          text: "Español / Spanish"
+      - waitForAnimationToEnd:
+          timeout: 1500
+      - runFlow:
+          when:
+            visible: "Elige un idioma / Choose a language"
+          commands:
+            - tapOn:
+                text: "Español / Spanish"
+            - waitForAnimationToEnd:
+                timeout: 1500
+- runFlow:
+    when:
+      visible: "Confirm|Confirmar|Aceptar"
+    commands:
+      - tapOn:
+          text: "Confirm|Confirmar|Aceptar"
+      - waitForAnimationToEnd:
+          timeout: 1500
+- runFlow:
+    when:
+      visible: "Allow|ALLOW|Permitir|Mientras la app está en uso|While using the app"
+    commands:
+      - tapOn:
+          text: "Allow|ALLOW|Permitir|Mientras la app está en uso|While using the app"
+- runFlow:
+    when:
+      visible: "No permitir|Don't Allow|Quizá después|Quizá más tarde|Más tarde|Cerrar|Omitir"
+    commands:
+      - tapOn:
+          text: "No permitir|Don't Allow|Quizá después|Quizá más tarde|Más tarde|Cerrar|Omitir"
+- runFlow:
+    when:
+      visible: "Save password to Google Password Manager?"
+    commands:
+      - tapOn:
+          text: "Not now|Never"

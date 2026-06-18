@@ -1,0 +1,42 @@
+# Proposito: validar cambio de metodo de pago en checkout sin completar compra.
+# Web parity: tests/regression/checkout/checkout-payment-method-switch.spec.js
+# Precondiciones: cuenta QA con direccion; carrito con producto.
+# Valida: seleccionar OXXO y cambiar a tarjeta sin llegar a "Revisa tu pedido".
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Checkout Payment Method Switch
+tags:
+  - regression
+  - checkout
+  - payments
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- runFlow: ../../reusable/advance-checkout-to-payment.yaml
+- scrollUntilVisible:
+    element:
+      text: "Otros métodos de pago"
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: "payment_holder"
+    below: "Otros métodos de pago"
+- waitForAnimationToEnd:
+    timeout: 3000
+- scrollUntilVisible:
+    element:
+      id: "ll_add_new_card"
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: "ll_add_new_card"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    text: "Agregar una nueva tarjeta|Número de tarjeta|Tarjeta"
+- assertVisible:
+    text: "Completa el pago"
+- assertNotVisible:
+    text: "Revisa tu pedido"

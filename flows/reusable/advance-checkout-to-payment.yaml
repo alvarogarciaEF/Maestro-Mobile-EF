@@ -1,0 +1,58 @@
+# Proposito: avanzar checkout desde telefono hasta pantalla de pago.
+# Precondiciones: checkout abierto; telefono confirmado o paso omitido si ya existe.
+# Valida: pantalla "Completa el pago" sin confirmar compra.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Advance Checkout To Payment
+---
+- runFlow:
+    when:
+      visible: "Confirma tu teléfono"
+    commands:
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Elige a quién enviarlo|Escoge un horario|Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Elige a quién enviarlo"
+    commands:
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Escoge un horario|Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Escoge un horario"
+    commands:
+      - tapOn:
+          point: "93%,50%"
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Dedicatoria"
+    commands:
+      - tapOn:
+          id: "checkbox_without_message"
+      - tapOn:
+          id: "checkbox_anonymous"
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible:
+            text: "Completa el pago"
+          timeout: 30000
+- assertVisible:
+    text: "Completa el pago"
+- assertVisible:
+    text: "Agregar una nueva tarjeta"
+- assertVisible:
+    id: "continueProcessBtn"

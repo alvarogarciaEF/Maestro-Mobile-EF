@@ -1,0 +1,19 @@
+# Proposito: valida login con Google desde Mi cuenta.
+# Precondiciones: GOOGLE_ACCOUNT_EMAIL configurado como cuenta Google del emulador/dispositivo.
+# Valida: acceso a una sesion autenticada.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Smoke - Login
+tags:
+  - smoke
+  - login
+---
+- runFlow: ../reusable/ensure-home.yaml
+- tapOn:
+    text: "Mi cuenta"
+- runFlow:
+    when:
+      visible: "Iniciar sesión"
+    file: ../reusable/login-valid-user.yaml
+- runFlow: ../reusable/close-modals.yaml
+- assertVisible:
+    text: "Mi perfil|Direcciones|Mis pedidos|Cerrar sesión"

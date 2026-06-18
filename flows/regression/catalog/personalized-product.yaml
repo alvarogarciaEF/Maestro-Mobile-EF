@@ -1,0 +1,44 @@
+# Proposito: validar PDP de producto personalizable (paridad parcial con web).
+# Precondiciones: DEEPLINK_PERSONALIZED_PRODUCT apunta a SKU personalizable en QA (default 26009).
+# Valida: seccion de personalizacion visible con CTA "Personalizar".
+# Nota: la carga de imagen usa picker nativo/WebView; no se automatiza en Maestro (alcance parcial).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Personalized Product
+tags:
+  - regression
+  - catalog
+  - personalization
+  - pdp
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- openLink:
+    link: ${DEEPLINK_PERSONALIZED_PRODUCT}
+    autoVerify: true
+- runFlow: ../../reusable/after-deeplink-launch.yaml
+- extendedWaitUntil:
+    visible:
+      id: "productImagesViewPager"
+    timeout: 60000
+- assertVisible:
+    id: "productImagesViewPager"
+- scrollUntilVisible:
+    element:
+      id: "personalization_holder"
+    direction: DOWN
+    timeout: 45000
+- assertVisible:
+    id: "personalization_holder"
+- assertVisible:
+    text: "Personalización"
+- assertVisible:
+    id: "ll_personalize_holder"
+- assertVisible:
+    text: "Personalizar"
+- scrollUntilVisible:
+    element:
+      id: "addToCartButton"
+    direction: DOWN
+    timeout: 30000
+- assertVisible:
+    id: "addToCartButton"

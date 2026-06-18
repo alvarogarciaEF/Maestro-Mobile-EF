@@ -1,0 +1,74 @@
+# Proposito: volver a la pestaña Inicio desde cualquier pantalla con bottom nav.
+# Precondiciones: app en primer plano.
+# Valida: Home principal con busqueda visible.
+# Nota: prioriza tap en Inicio; evita Back que puede ocultar el bottom nav.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Navigate Home Tab
+---
+- runFlow:
+    when:
+      visible:
+        id: "search_product_input"
+    commands:
+      - repeat:
+          times: 3
+          commands:
+            - runFlow:
+                when:
+                  visible:
+                    id: "search_product_input"
+                commands:
+                  - pressKey: Back
+                  - waitForAnimationToEnd:
+                      timeout: 800
+      - tapOn:
+          id: "action_main"
+      - waitForAnimationToEnd:
+          timeout: 1500
+- runFlow:
+    when:
+      visible:
+        id: "bottom_nav_view"
+      notVisible:
+        id: "toolbar_search"
+    commands:
+      - tapOn:
+          id: "action_main"
+      - waitForAnimationToEnd:
+          timeout: 1000
+- runFlow:
+    when:
+      visible:
+        text: "¿A dónde quieres enviar?"
+    commands:
+      - runFlow: select-city.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: "toolbar_search"
+    commands:
+      - launchApp:
+          stopApp: false
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - runFlow: close-startup-prompts.yaml
+      - runFlow:
+          when:
+            visible:
+              id: "bottom_nav_view"
+          commands:
+            - tapOn:
+                id: "action_main"
+            - waitForAnimationToEnd:
+                timeout: 1000
+- runFlow:
+    when:
+      visible:
+        text: "¿A dónde quieres enviar?"
+    commands:
+      - runFlow: select-city.yaml
+- runFlow: close-startup-prompts.yaml
+- extendedWaitUntil:
+    visible:
+      id: "toolbar_search"
+    timeout: 12000

@@ -1,0 +1,32 @@
+# Proposito: validar mensajes de campos obligatorios en login por correo.
+# Precondiciones: dialogo de login accesible desde Mi cuenta.
+# Valida: errores por correo/contrasena vacios sin iniciar sesion.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+  USER_DISPLAY_NAME: ${USER_DISPLAY_NAME || "QA Automation"}
+name: Regression - Login Empty Fields
+tags:
+  - regression
+  - auth
+  - negative
+---
+- clearState
+- runFlow: ../../reusable/open-login-dialog.yaml
+- tapOn:
+    id: "start_button"
+- assertVisible:
+    id: "loginEmailEditText"
+- assertVisible:
+    id: "loginPasswordEditText"
+- assertNotVisible:
+    text: "Mi perfil|${USER_DISPLAY_NAME}"
+- tapOn:
+    id: "loginEmailEditText"
+- inputText: ${USER_EMAIL}
+- tapOn:
+    id: "start_button"
+- assertVisible:
+    id: "loginPasswordEditText"
+- assertNotVisible:
+    text: "Mi perfil|${USER_DISPLAY_NAME}"

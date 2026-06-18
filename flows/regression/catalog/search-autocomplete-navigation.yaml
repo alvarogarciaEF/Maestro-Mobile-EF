@@ -1,0 +1,42 @@
+# Proposito: validar sugerencias de autocomplete y navegacion a PDP.
+# Web parity: tests/regression/catalog/search-autocomplete-navigation.spec.js (parcial)
+# Precondiciones: SEARCH_AUTOCOMPLETE_TERM genera sugerencias en QA.
+# Valida: secciones Productos/Categorias y apertura de detalle desde sugerencia.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Search Autocomplete Navigation
+tags:
+  - regression
+  - catalog
+  - search
+  - autocomplete
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- tapOn:
+    id: "toolbar_search"
+- assertVisible:
+    id: "search_product_input"
+- inputText: ${SEARCH_AUTOCOMPLETE_TERM}
+- extendedWaitUntil:
+    visible:
+      text: "Productos|Categorías"
+    timeout: 20000
+- assertVisible:
+    text: "Productos|Categorías"
+- runFlow:
+    when:
+      visible:
+        id: "rcv_search_products"
+    commands:
+      - tapOn:
+          id: "rcv_search_products"
+          point: "40%,50%"
+      - extendedWaitUntil:
+          visible:
+            id: "productImagesViewPager"
+          timeout: 45000
+      - assertVisible:
+          id: "productImagesViewPager"
+      - assertVisible:
+          id: "addToCartButton"

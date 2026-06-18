@@ -1,0 +1,18 @@
+# Proposito: valida que la app Android abra correctamente y cargue Home.
+# Precondiciones: app instalada y variables base de ambiente configuradas.
+# Valida: layout principal, toolbar, bottom navigation y bloque de ciudad/fecha.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Smoke - Launch App
+tags:
+  - smoke
+  - launch
+---
+- runFlow: ../reusable/ensure-home.yaml
+- assertVisible:
+    id: "layout_main"
+- assertVisible:
+    id: "main_toolbar"
+- assertVisible:
+    id: "bottom_nav_view"
+- assertVisible:
+    id: "location_date_holder"

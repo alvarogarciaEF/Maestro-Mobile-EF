@@ -1,0 +1,30 @@
+# Proposito: capturar codigo de seguridad/NIP cuando la app lo solicite en pago.
+# Precondiciones: modal o pantalla de codigo de seguridad visible despues de usar tarjeta.
+# Nota: usa 123 para CVV/CVC y 1234 para NIP, sin confirmar pago final.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Enter Card Security If Needed
+---
+- runFlow:
+    when:
+      visible: "Ingresa el CVV|CVV|CVC|Código de seguridad|Codigo de seguridad"
+    commands:
+      - tapOn:
+          point: "37%,49%"
+      - inputText: "123"
+      - runFlow:
+          when:
+            visible: "Pagar y completar compra|Continuar|Aceptar|Confirmar"
+          commands:
+            - tapOn: "Pagar y completar compra|Continuar|Aceptar|Confirmar"
+- runFlow:
+    when:
+      visible: "NIP"
+    commands:
+      - tapOn:
+          text: "NIP"
+      - inputText: "1234"
+      - runFlow:
+          when:
+            visible: "Continuar|Aceptar|Confirmar"
+          commands:
+            - tapOn: "Continuar|Aceptar|Confirmar"

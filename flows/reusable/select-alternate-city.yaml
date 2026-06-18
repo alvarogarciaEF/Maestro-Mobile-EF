@@ -1,0 +1,71 @@
+# Proposito: seleccionar estado y ciudad alternos desde Home.
+# Precondiciones: Home visible; ALTERNATE_STATE y ALTERNATE_CITY configurados.
+# Valida: ciudad alterna visible en el selector de envio.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Select Alternate City
+---
+- runFlow:
+    when:
+      visible:
+        text: "${ALTERNATE_CITY}"
+    commands:
+      - assertVisible:
+          text: "${ALTERNATE_CITY}"
+- runFlow:
+    when:
+      notVisible:
+        text: "${ALTERNATE_CITY}"
+    commands:
+      - runFlow: navigate-home-tab.yaml
+      - tapOn:
+          id: "state_and_city_container"
+      - extendedWaitUntil:
+          visible:
+            id: "search_store_and_city_input"
+          timeout: 15000
+      - runFlow:
+          when:
+            visible: "Estado"
+          commands:
+            - tapOn:
+                id: "txt_title"
+                text: "${ALTERNATE_STATE}"
+            - waitForAnimationToEnd:
+                timeout: 3000
+      - extendedWaitUntil:
+          visible:
+            id: "search_store_and_city_input"
+          timeout: 30000
+      - tapOn:
+          id: "search_store_and_city_input"
+      - inputText: ${ALTERNATE_CITY}
+      - hideKeyboard
+      - extendedWaitUntil:
+          visible:
+            text: "${ALTERNATE_CITY}"
+          timeout: 15000
+      - tapOn:
+          id: "txt_title"
+          text: "${ALTERNATE_CITY}"
+      - runFlow:
+          when:
+            visible:
+              text: "¿A dónde quieres enviar?"
+          commands:
+            - tapOn:
+                text: "${ALTERNATE_CITY}"
+            - waitForAnimationToEnd:
+                timeout: 5000
+            - runFlow:
+                when:
+                  visible:
+                    id: "btn_close"
+                commands:
+                  - tapOn:
+                      id: "btn_close"
+      - extendedWaitUntil:
+          visible:
+            text: "${ALTERNATE_CITY}"
+          timeout: 15000
+      - assertVisible:
+          text: ${ALTERNATE_CITY}

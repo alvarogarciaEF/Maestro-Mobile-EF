@@ -1,0 +1,29 @@
+# Proposito: validar flujo de dedicatoria desde carrito y checkout.
+# Web parity: tests/smoke/checkout/dedicatoria.spec.js
+# Precondiciones: usuario QA autenticado y producto disponible.
+# Valida: copy de dedicatoria en carrito y formulario en checkout.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Checkout Dedicatoria
+tags:
+  - regression
+  - checkout
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-cart-with-single-product.yaml
+- scrollUntilVisible:
+    element:
+      id: "btn_continue_shoppig_container"
+    direction: DOWN
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Añade tu dedicatoria en el siguiente paso."
+    commands:
+      - assertVisible:
+          text: "Añade tu dedicatoria en el siguiente paso."
+- assertVisible:
+    id: "btn_continue_shoppig_container"
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- runFlow: ../../reusable/advance-checkout-to-dedicatoria.yaml

@@ -1,0 +1,27 @@
+# Proposito: abrir la pestaña Mi cuenta desde cualquier pantalla con bottom nav.
+# Precondiciones: app en primer plano; bottom_nav_view accesible o recuperable.
+# Valida: pantalla de cuenta visible.
+# Nota: recover-app-context solo si la app perdio el bottom nav (p. ej. OAuth en Chrome).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Navigate Account Tab
+---
+- runFlow:
+    when:
+      notVisible:
+        id: "bottom_nav_view"
+    commands:
+      - runFlow: recover-app-context.yaml
+      - runFlow: navigate-home-tab.yaml
+- extendedWaitUntil:
+    visible:
+      id: "bottom_nav_view"
+    timeout: 15000
+- tapOn:
+    id: "action_account"
+- waitForAnimationToEnd:
+    timeout: 1500
+- runFlow: close-startup-prompts.yaml
+- extendedWaitUntil:
+    visible:
+      text: "Iniciar sesión|Mi perfil|Direcciones|Mis pedidos|Cerrar sesión"
+    timeout: 15000

@@ -1,0 +1,38 @@
+# Proposito: validar navegacion a centro de ayuda desde detalle de pedido.
+# Web parity: tests/regression/orders/order-help-faq.spec.js
+# Precondiciones: usuario autenticado con pedido que exponga "Ayuda con el pedido".
+# Valida: apertura del centro de ayuda nativo (parcial vs FAQ web).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Order Help FAQ
+tags:
+  - regression
+  - account
+  - orders
+  - help
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-first-order-detail.yaml
+- runFlow:
+    when:
+      notVisible: "Ayuda con el pedido|Help with.*order|Order help"
+    commands:
+      - scrollUntilVisible:
+          element:
+            text: "Ayuda con el pedido|Help with.*order|Order help"
+          direction: DOWN
+          timeout: 45000
+          visibilityPercentage: 50
+- tapOn:
+    text: "Ayuda con el pedido|Help with.*order|Order help"
+- extendedWaitUntil:
+    visible:
+      id: "tv_help_center_title"
+    timeout: 30000
+- assertVisible:
+    text: "Centro de Ayuda|Centro de ayuda|Help [Cc]enter"
+- assertVisible:
+    id: "tv_help_center_title"
+- assertVisible:
+    id: "rv_my_orders"

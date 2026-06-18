@@ -1,0 +1,66 @@
+# Proposito: dejar el carrito vacio antes de construir escenarios de cart/checkout.
+# Precondiciones: app instalada y Home accesible para la sesion actual.
+# Valida: estado final "Tu carrito esta vacio" y regreso a Home.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+  PRODUCT_NAME: ${PRODUCT_NAME}
+name: Reusable - Empty Cart If Needed
+---
+- runFlow:
+    when:
+      notVisible:
+        id: "location_date_holder"
+    commands:
+      - runFlow: navigate-home-tab.yaml
+- tapOn:
+    id: "toolbar_shoppingcart"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Tu carrito está vacío"
+    commands:
+      - tapOn:
+          id: "toolbar_arrow_left"
+      - assertVisible:
+          id: "location_date_holder"
+- runFlow:
+    when:
+      visible:
+        id: "btn_delete"
+    commands:
+      - tapOn:
+          id: "btn_delete"
+      - runFlow:
+          when:
+            visible: "Eliminar"
+          commands:
+            - tapOn: "Eliminar"
+      - waitForAnimationToEnd:
+          timeout: 3000
+      - runFlow:
+          when:
+            visible:
+              id: "btn_delete"
+          commands:
+            - tapOn:
+                id: "btn_delete"
+            - runFlow:
+                when:
+                  visible: "Eliminar"
+                commands:
+                  - tapOn: "Eliminar"
+            - waitForAnimationToEnd:
+                  timeout: 3000
+      - extendedWaitUntil:
+          visible: "Tu carrito está vacío"
+          timeout: 20000
+      - tapOn:
+          id: "toolbar_arrow_left"
+      - assertVisible:
+          id: "location_date_holder"

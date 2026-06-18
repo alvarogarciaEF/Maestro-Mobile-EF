@@ -1,0 +1,28 @@
+# Proposito: validar avance de checkout hasta seleccion de destinatario/direccion.
+# Precondiciones: usuario QA valido y producto disponible para busqueda.
+# Valida: progreso de checkout, contenedor de transaccion y boton continuar.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Checkout Address
+tags:
+  - regression
+  - checkout
+  - address
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- assertVisible:
+    text: "Confirma tu teléfono"
+- tapOn:
+    id: "continueProcessBtn"
+- extendedWaitUntil:
+    visible:
+      text: "Elige a quién enviarlo"
+    timeout: 30000
+- assertVisible:
+    text: "Elige a quién enviarlo"
+- assertVisible:
+    id: "transaction_container"
+- assertVisible:
+    id: "continueProcessBtn"

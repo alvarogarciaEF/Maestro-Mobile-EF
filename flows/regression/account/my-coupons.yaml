@@ -1,0 +1,31 @@
+# Proposito: validar acceso a Mis cupones desde Mi cuenta.
+# Web parity: tests/regression/clients/rewards-and-coupons.spec.js (parcial)
+# Precondiciones: usuario QA autenticado.
+# Valida: pantalla de cupones con filtros Disponibles/Usados/Vencidos.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - My Coupons
+tags:
+  - regression
+  - account
+  - coupons
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- scrollUntilVisible:
+    element:
+      text: "Mis cupones"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "Mis cupones"
+- extendedWaitUntil:
+    visible:
+      text: "Mis cupones"
+    timeout: 30000
+- assertVisible:
+    text: "Mis cupones"
+- assertVisible:
+    text: "Disponibles"
+- assertVisible:
+    text: "Usados|Vencidos"

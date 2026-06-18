@@ -1,0 +1,22 @@
+# Proposito: editar la fecha de entrega desde el carrito principal.
+# Precondiciones: carrito con al menos un producto y control de fecha visible.
+# Valida: calendario confirmado y resumen de compra disponible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Change Cart Delivery Date
+---
+- scrollUntilVisible:
+    element:
+      id: "date_and_delivery_container"
+    direction: UP
+    timeout: 15000
+- assertVisible:
+    id: "date_and_delivery_container"
+- tapOn:
+    id: "date_and_schedule_container"
+- runFlow: select-delivery-date.yaml
+- extendedWaitUntil:
+    visible:
+      id: "btn_continue_shoppig_container"
+    timeout: 15000
+- assertVisible:
+    id: "btn_continue_shoppig_container"

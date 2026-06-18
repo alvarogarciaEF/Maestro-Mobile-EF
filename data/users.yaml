@@ -1,0 +1,20 @@
+# Proposito: documentar perfiles de usuario QA esperados por la suite.
+# Uso: referencia no sensible; las credenciales reales deben venir de .env/secrets.
+# Nota: no versionar correos o passwords productivos.
+users:
+  valid:
+    email: qa.user@example.com
+    password: change-me
+    role: customer
+  locked:
+    email: locked.user@example.com
+    password: change-me
+    role: customer
+  guest:
+    email: guest.user@example.com
+    password: change-me
+    role: guest
+
+notes:
+  - Estos datos son dummy y no deben usarse como credenciales reales.
+  - Para ejecuciones reales, usar variables de ambiente o secretos del pipeline.

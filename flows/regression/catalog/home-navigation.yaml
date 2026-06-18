@@ -1,0 +1,28 @@
+# Proposito: validar rutas de categorias criticas desde el menu de categorias.
+# Web parity: tests/smoke/home/home-navigation.spec.js (equivalente mobile: pestaña Categorias).
+# Precondiciones: HOME_CATEGORY_* disponibles para DEFAULT_CITY.
+# Valida: cada categoria abre un listado con productos.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Home Navigation
+tags:
+  - regression
+  - catalog
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/select-home-delivery-date.yaml
+- runFlow:
+    file: ../../reusable/open-category-listing-from-tab.yaml
+    env:
+      CATEGORY_NAME: ${HOME_CATEGORY_BIRTHDAY}
+- runFlow: ../../reusable/navigate-home-tab.yaml
+- runFlow:
+    file: ../../reusable/open-category-listing-from-tab.yaml
+    env:
+      CATEGORY_NAME: ${HOME_CATEGORY_FLOWERS}
+- runFlow: ../../reusable/navigate-home-tab.yaml
+- runFlow:
+    file: ../../reusable/open-category-listing-from-tab.yaml
+    env:
+      CATEGORY_NAME: ${HOME_CATEGORY_GIFTS}

@@ -1,0 +1,33 @@
+# Proposito: validar que checkout bloquea avance con telefono vacio.
+# Precondiciones: usuario QA autenticado y producto en carrito.
+# Valida: permanece en "Confirma tu telefono" tras intentar continuar sin numero.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Checkout Phone Validation
+tags:
+  - regression
+  - checkout
+  - negative
+  - phone
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- assertVisible:
+    text: "Confirma tu teléfono"
+- assertVisible:
+    id: "add_phone_edit_text"
+- tapOn:
+    id: "add_phone_edit_text"
+- eraseText
+- hideKeyboard
+- tapOn:
+    id: "continueProcessBtn"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Confirma tu teléfono"
+- assertVisible:
+    id: "add_phone_edit_text"
+- assertNotVisible:
+    text: "Elige a quién enviarlo"

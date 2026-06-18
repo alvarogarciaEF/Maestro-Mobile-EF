@@ -1,0 +1,19 @@
+# Proposito: validar cierre de sesion y regreso a estado invitado.
+# Web parity: tests/smoke/auth/logout.spec.js
+# Precondiciones: USER_EMAIL y USER_PASSWORD validos en .env.
+# Valida: "Iniciar sesion" visible tras cerrar sesion.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Logout
+tags:
+  - regression
+  - auth
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/logout.yaml
+- runFlow: ../../reusable/navigate-account-tab.yaml
+- assertVisible:
+    text: "Iniciar sesión"
+- assertNotVisible:
+    text: "Mi perfil|Cerrar sesión"

@@ -1,0 +1,18 @@
+# Proposito: completar el intento de pago desde el modal actual de CVV.
+# Precondiciones: app detenida en el modal "Ingresa el CVV" despues de confirmar compra.
+# Valida: captura evidencia posterior a enviar el CVV y tocar pagar.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Validacion de bines - completar CVV intento actual
+tags:
+  - special
+  - checkout
+  - payment
+  - bines
+---
+- assertVisible:
+    text: "Ingresa el CVV|CVV|CVC"
+- runFlow: ../reusable/enter-card-security-if-needed.yaml
+- waitForAnimationToEnd:
+    timeout: 25000
+- takeScreenshot:
+    path: "bines-payment-attempt-6msi-final-${BIN_NUMBER}"

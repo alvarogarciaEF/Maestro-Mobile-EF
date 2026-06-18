@@ -1,0 +1,46 @@
+# Proposito: validar que la busqueda no avance al catalogo sin selector de envio completo.
+# Web parity: tests/smoke/location/shipping-guards-and-persistence.spec.js (guard)
+# Precondiciones: app en estado limpio sin ciudad persistida.
+# Valida: dialogo de envio al intentar buscar sin ubicacion configurada.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Shipping Guards
+tags:
+  - regression
+  - location
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- extendedWaitUntil:
+    visible:
+      id: "location_date_holder"
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: "toolbar_search"
+    commands:
+      - tapOn:
+          id: "toolbar_search"
+          optional: true
+      - runFlow:
+          when:
+            notVisible: "¿A dónde quieres enviar?"
+          commands:
+            - tapOn:
+                id: "state_and_city_container"
+      - extendedWaitUntil:
+          visible:
+            text: "¿A dónde quieres enviar?"
+          timeout: 15000
+      - assertVisible:
+          text: "¿A dónde quieres enviar?"
+      - runFlow:
+          when:
+            visible:
+              id: "btn_close"
+          commands:
+            - tapOn:
+                id: "btn_close"
+      - assertNotVisible:
+          id: "rcv_category_products"

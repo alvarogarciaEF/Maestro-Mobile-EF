@@ -1,0 +1,46 @@
+# Proposito: buscar un producto y abrir su detalle desde Home.
+# Precondiciones: ciudad configurada; PRODUCT_SEARCH_TERM y PRODUCT_NAME vigentes.
+# Valida: listado de resultados y PDP con bloques criticos visibles.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+  PRODUCT_SEARCH_TERM: ${PRODUCT_SEARCH_TERM || "rosas"}
+  PRODUCT_NAME: ${PRODUCT_NAME || "Clásico Amor con 24 Rosas Rojas"}
+name: Reusable - Search Open Product
+---
+- runFlow: ensure-home.yaml
+- tapOn:
+    id: "toolbar_search"
+- extendedWaitUntil:
+    visible:
+      id: "search_product_input"
+    timeout: 10000
+- inputText: ${PRODUCT_SEARCH_TERM}
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    text: "Resultados|Resultados para"
+- extendedWaitUntil:
+    visible:
+      text: ${PRODUCT_NAME}
+    timeout: 30000
+- tapOn:
+    text: ${PRODUCT_NAME}
+- extendedWaitUntil:
+    visible:
+      id: "productImagesViewPager"
+    timeout: 45000
+- scrollUntilVisible:
+    element:
+      id: "dateNdeliveryContainer"
+    direction: DOWN
+    timeout: 30000
+- assertVisible:
+    id: "dateNdeliveryContainer"
+- assertVisible:
+    id: "addToCartButton"

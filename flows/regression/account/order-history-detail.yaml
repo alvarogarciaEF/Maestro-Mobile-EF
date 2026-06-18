@@ -1,0 +1,27 @@
+# Proposito: validar acceso a detalle de pedido cuando existe historial.
+# Precondiciones: usuario QA autenticado; idealmente con al menos un pedido previo.
+# Valida: accion Ver pedido/detalle y pantalla de detalle; si no hay pedidos valida estado vacio.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Order History Detail
+tags:
+  - regression
+  - account
+  - orders
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-first-order-detail.yaml
+- runFlow:
+    when:
+      visible: "Menciona este número de referencia|Menciona el número de referencia"
+    commands:
+      - assertVisible:
+          text: "Menciona este número de referencia|Menciona el número de referencia"
+      - assertVisible:
+          text: "Monto a pagar|Referencia"
+- runFlow:
+    when:
+      visible: "Tus regalos son los mejores"
+    commands:
+      - assertVisible:
+          text: "Aquí podrás encontrar los pedidos que hagas"

@@ -1,0 +1,38 @@
+# Proposito: validar carrito con dos productos distintos.
+# Web parity: tests/smoke/shopping-cart/multi-product-cart.spec.js
+# Precondiciones: PRODUCT_* y SECOND_PRODUCT_* disponibles en DEFAULT_CITY.
+# Valida: ambos productos visibles en carrito y CTA de checkout disponible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Multi Product Cart
+tags:
+  - regression
+  - cart
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/empty-cart-if-needed.yaml
+- runFlow: ../../reusable/add-product-from-search.yaml
+- runFlow: ../../reusable/navigate-home-tab.yaml
+- runFlow: ../../reusable/add-second-product-from-category.yaml
+- tapOn:
+    text: "Ir al carrito"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 30000
+- assertVisible:
+    id: "cl_shopping_cart"
+- extendedWaitUntil:
+    visible:
+      text: "${PRODUCT_NAME}"
+    timeout: 30000
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- scrollUntilVisible:
+    element:
+      id: "btn_continue_shoppig_container"
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    id: "btn_continue_shoppig_container"

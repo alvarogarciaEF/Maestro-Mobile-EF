@@ -1,0 +1,15 @@
+# Proposito: validar continuidad del flujo de envio desde Home hasta PDP.
+# Web parity: tests/smoke/location/shipping-guards-and-persistence.spec.js (happy path)
+# Precondiciones: DEFAULT_STATE, DEFAULT_CITY, PRODUCT_SEARCH_TERM y PRODUCT_NAME vigentes.
+# Valida: ciudad/fecha seleccionadas, busqueda a PDP y CTA comercial visible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Shipping Flow Home To PDP
+tags:
+  - regression
+  - location
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/select-home-delivery-date.yaml
+- runFlow: ../../reusable/search-open-product.yaml

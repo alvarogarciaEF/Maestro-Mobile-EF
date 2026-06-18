@@ -1,0 +1,21 @@
+# Proposito: avanzar del carrito al flujo de checkout (paso telefono o siguiente).
+# Precondiciones: carrito con producto y boton continuar visible.
+# Valida: contenedor de transaccion y boton continuar del checkout.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open Checkout From Cart
+---
+- scrollUntilVisible:
+    element:
+      id: "btn_continue_shoppig_container"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: "btn_continue_shoppig_container"
+- extendedWaitUntil:
+    visible:
+      id: "transaction_container"
+    timeout: 30000
+- assertVisible:
+    id: "transaction_container"
+- assertVisible:
+    id: "continueProcessBtn"

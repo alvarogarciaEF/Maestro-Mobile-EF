@@ -1,0 +1,22 @@
+# Proposito: abrir Mis cupones desde la pestaña Mi cuenta.
+# Precondiciones: usuario autenticado; app con bottom nav accesible.
+# Valida: pantalla Mis cupones con filtro Disponibles visible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open My Coupons
+---
+- runFlow: navigate-account-tab.yaml
+- scrollUntilVisible:
+    element:
+      text: "Mis cupones"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "Mis cupones"
+- extendedWaitUntil:
+    visible:
+      text: "Mis cupones"
+    timeout: 30000
+- assertVisible:
+    text: "Mis cupones"
+- assertVisible:
+    text: "Disponibles"

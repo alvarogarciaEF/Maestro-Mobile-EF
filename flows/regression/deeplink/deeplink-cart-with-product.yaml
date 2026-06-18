@@ -1,0 +1,28 @@
+# Proposito: validar deeplink de carrito con producto previamente agregado.
+# Precondiciones: producto disponible para setup-cart-with-product.
+# Valida: carrito con PRODUCT_NAME visible tras abrir /shoppingcart.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Deeplink Cart With Product
+tags:
+  - regression
+  - deeplink
+  - cart
+---
+- clearState
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- tapOn:
+    id: "toolbar_arrow_left"
+- openLink:
+    link: ${DEEPLINK_CART}
+    autoVerify: true
+- runFlow: ../../reusable/after-deeplink-launch.yaml
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 45000
+- assertVisible:
+    id: "cl_shopping_cart"
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- assertVisible:
+    id: "btn_continue_shoppig_container"

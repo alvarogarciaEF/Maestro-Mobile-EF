@@ -1,0 +1,24 @@
+# Proposito: abrir listado desde la pestaña Categorias (equivalente mobile al megamenu web).
+# Precondiciones: CATEGORY_NAME existe en el menu de categorias.
+# Valida: listado de productos y filtros visibles.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open Category Listing From Tab
+---
+- tapOn:
+    text: "Categorías"
+- extendedWaitUntil:
+    visible:
+      id: "recyclerViewCategory"
+    timeout: 15000
+- tapOn:
+    text: ${CATEGORY_NAME}
+- tapOn:
+    text: "Ver todo"
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    id: "ll_filter_and_sort"

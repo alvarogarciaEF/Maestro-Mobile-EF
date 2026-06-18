@@ -1,0 +1,39 @@
+# Configuracion base del framework.
+# Proposito: documentar rutas, variables y convenciones globales de la suite.
+# Uso: este archivo no reemplaza .env; sirve como mapa tecnico del framework.
+# Nota: los scripts ejecutan suites con `maestro test <directorio>` para mantener
+# compatibilidad simple con Maestro CLI. Este archivo documenta convenciones
+# globales y puede adaptarse si tu version de Maestro soporta config externa.
+
+framework:
+  name: qa-mobile-enviaflores
+  type: mobile-enviaflores
+
+flows:
+  smoke: flows/smoke
+  regression: flows/regression
+  reusable: flows/reusable
+  utils: flows/utils
+
+env:
+  # Valores por defecto para Maestro Studio (no usa npm/lib.sh ni .env automaticamente).
+  # Sobrescribe en .env y arranca Studio con: npm run maestro:studio
+  # Los scripts npm pasan -e desde .env y pueden anular estos valores.
+  APP_ID_ANDROID: com.enviaflores.android
+  APP_ID_IOS: com.enviaflores.ios
+  DEFAULT_STATE: "Nuevo León"
+  DEFAULT_CITY: Monterrey
+  PRODUCT_SEARCH_TERM: rosas
+  PRODUCT_NAME: "Clásico Amor con 24 Rosas Rojas"
+  CATEGORY_NAME: "Cumpleaños"
+  DEEPLINK_HOME: enviaflores://
+  USER_EMAIL: qa.user@example.com
+  USER_PASSWORD: change-me
+
+testOutputDir: reports
+
+# Android usa APP_ID_ANDROID en los encabezados de flows.
+# Valor actual de referencia para la app Android: com.enviaflores.android.
+# iOS usa APP_ID_IOS en los encabezados de flows cuando se ejecuta la suite iOS.
+# Valor actual de referencia para la app iOS: com.enviaflores.ios.
+# Si tu app usa bundle ids distintos por ambiente, define esos valores en .env.

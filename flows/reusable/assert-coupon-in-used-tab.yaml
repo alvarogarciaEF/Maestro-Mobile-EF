@@ -1,0 +1,29 @@
+# Proposito: validar que un cupon aparece en la pestaña Usados de Mis cupones.
+# Precondiciones: pantalla Mis cupones abierta; COUPON_CODE es el codigo esperado.
+# Valida: tab Usados activo y codigo del cupon visible (no estado vacio).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  COUPON_CODE: ${COUPON_CODE}
+name: Reusable - Assert Coupon In Used Tab
+---
+- assertVisible:
+    text: "Usados"
+- tapOn:
+    text: "Usados"
+- waitForAnimationToEnd:
+    timeout: 2000
+- extendedWaitUntil:
+    visible:
+      text: "Código: ${COUPON_CODE}"
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      text: "Código: ${COUPON_CODE}"
+    direction: DOWN
+    timeout: 20000
+- assertVisible:
+    text: "Código: ${COUPON_CODE}"
+- assertNotVisible:
+    text: "Aquí aparecerán todos los cupones que apliques en tus compras"
+- assertNotVisible:
+    text: "Aún no usas ningún cupón"

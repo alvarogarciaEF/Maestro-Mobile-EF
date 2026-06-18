@@ -1,0 +1,41 @@
+# Proposito: validar creacion de recordatorio desde Mi cuenta.
+# Web parity: tests/regression/clients/reminder-create.spec.js (create)
+# Precondiciones: usuario QA autenticado; REMINDER_TITLE unico en .env.
+# Valida: recordatorio guardado y visible en la lista.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Reminder Create
+tags:
+  - regression
+  - account
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-reminders-screen.yaml
+- tapOn:
+    text: "Agregar una nueva fecha|Add a new date|Add new date"
+- extendedWaitUntil:
+    visible:
+      id: "et_title"
+    timeout: 15000
+- runFlow: ../../reusable/fill-reminder-form.yaml
+- tapOn:
+    id: "btn_save_container"
+- extendedWaitUntil:
+    visible:
+      text: "Agregar una nueva fecha|Add a new date"
+    timeout: 15000
+- runFlow:
+    when:
+      notVisible: "QA Recordatorio [0-9]+|${REMINDER_TITLE}"
+    commands:
+      - scrollUntilVisible:
+          element:
+            text: "QA Recordatorio [0-9]+|${REMINDER_TITLE}"
+          direction: DOWN
+          timeout: 30000
+          visibilityPercentage: 50
+- assertVisible:
+    text: "QA Recordatorio [0-9]+|${REMINDER_TITLE}"
+- assertVisible:
+    text: "Enviar un regalo|Send a gift"

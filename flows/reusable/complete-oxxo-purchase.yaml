@@ -1,0 +1,28 @@
+# Proposito: confirmar compra OXXO y esperar pantalla de referencia de pago.
+# Precondiciones: revision de pedido con CTA "Completar compra" visible.
+# Valida: instrucciones OXXO y referencia de pago en la app nativa.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Complete OXXO Purchase
+---
+- tapOn:
+    id: "continueProcessBtn"
+- waitForAnimationToEnd:
+    timeout: 8000
+- extendedWaitUntil:
+    visible:
+      id: "reference_oxxo"
+    timeout: 120000
+- runFlow:
+    when:
+      notVisible:
+        id: "reference_oxxo"
+    commands:
+      - runFlow: recover-app-context.yaml
+      - extendedWaitUntil:
+          visible:
+            id: "reference_oxxo"
+          timeout: 30000
+- assertVisible:
+    id: "reference_oxxo"
+- assertVisible:
+    text: "Menciona este número de referencia en caja."

@@ -1,0 +1,51 @@
+# Proposito: iniciar sesion con Google usando la cuenta QA configurada en el dispositivo.
+# Precondiciones: el usuario ya esta en Mi cuenta, ve "Iniciar sesion" y la cuenta Google existe en el emulador/dispositivo.
+# Valida: senales de sesion autenticada en Mi cuenta.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Login Valid User
+---
+- tapOn:
+    text: "Iniciar sesión"
+- assertVisible:
+    id: "google_login"
+- tapOn:
+    id: "google_login"
+    retryTapIfNoChange: false
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "android:id/button1"
+    timeout: 30000
+- tapOn:
+    id: "android:id/button1"
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    visible:
+      text: "Choose an account|Elegir una cuenta|Mi perfil|Direcciones|Cerrar sesión"
+    timeout: 30000
+- runFlow:
+    when:
+      visible: "Choose an account|Elegir una cuenta|to continue to EnviaFlores"
+    commands:
+      - tapOn:
+          text: "${GOOGLE_ACCOUNT_EMAIL}"
+          retryTapIfNoChange: false
+- waitForAnimationToEnd:
+    timeout: 10000
+- runFlow:
+    when:
+      visible: "Make Chrome your own|Save time, type less|Sign in to get your bookmarks"
+    commands:
+      - tapOn:
+          text: "No thanks|No, gracias|Use without an account|Usar sin una cuenta"
+          retryTapIfNoChange: false
+- runFlow: recover-app-context.yaml
+- tapOn:
+    text: "Mi cuenta"
+    optional: true
+- runFlow: close-modals.yaml
+- extendedWaitUntil:
+    visible:
+      text: "Mi perfil|Direcciones|Mis pedidos|Cerrar sesión"
+    timeout: 45000

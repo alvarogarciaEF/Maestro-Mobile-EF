@@ -1,0 +1,60 @@
+# Proposito: centralizar datos dummy de negocio usados por flows Maestro.
+# Uso: documenta defaults sugeridos; los valores sensibles o cambiantes van en .env.
+# Nota: no usar datos de pago reales ni informacion personal productiva.
+location:
+  defaultState: Nuevo León
+  defaultCity: Monterrey
+
+catalog:
+  searchTerm: rosas
+  productName: Clásico Amor con 24 Rosas Rojas
+  secondProductSearchTerm: globo
+  secondProductName: Globo Esfera Magenta con Rosas
+  searchNoResultsTerm: zzzqa-sin-resultados-999
+  productUnavailableSearchTerm: rosas
+  productUnavailableName: SKU no disponible QA
+  categoryName: Cumpleaños
+  homeCategoryBirthday: Cumpleaños
+  homeCategoryFlowers: Flores y plantas
+  homeCategoryGifts: Regalos
+
+location:
+  alternateState: Jalisco
+  alternateCity: Guadalajara
+
+account:
+  reminderTitle: QA Recordatorio Maestro
+
+auth:
+  invalidPassword: wrong-password-qa
+
+cart:
+  invalidCouponCode: QA-CUPON-INVALIDO
+  validCouponCode: ALE
+  validCouponCodes:
+    - ALE       # 15% OFF
+    - MOACYR15  # 15% OFF
+  couponSelection: random
+  couponDiscountPercent: 15
+
+deeplinks:
+  home: enviaflores://
+  category: https://www.enviaflores.com/florerias-nuevo-leon/monterrey/cumpleanos
+  product: https://www.enviaflores.com/product/001
+  cart: https://www.enviaflores.com/shoppingcart
+  faq: https://www.enviaflores.com/faq
+
+checkout:
+  shippingAddress:
+    alias: Casa QA
+    street: Calle Dummy 123
+    postalCode: "64000"
+    city: Monterrey
+    state: Nuevo León
+  payment:
+    mode: sandbox
+    note: No ejecutar pagos reales desde flows automatizados.
+
+profile:
+  firstName: QA
+  lastName: Automation

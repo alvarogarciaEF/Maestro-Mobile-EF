@@ -1,0 +1,17 @@
+# Proposito: elegir cupon QA al azar entre ALE y MOACYR15 (15% OFF).
+# Nota: la seleccion vive inline en apply-coupon-valid.yaml porque output no
+#       propaga entre subflows Maestro. Usar este archivo como referencia.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  VALID_COUPON_CODE: ${VALID_COUPON_CODE || ""}
+  QA_COUPON_CODE_1: ${QA_COUPON_CODE_1 || "ALE"}
+  QA_COUPON_CODE_2: ${QA_COUPON_CODE_2 || "MOACYR15"}
+name: Reusable - Select Random QA Coupon
+---
+- evalScript: |
+    const coupons = ["${QA_COUPON_CODE_1}", "${QA_COUPON_CODE_2}"];
+    const override = "${VALID_COUPON_CODE}".trim();
+    output.couponCode = override.length > 0
+      ? override
+      : coupons[Math.floor(Math.random() * coupons.length)];
+    console.log("Cupon QA seleccionado " + output.couponCode);

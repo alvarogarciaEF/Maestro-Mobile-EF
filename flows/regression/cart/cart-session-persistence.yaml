@@ -1,0 +1,41 @@
+# Proposito: validar que el carrito autenticado persiste tras relanzar app y re-login.
+# Web parity: tests/smoke/shopping-cart/cart-session-persistence.spec.js (parcial)
+# Precondiciones: USER_EMAIL/USER_PASSWORD validos; PRODUCT_NAME disponible.
+# Valida: producto en carrito tras relaunch y tras logout + login.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Cart Session Persistence
+tags:
+  - regression
+  - cart
+  - auth
+  - session
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- launchApp:
+    stopApp: false
+- waitForAnimationToEnd:
+    timeout: 5000
+- runFlow: ../../reusable/close-modals.yaml
+- tapOn:
+    id: "toolbar_shoppingcart"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 30000
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- runFlow: ../../reusable/logout.yaml
+- runFlow: ../../reusable/login-email-password.yaml
+- tapOn:
+    id: "toolbar_shoppingcart"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 30000
+- assertVisible:
+    text: ${PRODUCT_NAME}

@@ -1,0 +1,35 @@
+# Proposito: abrir detalle de un pedido cancelable (pago pendiente) en Mis pedidos.
+# Precondiciones: usuario autenticado; al menos un pedido con pago pendiente en historial.
+# Valida: detalle de pedido con acciones de pedido visibles.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open Cancelable Order Detail
+---
+- scrollUntilVisible:
+    element:
+      text: "Mis pedidos"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: "Mis pedidos"
+- extendedWaitUntil:
+    visible:
+      id: "my_orders_fragment_compose_view"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: "Pedido: [0-9]+"
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: "Pago pendiente|Pending payment"
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    text: "Pago pendiente|Pending payment"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: "Pedido #[0-9]+|Datos de envío|Pedido realizado:|Shipping details"
+    timeout: 30000
+- assertVisible:
+    text: "Pedido #[0-9]+|Datos de envío|Pedido realizado:|Shipping details"

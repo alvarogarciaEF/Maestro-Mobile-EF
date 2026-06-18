@@ -1,0 +1,22 @@
+# Proposito: confirmar la pantalla actual de revision para ejecutar un intento de pago controlado.
+# Precondiciones: app detenida en "Revisa tu pedido" con metodo de pago y plan MSI ya seleccionados.
+# Valida: captura evidencia posterior al intento para revisar respuesta de pago o mensaje de error.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Validacion de bines - confirmar intento de pago actual
+tags:
+  - special
+  - checkout
+  - payment
+  - bines
+---
+- assertVisible:
+    text: "Revisa tu pedido"
+- assertVisible:
+    text: ".*6 meses.*|.*6 MSI.*|.*6 mensualidades.*"
+- tapOn:
+    text: "Completar compra"
+- runFlow: ../reusable/enter-card-security-if-needed.yaml
+- waitForAnimationToEnd:
+    timeout: 20000
+- takeScreenshot:
+    path: "bines-payment-attempt-6msi-result-${BIN_NUMBER}"

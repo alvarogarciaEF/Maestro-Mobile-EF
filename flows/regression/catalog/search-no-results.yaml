@@ -1,0 +1,27 @@
+# Proposito: validar busqueda sin resultados y fallback a mas vendidos.
+# Precondiciones: SEARCH_NO_RESULTS_TERM no debe coincidir con productos activos en DEFAULT_CITY.
+# Valida: ausencia del producto esperado y seccion de mas vendidos visible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Search No Results
+tags:
+  - regression
+  - catalog
+  - search
+  - negative
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- tapOn:
+    id: "toolbar_search"
+- assertVisible:
+    id: "search_product_input"
+- inputText: ${SEARCH_NO_RESULTS_TERM}
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      text: "Más vendidos|mas vendidos|más vendidos|Más buscados"
+    timeout: 30000
+- assertVisible:
+    text: "Más vendidos|mas vendidos|más vendidos|Más buscados"
+- assertNotVisible:
+    text: ${PRODUCT_NAME}

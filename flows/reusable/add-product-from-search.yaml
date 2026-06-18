@@ -1,0 +1,43 @@
+# Proposito: agregar al carrito el producto configurado desde busqueda.
+# Precondiciones: PRODUCT_SEARCH_TERM y PRODUCT_NAME existen para la ciudad actual.
+# Valida: que despues de elegir fecha aparezca la accion "Ir al carrito".
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+  PRODUCT_SEARCH_TERM: ${PRODUCT_SEARCH_TERM || "rosas"}
+  PRODUCT_NAME: ${PRODUCT_NAME}
+name: Reusable - Add Product From Search
+---
+- runFlow:
+    when:
+      notVisible:
+        id: "location_date_holder"
+    commands:
+      - runFlow: navigate-home-tab.yaml
+- tapOn:
+    id: "toolbar_search"
+- extendedWaitUntil:
+    visible:
+      id: "search_product_input"
+    timeout: 10000
+- inputText: ${PRODUCT_SEARCH_TERM}
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 15000
+- tapOn:
+    text: ${PRODUCT_NAME}
+- extendedWaitUntil:
+    visible:
+      id: "addToCartButton"
+    timeout: 15000
+- tapOn:
+    id: "addToCartButton"
+- runFlow: select-delivery-date.yaml
+- extendedWaitUntil:
+    visible:
+      text: "Ir al carrito"
+    timeout: 15000

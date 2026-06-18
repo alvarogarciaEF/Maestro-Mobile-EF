@@ -1,0 +1,54 @@
+# Proposito: subir cantidad hasta habilitar "Continuar compra" (minimo ~$1000).
+# Precondiciones: carrito abierto con el producto y btn_plus_quantity accesible.
+# Valida: btn_continue_shoppig_container visible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Reach Cart Checkout Ready
+---
+- scrollUntilVisible:
+    element:
+      id: "btn_plus_quantity"
+    direction: DOWN
+    timeout: 12000
+- runFlow:
+    when:
+      notVisible:
+        id: "btn_continue_shoppig_container"
+    commands:
+      - tapOn:
+          id: "btn_plus_quantity"
+      - waitForAnimationToEnd:
+          timeout: 1500
+- runFlow:
+    when:
+      notVisible:
+        id: "btn_continue_shoppig_container"
+    commands:
+      - tapOn:
+          id: "btn_plus_quantity"
+      - waitForAnimationToEnd:
+          timeout: 1500
+- runFlow:
+    when:
+      notVisible:
+        id: "btn_continue_shoppig_container"
+    commands:
+      - tapOn:
+          id: "btn_plus_quantity"
+      - waitForAnimationToEnd:
+          timeout: 1500
+- runFlow:
+    when:
+      notVisible:
+        id: "btn_continue_shoppig_container"
+    commands:
+      - tapOn:
+          id: "btn_plus_quantity"
+      - waitForAnimationToEnd:
+          timeout: 1500
+- scrollUntilVisible:
+    element:
+      id: "btn_continue_shoppig_container"
+    direction: DOWN
+    timeout: 12000
+- assertVisible:
+    id: "btn_continue_shoppig_container"

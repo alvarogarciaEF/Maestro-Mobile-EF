@@ -1,0 +1,33 @@
+# Proposito: validar que doble tap en "Completar compra" no rompe la confirmacion OXXO.
+# Web parity: tests/regression/purchase/oxxo-no-double-purchase.spec.js (parcial; sin interceptar API).
+# Precondiciones: usuario QA autenticado; OXXO habilitado en backend QA.
+# Valida: pantalla de referencia OXXO tras doble submit y ausencia de CTA de compra repetida.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - OXXO No Double Purchase
+tags:
+  - regression
+  - checkout
+  - payments
+  - oxxo
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- runFlow: ../../reusable/advance-checkout-to-oxxo-review.yaml
+- assertVisible:
+    text: "Completar compra"
+- doubleTapOn:
+    id: "continueProcessBtn"
+- waitForAnimationToEnd:
+    timeout: 8000
+- runFlow: ../../reusable/recover-app-context.yaml
+- extendedWaitUntil:
+    visible:
+      text: "Menciona este número de referencia en caja"
+    timeout: 120000
+- assertVisible:
+    text: "Menciona este número de referencia en caja"
+- assertNotVisible:
+    text: "Completar compra"

@@ -1,0 +1,49 @@
+# Proposito: validar cupon QA aplicado en carrito, checkout OXXO y aparicion en Mis cupones > Usados.
+# Web parity: tests/regression/clients/rewards-and-coupons.spec.js (parcial)
+# Precondiciones: usuario QA autenticado; cupon ALE o MOACYR15 vigente (VALID_COUPON_CODE).
+# Nota: crea pedido OXXO real en QA; cada corrida consume el cupon al confirmar compra.
+# Nota: la pestaña Usados puede tardar en sincronizar tras OXXO pendiente; el assert espera hasta 90s.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  VALID_COUPON_CODE: ${VALID_COUPON_CODE || "ALE"}
+name: Regression - Coupon Used After Purchase
+tags:
+  - regression
+  - account
+  - cart
+  - coupon
+  - checkout
+  - payments
+  - oxxo
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- runFlow:
+    file: ../../reusable/apply-cart-coupon.yaml
+    env:
+      COUPON_CODE: ${VALID_COUPON_CODE}
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- runFlow: ../../reusable/advance-checkout-to-oxxo-review.yaml
+- scrollUntilVisible:
+    element:
+      text: "Cupón"
+    direction: DOWN
+    timeout: 20000
+- assertVisible:
+    text: "Cupón"
+- assertVisible:
+    text: ${VALID_COUPON_CODE}
+- assertVisible:
+    text: "-\\$[0-9,]+"
+- runFlow: ../../reusable/complete-oxxo-purchase.yaml
+- assertVisible:
+    id: "reference_oxxo"
+- assertVisible:
+    text: "Menciona este número de referencia en caja."
+- runFlow: ../../reusable/open-my-coupons.yaml
+- runFlow:
+    file: ../../reusable/assert-coupon-in-used-tab.yaml
+    env:
+      COUPON_CODE: ${VALID_COUPON_CODE}

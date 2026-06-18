@@ -1,0 +1,29 @@
+# Mobile app binaries
+apps/android/*.apk
+apps/ios/*.app
+
+# Local environment
+.env
+
+# Reports and test output
+reports/*
+!reports/.gitkeep
+test-results/
+
+# Dependencies
+node_modules/
+
+# Keep empty app folders
+!apps/android/.gitkeep
+!apps/ios/.gitkeep
+
+# OS temporary files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo

@@ -1,0 +1,40 @@
+# Proposito: validar regreso del PDP al listado de categoria con filtros.
+# Web parity: tests/regression/catalog/catalog-pdp-back-navigation.spec.js
+# Precondiciones: CATEGORY_NAME con productos listados.
+# Valida: listado visible antes y despues de abrir PDP y presionar Atras.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - PDP Back Navigation
+tags:
+  - regression
+  - catalog
+  - pdp
+  - navigation
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/open-category-listing-from-tab.yaml
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- tapOn:
+    id: "rcv_category_products"
+    point: "50%,35%"
+- extendedWaitUntil:
+    visible:
+      id: "productImagesViewPager"
+    timeout: 45000
+- assertVisible:
+    id: "addToCartButton"
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    id: "ll_filter_and_sort"
+- assertVisible:
+    text: ".* productos"

@@ -1,0 +1,74 @@
+# Proposito: dejar al usuario autenticado sin importar si ya habia sesion.
+# Precondiciones: app instalada; USER_EMAIL/USER_PASSWORD en env (Studio o npm/.env).
+# Valida: senales de sesion autenticada en Mi cuenta.
+# Nota: recover-app-context solo tras login Google; evita relanzar la app si ya hay sesion.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+  USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+  GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
+name: Reusable - Ensure Logged In
+---
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow: close-pre-login-prompts.yaml
+- waitForAnimationToEnd:
+    timeout: 1000
+- runFlow: close-pre-login-prompts.yaml
+- runFlow:
+    when:
+      visible: "Iniciar Sesión|Iniciar sesión"
+    commands:
+      - runFlow:
+          file: login-from-onboarding.yaml
+          env:
+            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+            USER_EMAIL: ${USER_EMAIL}
+            USER_PASSWORD: ${USER_PASSWORD}
+- runFlow:
+    file: ensure-home.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- runFlow:
+    file: navigate-account-tab.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- runFlow:
+    when:
+      visible: "Iniciar sesión"
+    commands:
+      - runFlow:
+          file: login-email-password.yaml
+          env:
+            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+            USER_EMAIL: ${USER_EMAIL}
+            USER_PASSWORD: ${USER_PASSWORD}
+      - runFlow:
+          when:
+            visible: "Iniciar sesión"
+          commands:
+            - runFlow:
+                file: login-valid-user.yaml
+                env:
+                  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+                  GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
+            - runFlow: recover-app-context.yaml
+            - runFlow:
+                file: navigate-account-tab.yaml
+                env:
+                  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+                  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+                  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- extendedWaitUntil:
+    visible:
+      text: "Mi perfil|Direcciones|Mis pedidos|Cerrar sesión"
+    timeout: 18000

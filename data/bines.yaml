@@ -1,0 +1,405 @@
+# Proposito: dataset de BINes a validar en el flujo especial de metodo de pago.
+# Precondiciones: cada BIN debe conservarse como texto para no perder ceros iniciales.
+# Nota: msi_allowed indica si la app deberia mostrar opciones de meses sin intereses.
+# Nota: payment_action controla si el flow solo captura BIN, valida opciones o intenta pago.
+bines:
+- bin: '55462590'
+  institution_id: '210002'
+  institution: BANAMEX
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, Existoso (Mich)
+  payment_action: validate_options
+- bin: '40099436'
+  institution_id: '116058'
+  institution: TARJETAS BANAMEX
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '48151530'
+  institution_id: '210012'
+  institution: BBVA
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, Existoso (buscar tarjeta y cambiar bin)
+  payment_action: validate_options
+- bin: '49317300'
+  institution_id: '110072'
+  institution: BANORTE
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, Existoso (Eric)
+  payment_action: validate_options
+- bin: '27280000'
+  institution_id: '110014'
+  institution: SANTANDER
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '41371700'
+  institution_id: '110018'
+  institution: CREDICLUB
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '46558275'
+  institution_id: '110019'
+  institution: BANJERCITO
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '20202200'
+  institution_id: '110030'
+  institution: BAJIO
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: PRIVADA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '23086400'
+  institution_id: '110036'
+  institution: INBURSA
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '51994600'
+  institution_id: '110042'
+  institution: MIFEL
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '20202700'
+  institution_id: '110044'
+  institution: SCOTIABANK INVERLAT
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: PRIVADA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '44505900'
+  institution_id: '110045'
+  institution: CAJA MORELIA VALLADOLID
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '41193218'
+  institution_id: '110058'
+  institution: BANREGIO
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '42364600'
+  institution_id: '110062'
+  institution: AFIRME
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '44013300'
+  institution_id: '110127'
+  institution: AZTECA
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '52031800'
+  institution_id: '110134'
+  institution: SOCIEDAD FINANCIERA INBURSA
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '52237500'
+  institution_id: '114925'
+  institution: TARJETA FALABELLA SORIANA
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '40506759'
+  institution_id: '116014'
+  institution: LIVERPOOL P.C.
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '40895700'
+  institution_id: '116044'
+  institution: RED AMIGO DAL
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '40756100'
+  institution_id: '116055'
+  institution: TARJETAS DEL FUTURO
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '44958300'
+  institution_id: '116107'
+  institution: EFEVOO PAY
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: VISA
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '52003300'
+  institution_id: '116147'
+  institution: KLAR TECHNOLOGIES
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '53334705'
+  institution_id: '210036'
+  institution: INBURSA
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '51610300'
+  institution_id: '310014'
+  institution: SANTANDER
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '53063668'
+  institution_id: '310042'
+  institution: MIFEL
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '25007000'
+  institution_id: '310059'
+  institution: INVEX
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '52677754'
+  institution_id: '310104'
+  institution: NU MEXICO FINANCIERA
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: SI, Exitoso (Eric)
+  payment_action: validate_options
+- bin: '51012500'
+  institution_id: '310104'
+  institution: NU MEXICO FINANCIERA
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '43312600'
+  institution_id: '110014'
+  institution: SANTANDER
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '37952500'
+  institution_id: '110021'
+  institution: HSBC
+  msi_allowed: true
+  msi_policy: Si permitir MSI
+  card_brand: AMERICAN EXPRESS
+  payment_policy: SI, No exitoso
+  payment_action: attempt_payment
+- bin: '42131601'
+  institution_id: '110021'
+  institution: HSBC
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '23086600'
+  institution_id: '110036'
+  institution: INBURSA
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '40431300'
+  institution_id: '110044'
+  institution: SCOTIABANK INVERLAT
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '43479832'
+  institution_id: '110058'
+  institution: BANREGIO
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '42080700'
+  institution_id: '110059'
+  institution: INVEX
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '52342800'
+  institution_id: '110059'
+  institution: INVEX
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '40019500'
+  institution_id: '110127'
+  institution: AZTECA
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '43125700'
+  institution_id: '116086'
+  institution: MERCADO LENDING
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '54837900'
+  institution_id: '116147'
+  institution: KLAR TECHNOLOGIES
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '53788201'
+  institution_id: '210036'
+  institution: INBURSA
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '40788300'
+  institution_id: '210137'
+  institution: BANCOPPEL
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '40780700'
+  institution_id: '210137'
+  institution: BANCOPPEL
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: VISA
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '55471999'
+  institution_id: '310014'
+  institution: SANTANDER
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '55132300'
+  institution_id: '310021'
+  institution: HSBC
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '51413400'
+  institution_id: '316059'
+  institution: MERCADO LIBRE
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '51852400'
+  institution_id: '316099'
+  institution: STORI MEXICO
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '53142563'
+  institution_id: '316099'
+  institution: STORI MEXICO
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '53282947'
+  institution_id: '316111'
+  institution: REGIGOLD
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '52369111'
+  institution_id: '316150'
+  institution: BANCO PLATA
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only
+- bin: '51029921'
+  institution_id: '316150'
+  institution: BANCO PLATA
+  msi_allowed: false
+  msi_policy: No permite MSI
+  card_brand: MASTER CARD
+  payment_policy: No se realiza
+  payment_action: bin_only

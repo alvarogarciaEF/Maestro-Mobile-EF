@@ -1,0 +1,125 @@
+# Proposito: validar cupon QA valido en carrito con descuento del 15%.
+# Precondiciones: usuario QA autenticado, carrito con producto; cupon ALE o MOACYR15 (15% OFF).
+# Valida: cupon aplicado al azar (o VALID_COUPON_CODE fijo) y descuento ~15% en resumen.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  VALID_COUPON_CODE: ${VALID_COUPON_CODE || ""}
+  COUPON_DISCOUNT_PERCENT: ${COUPON_DISCOUNT_PERCENT || "15"}
+name: Regression - Apply Coupon Valid
+tags:
+  - regression
+  - cart
+  - coupon
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- evalScript: ${output.useAle = Math.random() < 0.5}
+- scrollUntilVisible:
+    element:
+      text: "Cupón de descuento"
+    direction: DOWN
+    timeout: 45000
+- tapOn:
+    text: "Cupón de descuento"
+- extendedWaitUntil:
+    visible:
+      id: "et_coupon_code"
+    timeout: 15000
+- tapOn:
+    id: "et_coupon_code"
+- eraseText
+- runFlow:
+    when:
+      true: ${VALID_COUPON_CODE == "ALE"}
+    commands:
+      - inputText: "ALE"
+- runFlow:
+    when:
+      true: ${VALID_COUPON_CODE == "MOACYR15"}
+    commands:
+      - inputText: "MOACYR15"
+- runFlow:
+    when:
+      true: ${VALID_COUPON_CODE == "" && output.useAle}
+    commands:
+      - inputText: "ALE"
+- runFlow:
+    when:
+      true: ${VALID_COUPON_CODE == "" && output.useAle == false}
+    commands:
+      - inputText: "MOACYR15"
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: "btn_apply_coupon"
+    timeout: 15000
+- tapOn:
+    id: "btn_apply_coupon"
+- extendedWaitUntil:
+    visible:
+      id: "tv_coupon_name"
+    timeout: 30000
+- assertVisible:
+    id: "tv_coupon_name"
+- runFlow:
+    when:
+      true: ${VALID_COUPON_CODE == "ALE"}
+    commands:
+      - assertVisible:
+          text: "ALE"
+- runFlow:
+    when:
+      true: ${VALID_COUPON_CODE == "MOACYR15"}
+    commands:
+      - assertVisible:
+          text: "MOACYR15"
+- runFlow:
+    when:
+      true: ${VALID_COUPON_CODE == "" && output.useAle}
+    commands:
+      - assertVisible:
+          text: "ALE"
+- runFlow:
+    when:
+      true: ${VALID_COUPON_CODE == "" && output.useAle == false}
+    commands:
+      - assertVisible:
+          text: "MOACYR15"
+- assertNotVisible:
+    id: "tv_coupon_error"
+- waitForAnimationToEnd:
+    timeout: 3000
+- scrollUntilVisible:
+    element:
+      text: "Resumen del pedido|Cupón|Total"
+    direction: DOWN
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      text: "Cupón|Descuento|-\\$[0-9]"
+    timeout: 15000
+- assertVisible:
+    text: "Cupón"
+- assertVisible:
+    text: "ALE|MOACYR15"
+- assertVisible:
+    text: "-\\$[0-9,]+"
+- copyTextFrom:
+    text: "-\\$[0-9,]+"
+- evalScript: ${output.couponDiscountText = maestro.copiedText}
+- copyTextFrom:
+    text: "\\$[0-9]+,[0-9]+"
+    below: "Resumen del pedido"
+- evalScript: ${output.couponSubtotalText = maestro.copiedText}
+- runScript: ../../scripts/validate-cart-coupon-discount.js
+- assertTrue:
+    condition: ${output.couponDiscountOk}
+    label: Descuento del cupon ~${COUPON_DISCOUNT_PERCENT}% sobre subtotal
+- scrollUntilVisible:
+    element:
+      text: "Total"
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    text: "Total"

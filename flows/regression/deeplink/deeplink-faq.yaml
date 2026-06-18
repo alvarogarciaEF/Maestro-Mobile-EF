@@ -1,0 +1,22 @@
+# Proposito: validar apertura del centro de ayuda por deeplink /faq.
+# Precondiciones: DEEPLINK_FAQ apunta al host HTTPS configurado en la app.
+# Valida: contenido del centro de ayuda visible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Deeplink FAQ
+tags:
+  - regression
+  - deeplink
+  - help
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- openLink:
+    link: ${DEEPLINK_FAQ}
+    autoVerify: true
+- runFlow: ../../reusable/after-deeplink-launch.yaml
+- extendedWaitUntil:
+    visible:
+      id: "help_center_rcv"
+    timeout: 45000
+- assertVisible:
+    id: "help_center_rcv"

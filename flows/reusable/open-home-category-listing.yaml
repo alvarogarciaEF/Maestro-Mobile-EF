@@ -1,0 +1,21 @@
+# Proposito: abrir listado de categoria desde el carrusel de Home.
+# Precondiciones: Home con ciudad/fecha configuradas; HOME_CATEGORY_NAME definido.
+# Valida: listado de productos visible para la categoria elegida.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open Home Category Listing
+---
+- scrollUntilVisible:
+    element:
+      text: "${HOME_CATEGORY_NAME}"
+    direction: DOWN
+    timeout: 60000
+- tapOn:
+    text: ${HOME_CATEGORY_NAME}
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    id: "ll_filter_and_sort"

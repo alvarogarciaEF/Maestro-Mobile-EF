@@ -1,0 +1,64 @@
+# Proposito: cerrar prompts frecuentes de arranque/login con selectores robustos.
+# Precondiciones: app en primer plano.
+# Nota: usar locators por texto; evitar coordenadas salvo ultimo recurso.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Close Startup Prompts
+---
+- runFlow:
+    when:
+      visible: "Elige un idioma / Choose a language"
+    commands:
+      - tapOn:
+          text: "Español / Spanish"
+      - waitForAnimationToEnd:
+          timeout: 1500
+      - runFlow:
+          when:
+            visible: "Elige un idioma / Choose a language"
+          commands:
+            - tapOn:
+                text: "Español / Spanish"
+            - waitForAnimationToEnd:
+                timeout: 1500
+- runFlow:
+    when:
+      visible: "Confirm|Confirmar|Aceptar"
+    commands:
+      - tapOn:
+          text: "Confirm|Confirmar|Aceptar"
+      - waitForAnimationToEnd:
+          timeout: 1500
+- runFlow:
+    when:
+      visible: "Comenzar"
+    commands:
+      - tapOn:
+          id: "start_button"
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow:
+    when:
+      visible: "Comenzar"
+    commands:
+      - tapOn:
+          id: "start_button"
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow:
+    when:
+      visible: "Allow|ALLOW|Permitir|Mientras la app está en uso|While using the app"
+    commands:
+      - tapOn:
+          text: "Allow|ALLOW|Permitir|Mientras la app está en uso|While using the app"
+- runFlow:
+    when:
+      visible: "No permitir|Don't Allow|Quizá después|Quizá más tarde|Más tarde|Cerrar|Omitir"
+    commands:
+      - tapOn:
+          text: "No permitir|Don't Allow|Quizá después|Quizá más tarde|Más tarde|Cerrar|Omitir"
+- runFlow:
+    when:
+      visible: "Save password to Google Password Manager?"
+    commands:
+      - tapOn:
+          text: "Not now|Never"

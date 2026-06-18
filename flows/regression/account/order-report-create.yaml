@@ -1,0 +1,39 @@
+# Proposito: validar flujo de reporte de pedido sin crear ticket valido.
+# Web parity: tests/regression/orders/order-report-create-contract.spec.js (parcial)
+# Precondiciones: pedido con accion "Reportar" o "Reportar un problema" en detalle.
+# Valida: pantalla de razones/formulario y bloqueo de envio vacio.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Order Report Create
+tags:
+  - regression
+  - account
+  - orders
+  - report
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-first-order-detail.yaml
+- runFlow:
+    when:
+      visible: "Reportar|Reportar un problema|Reportar pedido|Report a problem|Report an issue"
+    commands:
+      - tapOn:
+          text: "Reportar|Reportar un problema|Reportar pedido|Report a problem|Report an issue"
+      - extendedWaitUntil:
+          visible:
+            text: "Reporte|Reportar|problema|motivo|razón|reason|issue"
+          timeout: 30000
+      - assertVisible:
+          text: "Reporte|Reportar|problema|motivo|razón|reason|issue"
+      - runFlow:
+          when:
+            visible:
+              text: "Enviar|Continuar|Reportar|Submit|Send"
+          commands:
+            - tapOn:
+                text: "Enviar|Continuar|Reportar|Submit|Send"
+            - waitForAnimationToEnd:
+                timeout: 3000
+            - assertNotVisible:
+                text: "Reporte enviado|Gracias por tu reporte|Ticket creado|Report submitted|Thank you"

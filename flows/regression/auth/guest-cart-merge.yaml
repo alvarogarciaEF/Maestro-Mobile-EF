@@ -1,0 +1,55 @@
+# Proposito: validar estado controlado del carrito tras transicion invitado -> autenticado.
+# Web parity: tests/regression/auth/guest-to-auth-cart-state.spec.js
+# Precondiciones: USER_EMAIL/USER_PASSWORD validos; producto disponible en QA.
+# Valida: tras login el carrito conserva el producto (A) o queda vacio de forma coherente (B).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Guest Cart Merge
+tags:
+  - regression
+  - auth
+  - cart
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/select-city.yaml
+- runFlow: ../../reusable/add-product-from-search.yaml
+- tapOn:
+    text: "Ir al carrito"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 30000
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- runFlow: ../../reusable/navigate-account-tab.yaml
+- runFlow: ../../reusable/login-email-password.yaml
+- openLink:
+    link: ${DEEPLINK_CART}
+    autoVerify: true
+- runFlow: ../../reusable/after-deeplink-launch.yaml
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 45000
+- runFlow:
+    when:
+      visible: ${PRODUCT_NAME}
+    commands:
+      - assertVisible:
+          text: ${PRODUCT_NAME}
+      - scrollUntilVisible:
+          element:
+            id: "btn_continue_shoppig_container"
+          direction: DOWN
+          timeout: 20000
+      - assertVisible:
+          id: "btn_continue_shoppig_container"
+- runFlow:
+    when:
+      visible: "Tu carrito está vacío"
+    commands:
+      - assertVisible:
+          text: "Tu carrito está vacío"
+- assertVisible:
+    text: "${PRODUCT_NAME}|Tu carrito está vacío"

@@ -1,0 +1,33 @@
+# Proposito: validar apertura de detalle de producto (PDP) por deeplink.
+# Precondiciones: DEEPLINK_PRODUCT con SKU y ciudad en path (ej. .../monterrey/002).
+# Valida: bloques criticos del detalle y CTA de compra.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Deeplink Product Detail
+tags:
+  - regression
+  - deeplink
+  - product-detail
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- openLink:
+    link: ${DEEPLINK_PRODUCT}
+    autoVerify: true
+- runFlow: ../../reusable/after-deeplink-launch.yaml
+- extendedWaitUntil:
+    visible:
+      id: "productImagesViewPager"
+    timeout: 60000
+- assertVisible:
+    id: "productImagesViewPager"
+- scrollUntilVisible:
+    element:
+      id: "dateNdeliveryContainer"
+    direction: DOWN
+    timeout: 30000
+- assertVisible:
+    id: "dateNdeliveryContainer"
+- assertVisible:
+    id: "addToCartButton"
+- assertVisible:
+    text: ${PRODUCT_NAME}

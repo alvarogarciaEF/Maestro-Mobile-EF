@@ -1,0 +1,40 @@
+# Proposito: aplicar un cupon valido en el carrito.
+# Precondiciones: carrito abierto con seccion Cupon de descuento accesible.
+# Valida: cupon aplicado (nombre visible en carrito) sin error de cupon.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  COUPON_CODE: ${COUPON_CODE}
+name: Reusable - Apply Cart Coupon
+---
+- scrollUntilVisible:
+    element:
+      text: "Cupón de descuento"
+    direction: DOWN
+    timeout: 45000
+- tapOn:
+    text: "Cupón de descuento"
+- extendedWaitUntil:
+    visible:
+      id: "et_coupon_code"
+    timeout: 15000
+- tapOn:
+    id: "et_coupon_code"
+- eraseText
+- inputText: ${COUPON_CODE}
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: "btn_apply_coupon"
+    timeout: 15000
+- tapOn:
+    id: "btn_apply_coupon"
+- extendedWaitUntil:
+    visible:
+      id: "tv_coupon_name"
+    timeout: 30000
+- assertVisible:
+    id: "tv_coupon_name"
+- assertVisible:
+    text: ${COUPON_CODE}
+- assertNotVisible:
+    id: "tv_coupon_error"

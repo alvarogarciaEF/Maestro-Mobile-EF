@@ -1,0 +1,48 @@
+# Proposito: abrir el detalle del primer pedido visible en Mis pedidos.
+# Precondiciones: usuario autenticado; idealmente con al menos un pedido en historial.
+# Valida: pantalla de detalle de pedido cuando hay pedidos disponibles.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open First Order Detail
+---
+- scrollUntilVisible:
+    element:
+      text: "Mis pedidos"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: "Mis pedidos"
+- extendedWaitUntil:
+    visible:
+      id: "my_orders_fragment_compose_view"
+    timeout: 30000
+- assertVisible:
+    text: "Mis pedidos"
+- extendedWaitUntil:
+    visible:
+      text: "Pedido: [0-9]+"
+    timeout: 60000
+- runFlow:
+    when:
+      visible: "Ver pedido|Ver detalles del pedido|Ver o editar pedido"
+    commands:
+      - tapOn:
+          text: "Ver pedido|Ver detalles del pedido|Ver o editar pedido"
+      - extendedWaitUntil:
+          visible:
+            text: "Detalle del pedido|Detalles del pedido|Número de pedido|Pedido"
+          timeout: 30000
+      - assertVisible:
+          text: "Detalle del pedido|Detalles del pedido|Número de pedido|Pedido"
+- runFlow:
+    when:
+      notVisible: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Datos de envío|Pedido realizado:"
+    commands:
+      - tapOn:
+          text: "Pedido: [0-9]+"
+          index: 0
+      - extendedWaitUntil:
+          visible:
+            text: "Pedido #[0-9]+|Datos de envío|Pedido realizado:|Cancelar pedido"
+          timeout: 30000
+- assertVisible:
+    text: "Pedido #[0-9]+|Detalle del pedido|Detalles del pedido|Datos de envío|Pedido realizado:"

@@ -1,0 +1,37 @@
+# Proposito: validar apertura del flujo de cancelacion de pedido sin confirmar.
+# Web parity: tests/regression/orders/order-cancel-contract.spec.js (parcial)
+# Precondiciones: pedido cancelable visible en detalle.
+# Valida: dialogo "Cancelar pedido" y cierre sin cancelar.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Order Cancel Dialog
+tags:
+  - regression
+  - account
+  - orders
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-cancelable-order-detail.yaml
+- scrollUntilVisible:
+    element:
+      text: "Cancelar pedido|Cancel order"
+    direction: DOWN
+    timeout: 45000
+    visibilityPercentage: 50
+- tapOn:
+    text: "Cancelar pedido|Cancel order"
+- extendedWaitUntil:
+    visible:
+      text: "Cancelar pedido|Cancel order"
+    timeout: 15000
+- assertVisible:
+    id: "iv_close"
+- tapOn:
+    id: "iv_close"
+- extendedWaitUntil:
+    visible:
+      text: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Número de pedido|Pedido"
+    timeout: 15000
+- assertVisible:
+    text: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Número de pedido|Pedido"

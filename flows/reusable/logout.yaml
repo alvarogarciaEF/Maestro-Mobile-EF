@@ -1,0 +1,20 @@
+# Proposito: cerrar sesion desde Mi cuenta.
+# Precondiciones: usuario autenticado y app abierta.
+# Valida: que vuelva a estar disponible la accion "Iniciar sesion".
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Logout
+---
+- runFlow: navigate-account-tab.yaml
+- scrollUntilVisible:
+    element:
+      text: "Cerrar sesión"
+    direction: DOWN
+- tapOn:
+    text: "Cerrar sesión"
+- runFlow:
+    when:
+      visible: "¿Quieres cerrar sesión?"
+    commands:
+      - tapOn: "Cerrar sesión"
+- assertVisible:
+    text: "Iniciar sesión"

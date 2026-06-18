@@ -1,0 +1,51 @@
+# Proposito: validar error controlado al agregar tarjeta sandbox declinada.
+# Precondiciones: usuario QA con checkout listo; SANDBOX_DECLINE_CARD_NUMBER configurada.
+# Valida: mensaje de error al agregar tarjeta, sin completar compra real.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Payment Sandbox Error
+tags:
+  - regression
+  - checkout
+  - payment
+  - negative
+  - sandbox
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- runFlow: ../../reusable/advance-checkout-to-payment.yaml
+- tapOn:
+    text: "Agregar una nueva tarjeta"
+- assertVisible:
+    text: "Agrega una tarjeta de crédito o débito"
+- tapOn:
+    id: "add_card_name_edit_text"
+- eraseText
+- inputText: ${SANDBOX_DECLINE_CARD_FIRST_NAME}
+- tapOn:
+    id: "add_card_last_name_edit_text"
+- eraseText
+- inputText: ${SANDBOX_DECLINE_CARD_LAST_NAME}
+- tapOn:
+    id: "add_card_card_number_edit_text"
+- eraseText
+- inputText: ${SANDBOX_DECLINE_CARD_NUMBER}
+- tapOn:
+    id: "add_card_month_year_edit_text"
+- eraseText
+- inputText: ${SANDBOX_DECLINE_CARD_EXPIRY}
+- hideKeyboard
+- tapOn:
+    text: "Usar esta tarjeta"
+- waitForAnimationToEnd:
+    timeout: 15000
+- runFlow: ../../reusable/enter-card-security-if-needed.yaml
+- extendedWaitUntil:
+    visible:
+      text: "Error al agregar la tarjeta|Lo sentimos, tu pago fue rechazado|Pago rechazado|Agrega una tarjeta de crédito o débito|Completa el pago"
+    timeout: 30000
+- assertVisible:
+    text: "Error al agregar la tarjeta|Lo sentimos, tu pago fue rechazado|Pago rechazado|Agrega una tarjeta de crédito o débito"
+- assertNotVisible:
+    text: "Revisa tu pedido"

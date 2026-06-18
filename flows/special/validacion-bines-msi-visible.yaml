@@ -1,0 +1,133 @@
+# Proposito: validar que un BIN permitido muestre opciones MSI al usar tarjeta.
+# Precondiciones: BIN_CARD_NUMBER debe ser una tarjeta QA completa y aceptada por la app.
+# Nota: no limpia estado local; el runner batch puede hacerlo una vez con BIN_CLEAR_STATE=1.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Validacion de bines - MSI visible
+tags:
+  - special
+  - checkout
+  - payment
+  - bines
+  - msi
+---
+- runFlow: ../reusable/ensure-logged-in.yaml
+- runFlow: ../reusable/setup-cart-with-product.yaml
+- scrollUntilVisible:
+    element:
+      id: "btn_continue_shoppig_container"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: "btn_continue_shoppig_container"
+- assertVisible:
+    id: "continueProcessBtn"
+- assertVisible:
+    id: "transaction_container"
+- runFlow:
+    when:
+      visible: "Confirma tu teléfono"
+    commands:
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible: "Elige a quién enviarlo|Escoge un horario|Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Elige a quién enviarlo"
+    commands:
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible: "Escoge un horario|Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Escoge un horario"
+    commands:
+      - tapOn:
+          point: "93%,50%"
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible: "Dedicatoria|Completa el pago"
+          timeout: 30000
+- runFlow:
+    when:
+      visible: "Dedicatoria"
+    commands:
+      - tapOn:
+          id: "checkbox_without_message"
+      - tapOn:
+          id: "checkbox_anonymous"
+      - tapOn:
+          id: "continueProcessBtn"
+      - extendedWaitUntil:
+          visible: "Completa el pago"
+          timeout: 30000
+- assertVisible:
+    text: "Completa el pago"
+- tapOn:
+    text: "Agregar una nueva tarjeta"
+- assertVisible:
+    text: "Agrega una tarjeta de crédito o débito"
+- tapOn:
+    id: "add_card_name_edit_text"
+- eraseText
+- inputText: ${BIN_CARD_FIRST_NAME}
+- tapOn:
+    id: "add_card_last_name_edit_text"
+- eraseText
+- inputText: "G"
+- waitForAnimationToEnd:
+    timeout: 1000
+- inputText: "a"
+- waitForAnimationToEnd:
+    timeout: 1000
+- inputText: "r"
+- waitForAnimationToEnd:
+    timeout: 1000
+- inputText: "c"
+- waitForAnimationToEnd:
+    timeout: 1000
+- inputText: "i"
+- waitForAnimationToEnd:
+    timeout: 1000
+- inputText: "a"
+- tapOn:
+    id: "add_card_card_number_edit_text"
+- eraseText
+- inputText: ${BIN_CARD_NUMBER}
+- tapOn:
+    id: "add_card_month_year_edit_text"
+- eraseText
+- inputText: "1"
+- waitForAnimationToEnd:
+    timeout: 1000
+- inputText: "2"
+- waitForAnimationToEnd:
+    timeout: 1000
+- inputText: "3"
+- waitForAnimationToEnd:
+    timeout: 1000
+- inputText: "0"
+- assertVisible:
+    text: "12/30"
+- tapOn:
+    text: "Usar esta tarjeta"
+- runFlow: ../reusable/enter-card-security-if-needed.yaml
+- waitForAnimationToEnd:
+    timeout: 10000
+- takeScreenshot:
+    path: "bines-msi-visible-${BIN_NUMBER}"
+- assertVisible:
+    text: "Completa el pago"
+- assertVisible:
+    text: ".*Contado.*|.*Pago de contado.*|.*De contado.*"
+- assertVisible:
+    text: ".*3 meses.*|.*3 MSI.*|.*3 mensualidades.*"
+- assertVisible:
+    text: ".*6 meses.*|.*6 MSI.*|.*6 mensualidades.*"
+# Importante: no confirmar pago real desde flows automatizados.
+- assertVisible:
+    id: "continueProcessBtn"

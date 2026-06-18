@@ -1,0 +1,25 @@
+# Proposito: validar navegacion por una categoria estable.
+# Precondiciones: CATEGORY_NAME existe en el menu de categorias.
+# Valida: listado de productos y acceso a filtro/ordenamiento.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Browse Category
+tags:
+  - regression
+  - catalog
+  - category
+---
+- runFlow: ../../reusable/ensure-home.yaml
+- tapOn:
+    text: "Categorías"
+- assertVisible:
+    id: "recyclerViewCategory"
+- tapOn:
+    text: ${CATEGORY_NAME}
+- tapOn:
+    text: "Ver todo"
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    id: "ll_filter_and_sort"
+- assertVisible:
+    text: "Filtrar y ordenar"

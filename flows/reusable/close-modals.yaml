@@ -1,0 +1,180 @@
+# Proposito: cerrar permisos, prompts y modales comunes que bloquean flows.
+# Precondiciones: se ejecuta despues de launchApp/openLink cuando pueda haber modales.
+# Nota: mantener pasos idempotentes usando condiciones `when`.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Close Common Modals
+---
+- runFlow:
+    when:
+      visible: "stylus|Stylus|Handwriting|handwriting|escritura a mano|Write in a text field|Open more stylus options"
+    commands:
+      - tapOn: "Cancel|Cancelar|No thanks|No, gracias|Got it|Entendido|Dismiss"
+      - pressKey: Back
+- runFlow:
+    when:
+      visible: "Save password to Google Password Manager?"
+    commands:
+      - tapOn: "Not now|Never"
+- runFlow:
+    when:
+      visible: "Make Chrome your own|Sign in to get your bookmarks"
+    commands:
+      - tapOn: "Continue as Alvaro|Continuar como Alvaro|Use without an account|Usar sin una cuenta|No thanks|No, gracias"
+- runFlow:
+    when:
+      visible: "Save time, type less|sync your tabs and history"
+    commands:
+      - tapOn: "No thanks|No, gracias"
+- runFlow:
+    when:
+      visible: "Elige un idioma / Choose a language"
+    commands:
+      - tapOn:
+          text: "Español / Spanish"
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - runFlow:
+          when:
+            visible: "Elige un idioma / Choose a language"
+          commands:
+            - tapOn:
+                text: "Español / Spanish"
+            - waitForAnimationToEnd:
+                timeout: 2000
+- runFlow:
+    when:
+      visible: "Confirm|Confirmar|Aceptar"
+    commands:
+      - tapOn: "Confirm|Confirmar|Aceptar"
+- runFlow:
+    when:
+      visible: "Comenzar"
+    commands:
+      - tapOn:
+          id: "start_button"
+- runFlow:
+    when:
+      visible: "¿A dónde quieres enviar?"
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: "txt_title"
+              text: "${DEFAULT_CITY}"
+          commands:
+            - tapOn:
+                id: "txt_title"
+                text: "${DEFAULT_CITY}"
+            - waitForAnimationToEnd:
+                timeout: 3000
+            - runFlow:
+                when:
+                  visible:
+                    id: "btn_close"
+                commands:
+                  - tapOn:
+                      id: "btn_close"
+- runFlow:
+    when:
+      visible: "Estado"
+    commands:
+      - tapOn:
+          id: "txt_title"
+          text: "${DEFAULT_STATE}"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- runFlow:
+    when:
+      visible:
+        id: "search_store_and_city_input"
+      notVisible:
+        text: "${DEFAULT_CITY}"
+    commands:
+      - tapOn:
+          id: "search_store_and_city_input"
+      - inputText: ${DEFAULT_CITY}
+      - hideKeyboard
+      - extendedWaitUntil:
+          visible:
+            text: "${DEFAULT_CITY}"
+          timeout: 15000
+      - tapOn:
+          id: "txt_title"
+          text: "${DEFAULT_CITY}"
+      - runFlow:
+          when:
+            visible:
+              id: "btn_close"
+          commands:
+            - tapOn:
+                id: "btn_close"
+- runFlow:
+    when:
+      visible: "No encontramos este correo"
+    commands:
+      - tapOn: "Intentar de nuevo"
+- runFlow:
+    when:
+      visible: "Allow"
+    commands:
+      - tapOn: "Allow"
+- runFlow:
+    when:
+      visible: "ALLOW"
+    commands:
+      - tapOn: "ALLOW"
+- runFlow:
+    when:
+      visible: "Permitir"
+    commands:
+      - tapOn: "Permitir"
+- runFlow:
+    when:
+      visible: "Mientras la app está en uso"
+    commands:
+      - tapOn: "Mientras la app está en uso"
+- runFlow:
+    when:
+      visible: "While using the app"
+    commands:
+      - tapOn: "While using the app"
+- runFlow:
+    when:
+      visible: "Don't Allow"
+    commands:
+      - tapOn: "Don't Allow"
+- runFlow:
+    when:
+      visible: "No permitir"
+    commands:
+      - tapOn: "No permitir"
+- runFlow:
+    when:
+      visible: "Quizá después"
+    commands:
+      - tapOn: "Quizá después"
+- runFlow:
+    when:
+      visible: "Quizá más tarde"
+    commands:
+      - tapOn: "Quizá más tarde"
+- runFlow:
+    when:
+      visible: "Cerrar"
+    commands:
+      - tapOn: "Cerrar"
+- runFlow:
+    when:
+      visible: "Omitir"
+    commands:
+      - tapOn: "Omitir"
+- runFlow:
+    when:
+      visible: "Más tarde"
+    commands:
+      - tapOn: "Más tarde"
+- runFlow:
+    when:
+      visible: "No internet connection|Check if you have an active internet connection"
+    commands:
+      - tapOn: "Retry"

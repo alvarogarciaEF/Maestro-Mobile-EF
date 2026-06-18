@@ -1,0 +1,27 @@
+# Proposito: validar contrato de confirmacion OXXO post-compra (referencia, monto, instrucciones).
+# Web parity: tests/regression/purchase/oxxo-confirmation-contract.spec.js
+# Precondiciones: usuario QA autenticado; OXXO habilitado en backend QA.
+# Nota: crea un pedido OXXO real en QA; alcance parcial vs web (sin validar fecha/horario exactos).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - OXXO Confirmation Contract
+tags:
+  - regression
+  - checkout
+  - payments
+  - oxxo
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- runFlow: ../../reusable/advance-checkout-to-oxxo-review.yaml
+- assertVisible:
+    text: "Completar compra"
+- runFlow: ../../reusable/complete-oxxo-purchase.yaml
+- assertVisible:
+    id: "amount_to_pay_oxxo"
+- assertVisible:
+    text: "Menciona este número de referencia en caja"
+- assertVisible:
+    id: "limit_date_payment_oxxo"

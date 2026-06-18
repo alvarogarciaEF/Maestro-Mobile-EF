@@ -1,0 +1,27 @@
+# Proposito: validar accion de reintento/cambio de pago en pedido pendiente.
+# Web parity: tests/regression/orders/order-payment-retry-contract.spec.js (parcial)
+# Precondiciones: pedido con pago pendiente/rechazado en historial.
+# Valida: CTA de cambio de pago o referencia OXXO en detalle (sin completar compra).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Order Payment Retry
+tags:
+  - regression
+  - account
+  - orders
+  - payments
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-first-order-detail.yaml
+- runFlow:
+    when:
+      visible: "Pago pendiente|Pago rechazado|Cambiar método de pago|Menciona este número de referencia"
+    commands:
+      - scrollUntilVisible:
+          element:
+            text: "Cambiar método de pago|Menciona este número de referencia en caja"
+          direction: DOWN
+          timeout: 45000
+      - assertVisible:
+          text: "Cambiar método de pago|Menciona este número de referencia en caja"

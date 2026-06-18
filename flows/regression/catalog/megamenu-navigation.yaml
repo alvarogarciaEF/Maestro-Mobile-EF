@@ -1,0 +1,36 @@
+# Proposito: validar navegacion por categorias (equivalente mobile al megamenu web).
+# Web parity: tests/smoke/catalog/megamenu.spec.js
+# Precondiciones: CATEGORY_NAME disponible en pestaña Categorias.
+# Valida: menu de categorias, listado con productos y filtros.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Megamenu Navigation
+tags:
+  - regression
+  - catalog
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/select-home-delivery-date.yaml
+- tapOn:
+    text: "Categorías"
+- extendedWaitUntil:
+    visible:
+      id: "recyclerViewCategory"
+    timeout: 15000
+- assertVisible:
+    id: "recyclerViewCategory"
+- assertVisible:
+    text: ${CATEGORY_NAME}
+- tapOn:
+    text: ${CATEGORY_NAME}
+- tapOn:
+    text: "Ver todo"
+- extendedWaitUntil:
+    visible:
+      id: "rcv_category_products"
+    timeout: 30000
+- assertVisible:
+    id: "rcv_category_products"
+- assertVisible:
+    id: "ll_filter_and_sort"

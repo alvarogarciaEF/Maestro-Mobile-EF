@@ -1,0 +1,44 @@
+# Proposito: validar seccion upsell "Agrega un detalle" en carrito.
+# Precondiciones: carrito con producto base (setup-cart-with-product).
+# Valida: tarjetas de complementos, dialogo "Complementa tu regalo" y cierre sin alterar cantidad.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Cart Upsell Additional
+tags:
+  - regression
+  - cart
+  - upsell
+  - additionals
+---
+- clearState
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- scrollUntilVisible:
+    element:
+      text: "Agrega un detalle"
+    direction: DOWN
+    timeout: 45000
+- assertVisible:
+    text: "Agrega un detalle"
+- assertVisible:
+    id: "rv_additional_items"
+- assertVisible:
+    id: "tv_see_more"
+- tapOn:
+    id: "tv_see_more"
+- extendedWaitUntil:
+    visible:
+      id: "rv_additional_categories"
+    timeout: 20000
+- assertVisible:
+    id: "rv_additional_categories"
+- assertVisible:
+    id: "close_button"
+- tapOn:
+    id: "close_button"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 15000
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- assertVisible:
+    text: "Cantidad: 2"

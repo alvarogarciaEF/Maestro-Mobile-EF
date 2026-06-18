@@ -1,0 +1,25 @@
+# Proposito: validar entrada a checkout tras cambiar fecha de entrega en carrito.
+# Web parity: tests/regression/checkout/checkout-after-cart-date-change.spec.js (parcial)
+# Precondiciones: usuario autenticado y producto en carrito.
+# Valida: checkout accesible y contenedor de transaccion visible tras cambio de fecha.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Checkout After Cart Date Change
+tags:
+  - regression
+  - checkout
+  - cart
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-cart-with-single-product.yaml
+- runFlow: ../../reusable/change-cart-delivery-date.yaml
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- assertVisible:
+    id: "transaction_container"
+- assertVisible:
+    id: "continueProcessBtn"
+- assertVisible:
+    text: "Confirma tu teléfono|Elige a quién enviarlo|Escoge un horario|Dedicatoria|Completa el pago"

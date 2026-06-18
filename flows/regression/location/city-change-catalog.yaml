@@ -1,0 +1,23 @@
+# Proposito: validar cambio de ciudad mid-session y catalogo independiente.
+# Web parity: tests/smoke/location/city-change.spec.js
+# Precondiciones: DEFAULT_* y ALTERNATE_* configurados en .env.
+# Valida: ciudad alterna visible y listado de productos accesible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - City Change Catalog
+tags:
+  - regression
+  - location
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- runFlow: ../../reusable/select-home-delivery-date.yaml
+- runFlow: ../../reusable/open-category-listing-from-tab.yaml
+- runFlow: ../../reusable/navigate-home-tab.yaml
+- runFlow: ../../reusable/select-alternate-city.yaml
+- runFlow: ../../reusable/select-home-delivery-date.yaml
+- assertVisible:
+    text: ${ALTERNATE_CITY}
+- runFlow: ../../reusable/open-category-listing-from-tab.yaml
+- assertVisible:
+    id: "rcv_category_products"

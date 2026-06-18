@@ -1,0 +1,136 @@
+# Proposito: ejecutar regression segmentada por dominio y plataforma para reducir tiempo de feedback.
+# Precondiciones: secrets USER_EMAIL/USER_PASSWORD y dataset vigente para ciudad/catalogo.
+# Nota: workflow manual para rollout progresivo antes de hacerlo obligatorio por PR.
+name: Maestro Regression Mobile Segmented
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to run against"
+        required: true
+        default: "qa"
+        type: choice
+        options:
+          - qa
+          - dev
+      platform:
+        description: "Platform"
+        required: true
+        default: "android"
+        type: choice
+        options:
+          - android
+          - ios
+      suite:
+        description: "Suite to execute"
+        required: true
+        default: "regression"
+        type: choice
+        options:
+          - regression
+          - catalog
+          - cart
+          - checkout
+          - account
+
+jobs:
+  regression-android:
+    if: ${{ inputs.platform == 'android' }}
+    name: Regression Android ${{ inputs.suite }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      APP_ID_ANDROID: com.enviaflores.android
+      USER_EMAIL: ${{ secrets.USER_EMAIL }}
+      USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+      DEFAULT_STATE: Nuevo León
+      DEFAULT_CITY: Monterrey
+      PRODUCT_SEARCH_TERM: rosas
+      PRODUCT_NAME: Globo Esfera Magenta con Rosas
+      CATEGORY_NAME: Cumpleaños
+      DEEPLINK_HOME: enviaflores://
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Maestro
+        run: curl -Ls "https://get.maestro.mobile.dev" | bash
+
+      - name: Add Maestro to PATH
+        run: echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Validate Maestro version
+        run: maestro --version
+
+      - name: Install npm metadata
+        run: npm install
+
+      - name: Run suite
+        run: npm run maestro:${{ inputs.suite }}:android
+
+      - name: Build JUnit summary
+        if: always()
+        run: ./scripts/junit-summary.sh "reports/*.xml" "Android ${{ inputs.suite }} Summary" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-${{ inputs.suite }}-android-reports
+          path: reports/
+
+  regression-ios:
+    if: ${{ inputs.platform == 'ios' }}
+    name: Regression iOS ${{ inputs.suite }}
+    runs-on: macos-latest
+    environment: ${{ inputs.environment }}
+    env:
+      APP_ID_IOS: com.enviaflores.ios
+      USER_EMAIL: ${{ secrets.USER_EMAIL }}
+      USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+      DEFAULT_STATE: Nuevo León
+      DEFAULT_CITY: Monterrey
+      PRODUCT_SEARCH_TERM: rosas
+      PRODUCT_NAME: Globo Esfera Magenta con Rosas
+      CATEGORY_NAME: Cumpleaños
+      DEEPLINK_HOME: enviaflores://
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Maestro
+        run: curl -Ls "https://get.maestro.mobile.dev" | bash
+
+      - name: Add Maestro to PATH
+        run: echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Validate Maestro version
+        run: maestro --version
+
+      - name: Install npm metadata
+        run: npm install
+
+      - name: Run suite
+        run: npm run maestro:${{ inputs.suite }}:ios
+
+      - name: Build JUnit summary
+        if: always()
+        run: ./scripts/junit-summary.sh "reports/*.xml" "iOS ${{ inputs.suite }} Summary" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-${{ inputs.suite }}-ios-reports
+          path: reports/

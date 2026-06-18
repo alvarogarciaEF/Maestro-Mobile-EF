@@ -1,0 +1,12 @@
+# Proposito: volver a EnviaFlores si un login OAuth abrio Chrome/Facebook u otra app.
+# Precondiciones: ninguna; pasos idempotentes.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Recover App Context
+---
+- pressKey: Back
+- pressKey: Back
+- launchApp:
+    stopApp: false
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow: close-modals.yaml

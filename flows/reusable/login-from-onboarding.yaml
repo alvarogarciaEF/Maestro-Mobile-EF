@@ -1,0 +1,36 @@
+# Proposito: iniciar sesion desde el onboarding usando el boton "Iniciar Sesion".
+# Precondiciones: app abierta en arranque o onboarding.
+# Valida: submit de credenciales; ensure-logged-in valida la sesion al final.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+  USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+name: Reusable - Login From Onboarding
+---
+- runFlow: close-pre-login-prompts.yaml
+- runFlow:
+    when:
+      visible: "Iniciar Sesión|Iniciar sesión"
+    commands:
+      - tapOn:
+          id: "have_account_button"
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow:
+    when:
+      visible:
+        id: "loginEmailEditText"
+    commands:
+      - tapOn:
+          id: "loginEmailEditText"
+      - inputText: ${USER_EMAIL}
+      - tapOn:
+          id: "loginPasswordEditText"
+      - inputText: ${USER_PASSWORD}
+      - hideKeyboard
+      - tapOn:
+          id: "start_button"
+      - waitForAnimationToEnd:
+          timeout: 8000
+      - runFlow: close-pre-login-prompts.yaml

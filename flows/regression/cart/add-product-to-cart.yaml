@@ -1,0 +1,38 @@
+# Proposito: validar agregar un producto al carrito desde detalle.
+# Precondiciones: usuario QA autenticado; PRODUCT_NAME disponible en DEFAULT_CITY.
+# Valida: carrito con producto y CTA continuar compra habilitado.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+  USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+  GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+  PRODUCT_SEARCH_TERM: ${PRODUCT_SEARCH_TERM || "rosas"}
+  PRODUCT_NAME: ${PRODUCT_NAME || "Clásico Amor con 24 Rosas Rojas"}
+name: Regression - Add Product To Cart
+tags:
+  - regression
+  - cart
+---
+- clearState
+- runFlow:
+    file: ../../reusable/ensure-logged-in.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+      USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+      GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- runFlow:
+    file: ../../reusable/setup-cart-with-product.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+      PRODUCT_SEARCH_TERM: ${PRODUCT_SEARCH_TERM || "rosas"}
+      PRODUCT_NAME: ${PRODUCT_NAME || "Clásico Amor con 24 Rosas Rojas"}
+- assertVisible:
+    id: "btn_continue_shoppig_container"

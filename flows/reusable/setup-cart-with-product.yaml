@@ -1,0 +1,73 @@
+# Proposito: dejar carrito listo con monto mayor o igual a mil pesos.
+# Precondiciones: app en estado estable; DEFAULT_STATE, DEFAULT_CITY, PRODUCT_SEARCH_TERM y PRODUCT_NAME vigentes.
+# Valida: vista de carrito abierta con el producto esperado y CTA continuar compra.
+# Nota: no relanza la app si ya esta en Home (toolbar_search visible).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+  PRODUCT_SEARCH_TERM: ${PRODUCT_SEARCH_TERM || "rosas"}
+  PRODUCT_NAME: ${PRODUCT_NAME || "Clásico Amor con 24 Rosas Rojas"}
+name: Reusable - Setup Cart With Product
+---
+- runFlow:
+    when:
+      notVisible:
+        id: "toolbar_search"
+      visible:
+        id: "bottom_nav_view"
+    commands:
+      - runFlow: navigate-home-tab.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: "toolbar_search"
+      notVisible:
+        id: "bottom_nav_view"
+    commands:
+      - runFlow:
+          file: ensure-home.yaml
+          env:
+            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+            DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+            DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- runFlow:
+    when:
+      visible:
+        id: "toolbar_search"
+      notVisible:
+        text: "${DEFAULT_CITY}"
+    commands:
+      - runFlow:
+          file: select-city.yaml
+          env:
+            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+            DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+            DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- runFlow:
+    file: empty-cart-if-needed.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+      PRODUCT_NAME: ${PRODUCT_NAME || "Clásico Amor con 24 Rosas Rojas"}
+- runFlow:
+    file: add-product-from-search.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+      PRODUCT_SEARCH_TERM: ${PRODUCT_SEARCH_TERM || "rosas"}
+      PRODUCT_NAME: ${PRODUCT_NAME || "Clásico Amor con 24 Rosas Rojas"}
+- tapOn:
+    text: "Ir al carrito"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      text: "${PRODUCT_NAME}"
+    timeout: 15000
+- runFlow: reach-cart-checkout-ready.yaml

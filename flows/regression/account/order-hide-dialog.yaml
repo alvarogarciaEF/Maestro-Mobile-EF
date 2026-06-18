@@ -1,0 +1,41 @@
+# Proposito: validar contrato del dialogo de ocultar pedido sin ocultarlo.
+# Web parity: tests/regression/orders/order-hide-contract.spec.js (parcial)
+# Precondiciones: pedido con accion "Ocultar pedido" visible en detalle.
+# Valida: modal de confirmacion y cancelacion sin alterar el listado.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Order Hide Dialog
+tags:
+  - regression
+  - account
+  - orders
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/open-hideable-order-detail.yaml
+- scrollUntilVisible:
+    element:
+      text: "Ocultar pedido|Ocultar Pedido|Hide order|Hide Order"
+    direction: DOWN
+    timeout: 45000
+    visibilityPercentage: 50
+- tapOn:
+    text: "Ocultar pedido|Ocultar Pedido|Hide order|Hide Order"
+- extendedWaitUntil:
+    visible:
+      id: "tv_title"
+    timeout: 15000
+- assertVisible:
+    id: "tv_title"
+- assertVisible:
+    id: "tv_message"
+- assertVisible:
+    text: "Cancelar|Cancel"
+- tapOn:
+    text: "Cancelar|Cancel"
+- extendedWaitUntil:
+    visible:
+      text: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Número de pedido|Pedido"
+    timeout: 15000
+- assertVisible:
+    text: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Número de pedido|Pedido"

@@ -1,0 +1,14 @@
+# Proposito: validar el flujo completo busqueda -> detalle -> carrito.
+# Precondiciones: producto buscado disponible para DEFAULT_CITY.
+# Valida: producto visible en carrito y CTA de continuar compra.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Cart From Search
+tags:
+  - regression
+  - cart
+  - search
+---
+- clearState
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- assertVisible:
+    id: "btn_continue_shoppig_container"

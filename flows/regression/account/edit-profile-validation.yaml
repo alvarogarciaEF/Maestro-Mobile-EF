@@ -1,0 +1,51 @@
+# Proposito: validar errores de formulario al editar perfil con campos vacios.
+# Precondiciones: usuario QA autenticado.
+# Valida: no permite guardar nombre/apellido vacios.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Edit Profile Validation
+tags:
+  - regression
+  - account
+  - negative
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- scrollUntilVisible:
+    element:
+      text: "Mi perfil"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: "Mi perfil"
+- extendedWaitUntil:
+    visible:
+      text: "Nombre"
+    timeout: 30000
+- tapOn:
+    text: "Nombre"
+- extendedWaitUntil:
+    visible:
+      id: "nameEditText"
+    timeout: 15000
+- tapOn:
+    id: "nameEditText"
+- eraseText
+- tapOn:
+    id: "lastnameEditText"
+- eraseText
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: "btn_save_cl"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "btn_save_cl"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: "nameEditText"
+- assertVisible:
+    id: "btn_save_cl"
+- assertNotVisible:
+    text: "¡Listo! Actualizaste tu nombre"

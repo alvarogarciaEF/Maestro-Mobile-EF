@@ -1,0 +1,31 @@
+# Proposito: garantizar ciudad configurada aunque la app abra en carrito, PDP o deeplink.
+# Precondiciones: app instalada; DEFAULT_STATE y DEFAULT_CITY en .env.
+# Valida: toolbar_search o selector de ciudad con DEFAULT_CITY visible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Ensure City Selected
+---
+- runFlow:
+    when:
+      visible:
+        text: "${DEFAULT_CITY}"
+    commands:
+      - assertVisible:
+          text: "${DEFAULT_CITY}"
+- runFlow:
+    when:
+      notVisible:
+        text: "${DEFAULT_CITY}"
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: "state_and_city_container"
+          commands:
+            - runFlow: navigate-home-tab.yaml
+      - runFlow: select-city.yaml
+      - extendedWaitUntil:
+          visible:
+            text: "${DEFAULT_CITY}"
+          timeout: 30000
+      - assertVisible:
+          text: "${DEFAULT_CITY}"

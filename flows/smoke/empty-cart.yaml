@@ -1,0 +1,19 @@
+# Proposito: valida el estado de carrito vacio desde una sesion limpia.
+# Precondiciones: app instalada; limpia estado con clearState antes de abrir.
+# Valida: pantalla de carrito y mensaje de carrito vacio.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Smoke - Empty Cart
+tags:
+  - smoke
+  - cart
+---
+- clearState
+- runFlow: ../reusable/ensure-home.yaml
+- assertVisible:
+    id: "layout_main"
+- tapOn:
+    id: "toolbar_shoppingcart"
+- assertVisible:
+    id: "cl_shopping_cart"
+- assertVisible:
+    text: "Tu carrito está vacío"

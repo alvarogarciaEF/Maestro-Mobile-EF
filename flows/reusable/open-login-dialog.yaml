@@ -1,0 +1,15 @@
+# Proposito: abrir el dialogo de login desde Home.
+# Precondiciones: app en Home con bottom navigation visible.
+# Valida: formulario de login visible con opcion de recuperar contrasena.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open Login Dialog
+---
+- runFlow: ensure-home.yaml
+- tapOn:
+    text: "Mi cuenta"
+- tapOn:
+    text: "Iniciar sesión"
+- assertVisible:
+    id: "loginEmailEditText"
+- assertVisible:
+    id: "forgotPassword_label"

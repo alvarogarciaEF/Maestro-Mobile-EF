@@ -1,0 +1,16 @@
+# Proposito: validar navegacion desde busqueda hasta detalle de producto.
+# Precondiciones: PRODUCT_NAME aparece para PRODUCT_SEARCH_TERM.
+# Valida: imagenes, descripcion, entrega y CTA de compra en detalle.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Product Detail
+tags:
+  - regression
+  - catalog
+  - product-detail
+---
+- clearState
+- runFlow: ../../reusable/search-open-product.yaml
+- assertVisible:
+    id: "productImagesViewPager"
+- assertVisible:
+    id: "addToCartButton"

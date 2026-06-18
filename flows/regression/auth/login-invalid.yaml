@@ -1,0 +1,31 @@
+# Proposito: validar error de credenciales invalidas en login por correo.
+# Precondiciones: USER_EMAIL valido y USER_INVALID_PASSWORD distinto de USER_PASSWORD.
+# Valida: login rechazado sin iniciar sesion.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+  USER_INVALID_PASSWORD: ${USER_INVALID_PASSWORD || "PasswordIncorrecto123."}
+  USER_DISPLAY_NAME: ${USER_DISPLAY_NAME || "QA Automation"}
+name: Regression - Login Invalid
+tags:
+  - regression
+  - auth
+  - negative
+---
+- clearState
+- runFlow: ../../reusable/open-login-dialog.yaml
+- tapOn:
+    id: "loginEmailEditText"
+- inputText: ${USER_EMAIL}
+- tapOn:
+    id: "loginPasswordEditText"
+- inputText: ${USER_INVALID_PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: "start_button"
+- waitForAnimationToEnd:
+    timeout: 15000
+- assertVisible:
+    id: "loginEmailEditText"
+- assertNotVisible:
+    text: "Mi perfil|${USER_DISPLAY_NAME}"

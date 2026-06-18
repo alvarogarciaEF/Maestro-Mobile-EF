@@ -1,0 +1,11 @@
+# Proposito: valida seleccion basica de estado y ciudad.
+# Precondiciones: DEFAULT_STATE y DEFAULT_CITY existen en el ambiente probado.
+# Valida: que la ciudad seleccionada quede visible en Home.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Smoke - Select City
+tags:
+  - smoke
+  - location
+---
+- runFlow: ../reusable/ensure-home.yaml
+- runFlow: ../reusable/select-city.yaml

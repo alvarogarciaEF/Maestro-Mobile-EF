@@ -1,0 +1,20 @@
+# Proposito: abrir pantalla de recordatorios desde Mi cuenta.
+# Precondiciones: usuario autenticado.
+# Valida: pantalla Recordatorios accesible.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open Reminders Screen
+---
+- runFlow: navigate-account-tab.yaml
+- scrollUntilVisible:
+    element:
+      text: "Recordatorios"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: "Recordatorios"
+- extendedWaitUntil:
+    visible:
+      text: "Recordatorios"
+    timeout: 15000
+- assertVisible:
+    text: "Recordatorios"

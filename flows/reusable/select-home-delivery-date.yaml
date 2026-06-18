@@ -1,0 +1,15 @@
+# Proposito: seleccionar fecha de entrega desde el selector de Home.
+# Precondiciones: estado y ciudad ya configurados en Home.
+# Valida: que la fecha deje de mostrar el placeholder "Fecha de entrega".
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Select Home Delivery Date
+---
+- assertVisible:
+    id: "location_date_holder"
+- tapOn:
+    id: "date_and_schedule_container"
+- runFlow: select-delivery-date.yaml
+- extendedWaitUntil:
+    notVisible:
+      text: "Fecha de entrega"
+    timeout: 15000

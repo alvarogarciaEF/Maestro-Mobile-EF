@@ -1,0 +1,18 @@
+# Proposito: validar edicion de fecha de entrega desde el carrito sin perder el resumen.
+# Web parity: tests/smoke/shopping-cart/main-cart-delivery-date.spec.js
+# Precondiciones: PRODUCT_NAME disponible en DEFAULT_CITY.
+# Valida: control de fecha editable y CTA de checkout visible tras confirmar calendario.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Cart Delivery Date Change
+tags:
+  - regression
+  - cart
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/open-cart-with-single-product.yaml
+- runFlow: ../../reusable/change-cart-delivery-date.yaml
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- assertNotVisible:
+    text: "Tu carrito está vacío"

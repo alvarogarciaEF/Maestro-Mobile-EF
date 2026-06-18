@@ -1,0 +1,9 @@
+# Proposito: limpiar estado local de la app bajo prueba.
+# Precondiciones: APP_ID_ANDROID apunta al applicationId instalado.
+# Nota: usar antes de flows que requieren sesion o carrito desde cero.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Utils - Clear App State
+---
+# Usa clearState cuando necesites iniciar una suite desde un estado limpio.
+# En Android/iOS Maestro limpiara el estado de la app definida por appId.
+- clearState

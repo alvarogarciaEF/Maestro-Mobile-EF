@@ -1,0 +1,23 @@
+# Proposito: validar cambio de cantidad dentro del carrito.
+# Precondiciones: carrito ya contiene al menos un producto.
+# Valida: incremento a 3 y decremento a 2 desde el carrito minimo de mil pesos.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Update Cart Quantity
+tags:
+  - regression
+  - cart
+---
+- clearState
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- extendedWaitUntil:
+    visible:
+      text: "Cantidad: 2"
+    timeout: 30000
+- tapOn:
+    id: "btn_plus_quantity"
+- assertVisible:
+    text: "Cantidad: 3"
+- tapOn:
+    id: "btn_minus_quantity"
+- assertVisible:
+    text: "Cantidad: 2"

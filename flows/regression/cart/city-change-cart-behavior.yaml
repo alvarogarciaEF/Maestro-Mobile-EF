@@ -1,0 +1,45 @@
+# Proposito: validar comportamiento del carrito al cambiar de ciudad con producto cargado.
+# Web parity: tests/regression/shopping-cart/city-change-cart-behavior.spec.js
+# Precondiciones: DEFAULT_* y ALTERNATE_* configurados; PRODUCT_NAME en DEFAULT_CITY.
+# Valida: carrito persiste o se limpia segun CITY_CHANGE_CART_BEHAVIOR (default either).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - City Change Cart Behavior
+tags:
+  - regression
+  - cart
+  - location
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- assertVisible:
+    text: ${PRODUCT_NAME}
+- assertVisible:
+    text: "${DEFAULT_CITY}"
+- tapOn:
+    id: "toolbar_arrow_left"
+- runFlow: ../../reusable/navigate-home-tab.yaml
+- runFlow: ../../reusable/select-alternate-city.yaml
+- tapOn:
+    id: "toolbar_shoppingcart"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        text: "${PRODUCT_NAME}"
+    commands:
+      - assertVisible:
+          text: ${PRODUCT_NAME}
+      - assertVisible:
+          text: "${ALTERNATE_CITY}|${DEFAULT_CITY}"
+- runFlow:
+    when:
+      visible: "Tu carrito está vacío"
+    commands:
+      - assertVisible:
+          text: "Tu carrito está vacío"
+- assertVisible:
+    text: "${PRODUCT_NAME}|Tu carrito está vacío"

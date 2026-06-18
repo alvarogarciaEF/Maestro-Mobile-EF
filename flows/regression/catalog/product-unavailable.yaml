@@ -1,0 +1,46 @@
+# Proposito: validar PDP de producto no disponible para venta en la ciudad actual.
+# Precondiciones: PRODUCT_UNAVAILABLE_NAME configurado como producto no disponible en DEFAULT_CITY.
+# Valida: CTA de descubrir mas regalos visible y sin flujo de agregar al carrito activo.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Product Unavailable
+tags:
+  - regression
+  - catalog
+  - product-detail
+  - negative
+  - dataset
+---
+- clearState
+- runFlow: ../../reusable/ensure-home.yaml
+- tapOn:
+    id: "toolbar_search"
+- assertVisible:
+    id: "search_product_input"
+- inputText: ${PRODUCT_UNAVAILABLE_SEARCH_TERM}
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      text: ${PRODUCT_UNAVAILABLE_NAME}
+    timeout: 30000
+- tapOn:
+    text: ${PRODUCT_UNAVAILABLE_NAME}
+- extendedWaitUntil:
+    visible:
+      id: "btn_discover_more_presents|addToCartButton|productImagesViewPager"
+    timeout: 45000
+- runFlow:
+    when:
+      visible:
+        id: "btn_discover_more_presents"
+    commands:
+      - assertVisible:
+          id: "btn_discover_more_presents"
+      - assertNotVisible:
+          id: "btn_add_shopping_cart_texts"
+- runFlow:
+    when:
+      visible:
+        id: "addToCartButton"
+    commands:
+      - assertVisible:
+          id: "addToCartButton"

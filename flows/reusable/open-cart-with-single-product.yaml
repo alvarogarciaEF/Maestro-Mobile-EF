@@ -1,0 +1,23 @@
+# Proposito: dejar el carrito abierto con un producto (cantidad 1).
+# Precondiciones: PRODUCT_SEARCH_TERM y PRODUCT_NAME disponibles para DEFAULT_CITY.
+# Valida: vista de carrito con el producto esperado.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Open Cart With Single Product
+---
+- runFlow: ensure-home.yaml
+- runFlow: empty-cart-if-needed.yaml
+- runFlow: add-product-from-search.yaml
+- tapOn:
+    text: "Ir al carrito"
+- extendedWaitUntil:
+    visible:
+      id: "cl_shopping_cart"
+    timeout: 30000
+- assertVisible:
+    id: "cl_shopping_cart"
+- extendedWaitUntil:
+    visible:
+      text: "${PRODUCT_NAME}"
+    timeout: 30000
+- assertVisible:
+    text: ${PRODUCT_NAME}

@@ -1,0 +1,32 @@
+# Proposito: validar acceso al programa de puntos desde Mi cuenta.
+# Web parity: tests/regression/clients/rewards-and-coupons.spec.js (parcial)
+# Precondiciones: usuario QA autenticado.
+# Valida: pantalla Programa de puntos con instrucciones e historial.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Rewards Program
+tags:
+  - regression
+  - account
+  - rewards
+  - web-parity
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- scrollUntilVisible:
+    element:
+      text: "Próxima recompensa|Programa de puntos|.*puntos.*|.*points.*"
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 50
+- tapOn:
+    text: "Próxima recompensa|Programa de puntos"
+- extendedWaitUntil:
+    visible:
+      text: "¿Cómo funciona?"
+    timeout: 30000
+- assertVisible:
+    text: "Programa de puntos|¿Cómo funciona?"
+- assertVisible:
+    text: "Historial de puntos"
+- assertVisible:
+    text: "\\$1 MXN = 1 punto"

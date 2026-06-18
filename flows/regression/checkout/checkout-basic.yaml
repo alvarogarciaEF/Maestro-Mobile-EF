@@ -1,0 +1,19 @@
+# Proposito: validar avance basico de carrito hacia checkout sin pagar.
+# Precondiciones: usuario QA valido y producto disponible para busqueda.
+# Nota: arma el carrito desde cero y se detiene en confirmacion de telefono.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Regression - Checkout Basic
+tags:
+  - regression
+  - checkout
+---
+- clearState
+- runFlow: ../../reusable/ensure-logged-in.yaml
+- runFlow: ../../reusable/setup-cart-with-product.yaml
+- runFlow: ../../reusable/open-checkout-from-cart.yaml
+- assertVisible:
+    id: "phone_progressbar"
+- assertVisible:
+    text: "Confirma tu teléfono"
+- assertVisible:
+    id: "add_phone_edit_text"
