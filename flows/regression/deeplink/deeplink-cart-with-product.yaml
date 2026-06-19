@@ -8,7 +8,11 @@ tags:
   - deeplink
   - cart
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/setup-cart-with-product.yaml
 - runFlow: ../../reusable/navigate-home-tab.yaml
 - openLink:

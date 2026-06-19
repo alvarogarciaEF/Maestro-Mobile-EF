@@ -11,7 +11,11 @@ tags:
   - oxxo
   - web-parity
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-logged-in.yaml
 - runFlow: ../../reusable/setup-cart-with-product.yaml
 - runFlow: ../../reusable/open-checkout-from-cart.yaml

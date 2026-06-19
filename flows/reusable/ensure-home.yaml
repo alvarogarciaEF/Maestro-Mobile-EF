@@ -26,6 +26,25 @@ name: Reusable - Ensure Home
     commands:
       - tapOn:
           id: "action_main"
+# Si no estamos en Home (sin toolbar_search) tras lo anterior (ej. PDP/subpantalla sin bottom nav),
+# relanzar sin borrar estado para volver a Home de forma fiable.
+- runFlow:
+    when:
+      notVisible:
+        id: "toolbar_search"
+    commands:
+      - launchApp:
+          stopApp: true
+      - runFlow: close-startup-prompts.yaml
+      - runFlow:
+          when:
+            visible:
+              id: "bottom_nav_view"
+            notVisible:
+              id: "toolbar_search"
+          commands:
+            - tapOn:
+                id: "action_main"
 - runFlow:
     when:
       notVisible:
@@ -37,23 +56,6 @@ name: Reusable - Ensure Home
             APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
             DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
             DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
-- runFlow:
-    when:
-      notVisible:
-        id: "layout_main"
-    commands:
-      - launchApp:
-          stopApp: true
-      - runFlow: close-startup-prompts.yaml
-- runFlow:
-    when:
-      visible:
-        id: "bottom_nav_view"
-      notVisible:
-        id: "toolbar_search"
-    commands:
-      - tapOn:
-          id: "action_main"
 - extendedWaitUntil:
     visible:
       id: "layout_main"

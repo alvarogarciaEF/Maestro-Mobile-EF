@@ -9,7 +9,11 @@ tags:
   - upsell
   - additionals
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/setup-cart-with-product.yaml
 - scrollUntilVisible:
     element:

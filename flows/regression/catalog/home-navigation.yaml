@@ -9,7 +9,11 @@ tags:
   - catalog
   - web-parity
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-home.yaml
 - runFlow: ../../reusable/select-home-delivery-date.yaml
 - runFlow:

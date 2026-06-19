@@ -1,5 +1,5 @@
 # Proposito: iniciar sesion desde el onboarding usando el boton "Iniciar Sesion".
-# Precondiciones: app abierta en arranque o onboarding.
+# Precondiciones: app abierta en onboarding con prompts iniciales ya atendidos.
 # Valida: submit de credenciales; ensure-logged-in valida la sesion al final.
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 env:
@@ -8,7 +8,6 @@ env:
   USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
 name: Reusable - Login From Onboarding
 ---
-- runFlow: close-pre-login-prompts.yaml
 - runFlow:
     when:
       visible: "Iniciar Sesión|Iniciar sesión"
@@ -29,4 +28,9 @@ name: Reusable - Login From Onboarding
       - hideKeyboard
       - tapOn:
           id: "start_button"
-      - runFlow: close-pre-login-prompts.yaml
+      - runFlow:
+          when:
+            visible: "Save password to Google Password Manager?"
+          commands:
+            - tapOn:
+                text: "Not now|Never"

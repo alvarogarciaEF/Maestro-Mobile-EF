@@ -8,7 +8,11 @@ tags:
   - cart
   - search
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/setup-cart-with-product.yaml
 - assertVisible:
     id: "btn_continue_shoppig_container"

@@ -1,0 +1,39 @@
+# Proposito: abrir el buscador desde Home de forma fiable.
+# Precondiciones: Home visible (toolbar_search presente).
+# Valida: campo de busqueda (search_product_input) visible y listo.
+# Nota: en estado warm el icono de busqueda queda inerte hasta seleccionar fecha de entrega.
+#       Si el primer tap no abre el buscador, se selecciona la fecha y se reintenta.
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+env:
+  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+  DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+name: Reusable - Open Search
+---
+- tapOn:
+    id: "toolbar_search"
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      notVisible:
+        id: "search_product_input"
+    commands:
+      # Tras cambiar de ciudad, la busqueda de Home puede quedar inerte en el proceso actual.
+      # Relanzar sin borrar estado (proceso fresco) la reactiva.
+      - launchApp:
+          stopApp: true
+      - runFlow:
+          file: ensure-home.yaml
+          env:
+            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+            DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+            DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+      - tapOn:
+          id: "toolbar_search"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- extendedWaitUntil:
+    visible:
+      id: "search_product_input"
+    timeout: 15000

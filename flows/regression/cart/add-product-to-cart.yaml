@@ -16,7 +16,11 @@ tags:
   - regression
   - cart
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow:
     file: ../../reusable/ensure-logged-in.yaml
     env:

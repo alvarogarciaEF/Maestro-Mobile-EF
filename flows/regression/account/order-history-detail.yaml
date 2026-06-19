@@ -8,7 +8,11 @@ tags:
   - account
   - orders
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-logged-in.yaml
 - runFlow: ../../reusable/open-first-order-detail.yaml
 - runFlow:

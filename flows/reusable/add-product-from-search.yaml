@@ -10,12 +10,12 @@ env:
   PRODUCT_NAME: ${PRODUCT_NAME}
 name: Reusable - Add Product From Search
 ---
-- tapOn:
-    id: "toolbar_search"
-- extendedWaitUntil:
-    visible:
-      id: "search_product_input"
-    timeout: 10000
+- runFlow:
+    file: open-search.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
 - inputText: ${PRODUCT_SEARCH_TERM}
 - pressKey: Enter
 - extendedWaitUntil:

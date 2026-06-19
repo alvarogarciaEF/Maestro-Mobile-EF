@@ -89,6 +89,13 @@ Ejemplo excepcional:
 - Mantener una profundidad maxima de cinco archivos y evitar ciclos.
 - Todo archivo en `flows/reusable/` debe tener al menos un consumidor.
 - `runFlow.when` puede usarse para condiciones locales y no cuenta como otra dependencia de archivo.
+- Revisar condiciones omitidas lentas con `npm run maestro:perf`; una condicion `SKIPPED` no necesariamente es gratuita.
+
+## Estado Autenticado
+
+- Los flows autenticados reutilizan sesion por defecto para evitar onboarding y login repetidos.
+- Usar `RESET_STATE=true` al ejecutar un flow cuando se requiera aislamiento completo desde estado limpio.
+- El modo limpio puede habilitar recuperaciones defensivas que se omiten en la ruta rapida.
 
 ## Variables
 

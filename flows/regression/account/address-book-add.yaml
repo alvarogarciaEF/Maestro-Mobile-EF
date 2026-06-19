@@ -22,7 +22,12 @@ tags:
   - account
   - address
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
+- evalScript: ${output.addressRecipientName = ADDRESS_RECIPIENT_NAME + " " + Date.now()}
 - runFlow:
     file: ../../reusable/ensure-logged-in.yaml
     env:
@@ -39,31 +44,6 @@ tags:
     timeout: 7000
 - tapOn:
     text: "Direcciones de envío|Direcciones"
-- runFlow:
-    when:
-      visible: "${ADDRESS_RECIPIENT_NAME}"
-    commands:
-      - tapOn:
-          text: "${ADDRESS_RECIPIENT_NAME}"
-      - tapOn:
-          id: "btn_edit_address"
-      - scrollUntilVisible:
-          element:
-            text: "Eliminar dirección|Eliminar direccion"
-          direction: DOWN
-          visibilityPercentage: 20
-          timeout: 8000
-      - tapOn:
-          id: "btn_delete_address"
-      - runFlow:
-          when:
-            visible: "Eliminar"
-          commands:
-            - tapOn: "Eliminar"
-      - extendedWaitUntil:
-          visible:
-            text: "Agregar una nueva dirección"
-          timeout: 10000
 - tapOn:
     text: "Agregar una nueva dirección"
 - extendedWaitUntil:
@@ -72,10 +52,11 @@ tags:
     timeout: 10000
 - tapOn:
     id: "recipentNameEditText"
-- inputText: ${ADDRESS_RECIPIENT_NAME}
+- inputText: ${output.addressRecipientName}
 - tapOn:
     id: "add_phone_edit_text"
 - inputText: ${ADDRESS_PHONE}
+- hideKeyboard
 - scrollUntilVisible:
     element:
       id: "streetEditText"
@@ -84,6 +65,7 @@ tags:
 - tapOn:
     id: "streetEditText"
 - inputText: ${ADDRESS_STREET}
+- hideKeyboard
 - scrollUntilVisible:
     element:
       id: "add_home_number_edit_text"
@@ -92,6 +74,7 @@ tags:
 - tapOn:
     id: "add_home_number_edit_text"
 - inputText: ${ADDRESS_NUMBER}
+- hideKeyboard
 - scrollUntilVisible:
     element:
       id: "neighborhoodEditText"
@@ -100,6 +83,7 @@ tags:
 - tapOn:
     id: "neighborhoodEditText"
 - inputText: ${ADDRESS_NEIGHBORHOOD}
+- hideKeyboard
 - scrollUntilVisible:
     element:
       id: "dropdown_state_container"
@@ -182,68 +166,64 @@ tags:
     id: "btn_continue_address_container"
 - runFlow:
     when:
-      visible: "Solo faltan unos detalles"
+      true: ${(RESET_STATE || "false") == "true"}
     commands:
-      - tapOn: "Aceptar|Entendido|OK|Cerrar"
-- runFlow:
-    when:
-      notVisible: "${ADDRESS_RECIPIENT_NAME}"
-    commands:
-      - extendedWaitUntil:
-          visible:
-            id: "btn_confirm_address_container"
-          timeout: 30000
-      - tapOn:
-          id: "btn_confirm_address_container"
-- runFlow:
-    when:
-      visible: "¡Casi lo tenemos!|No logramos ubicar la dirección exacta"
-    commands:
-      - tapOn: "Entendido"
-      - scrollUntilVisible:
-          element:
-            id: "btn_continue_address_container"
-          direction: DOWN
-          visibilityPercentage: 40
-          timeout: 10000
-      - tapOn:
-          id: "btn_continue_address_container"
-      - extendedWaitUntil:
-          visible:
-            id: "btn_confirm_address_container"
-          timeout: 30000
-      - tapOn:
-          id: "btn_confirm_address_container"
-- extendedWaitUntil:
-    visible:
-      text: "${ADDRESS_RECIPIENT_NAME}"
-    timeout: 18000
-- assertVisible:
-    text: "${ADDRESS_RECIPIENT_NAME}"
-- runFlow:
-    when:
-      visible: "${ADDRESS_RECIPIENT_NAME}"
-    commands:
-      - tapOn:
-          id: "btn_edit_address"
-      - scrollUntilVisible:
-          element:
-            text: "Eliminar dirección|Eliminar direccion"
-          direction: DOWN
-          visibilityPercentage: 20
-          timeout: 8000
-      - tapOn:
-          id: "btn_delete_address"
-      - assertVisible:
-          id: "tv_title"
       - runFlow:
           when:
-            visible: "Eliminar"
+            visible: "Solo faltan unos detalles"
           commands:
-            - tapOn: "Eliminar"
+            - tapOn: "Aceptar|Entendido|OK|Cerrar"
+- extendedWaitUntil:
+    visible:
+      id: "btn_confirm_address_container"
+    timeout: 30000
+- tapOn:
+    id: "btn_confirm_address_container"
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - runFlow:
+          when:
+            visible: "¡Casi lo tenemos!|No logramos ubicar la dirección exacta"
+          commands:
+            - tapOn: "Entendido"
+            - scrollUntilVisible:
+                element:
+                  id: "btn_continue_address_container"
+                direction: DOWN
+                visibilityPercentage: 40
+                timeout: 10000
+            - tapOn:
+                id: "btn_continue_address_container"
+            - extendedWaitUntil:
+                visible:
+                  id: "btn_confirm_address_container"
+                timeout: 30000
+            - tapOn:
+                id: "btn_confirm_address_container"
+- extendedWaitUntil:
+    visible:
+      text: "${output.addressRecipientName}"
+    timeout: 18000
+- assertVisible:
+    text: "${output.addressRecipientName}"
+- tapOn:
+    id: "btn_edit_address"
+- scrollUntilVisible:
+    element:
+      text: "Eliminar dirección|Eliminar direccion"
+    direction: DOWN
+    visibilityPercentage: 20
+    timeout: 8000
+- tapOn:
+    id: "btn_delete_address"
+- assertVisible:
+    id: "tv_title"
+- tapOn: "Eliminar"
 - extendedWaitUntil:
     visible:
       text: "Agregar una nueva dirección"
     timeout: 10000
 - assertNotVisible:
-    text: "${ADDRESS_RECIPIENT_NAME}"
+    text: "${output.addressRecipientName}"

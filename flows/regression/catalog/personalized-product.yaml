@@ -10,7 +10,11 @@ tags:
   - personalization
   - pdp
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-home.yaml
 - openLink:
     link: ${DEEPLINK_PERSONALIZED_PRODUCT}
