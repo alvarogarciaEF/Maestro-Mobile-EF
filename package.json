@@ -38,7 +38,8 @@
     "maestro:bines:msi:android": "BIN_VALIDATE_MSI=1 ./scripts/run-bines-android.sh",
     "bines:binlookup": "./scripts/validate-binlookup.sh",
     "maestro:studio": "./scripts/maestro-studio.sh",
-    "maestro:studio:env": "./scripts/print-studio-env.sh"
+    "maestro:studio:env": "./scripts/print-studio-env.sh",
+    "maestro:perf": "ruby scripts/analyze-maestro-performance.rb"
   },
   "keywords": [
     "maestro",

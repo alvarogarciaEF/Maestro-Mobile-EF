@@ -5,6 +5,7 @@
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 env:
   APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+  RESET_STATE: ${RESET_STATE || "false"}
   DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
   DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
   USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
@@ -14,17 +15,21 @@ name: Reusable - Ensure Logged In
 ---
 - launchApp:
     stopApp: true
-- runFlow: close-pre-login-prompts.yaml
 - runFlow:
     when:
-      visible: "Iniciar Sesión|Iniciar sesión"
+      true: ${(RESET_STATE || "false") == "true"}
     commands:
+      - runFlow: close-pre-login-prompts.yaml
       - runFlow:
-          file: login-from-onboarding.yaml
-          env:
-            APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
-            USER_EMAIL: ${USER_EMAIL}
-            USER_PASSWORD: ${USER_PASSWORD}
+          when:
+            visible: "Iniciar Sesión|Iniciar sesión"
+          commands:
+            - runFlow:
+                file: login-from-onboarding.yaml
+                env:
+                  APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+                  USER_EMAIL: ${USER_EMAIL}
+                  USER_PASSWORD: ${USER_PASSWORD}
 - runFlow:
     file: ensure-home.yaml
     env:

@@ -9,7 +9,11 @@ tags:
   - cart
   - web-parity
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/open-cart-with-single-product.yaml
 - runFlow: ../../reusable/change-cart-delivery-date.yaml
 - assertVisible:

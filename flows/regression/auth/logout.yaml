@@ -9,7 +9,11 @@ tags:
   - auth
   - web-parity
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-logged-in.yaml
 - runFlow: ../../reusable/logout.yaml
 - assertVisible:

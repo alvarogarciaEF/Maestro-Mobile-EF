@@ -10,25 +10,30 @@ tags:
   - search
   - web-parity
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-home.yaml
-- tapOn:
-    id: "toolbar_search"
-- assertVisible:
-    id: "search_product_input"
+- runFlow: ../../reusable/open-search.yaml
 - inputText: ${SEARCH_NO_RESULTS_TERM}
 - pressKey: Enter
 - extendedWaitUntil:
     visible:
-      text: "Más vendidos|mas vendidos|más vendidos|Más buscados"
+      text: ".*no hay resultados.*|Más vendidos|mas vendidos|más vendidos|Más buscados"
     timeout: 30000
 - assertVisible:
-    text: "Más vendidos|mas vendidos|más vendidos|Más buscados"
-- runFlow: ../../reusable/navigate-home-tab.yaml
-- tapOn:
-    id: "toolbar_search"
+    text: ".*no hay resultados.*"
 - assertVisible:
-    id: "search_product_input"
+    text: "Más vendidos|mas vendidos|más vendidos|Más buscados"
+- runFlow:
+    file: ../../reusable/ensure-home.yaml
+    env:
+      APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
+      DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
+      DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
+- runFlow: ../../reusable/open-search.yaml
 - inputText: ${PRODUCT_SEARCH_TERM}
 - pressKey: Enter
 - extendedWaitUntil:

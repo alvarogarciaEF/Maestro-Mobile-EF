@@ -11,7 +11,11 @@ tags:
   - navigation
   - web-parity
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-home.yaml
 - runFlow: ../../reusable/open-category-listing-from-tab.yaml
 - extendedWaitUntil:

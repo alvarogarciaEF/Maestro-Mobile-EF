@@ -10,7 +10,11 @@ tags:
   - orders
   - web-parity
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-logged-in.yaml
 - runFlow: ../../reusable/open-hideable-order-detail.yaml
 - scrollUntilVisible:

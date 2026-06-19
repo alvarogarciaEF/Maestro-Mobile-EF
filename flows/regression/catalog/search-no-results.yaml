@@ -9,18 +9,21 @@ tags:
   - search
   - negative
 ---
-- clearState
+- runFlow:
+    when:
+      true: ${(RESET_STATE || "false") == "true"}
+    commands:
+      - clearState
 - runFlow: ../../reusable/ensure-home.yaml
-- tapOn:
-    id: "toolbar_search"
-- assertVisible:
-    id: "search_product_input"
+- runFlow: ../../reusable/open-search.yaml
 - inputText: ${SEARCH_NO_RESULTS_TERM}
 - pressKey: Enter
 - extendedWaitUntil:
     visible:
-      text: "Más vendidos|mas vendidos|más vendidos|Más buscados"
+      text: ".*no hay resultados.*|Más vendidos|mas vendidos|más vendidos|Más buscados"
     timeout: 30000
+- assertVisible:
+    text: ".*no hay resultados.*"
 - assertVisible:
     text: "Más vendidos|mas vendidos|más vendidos|Más buscados"
 - assertNotVisible:
