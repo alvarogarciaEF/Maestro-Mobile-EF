@@ -1,0 +1,62 @@
+# Proposito: preparar Node, Maestro, KVM y descargar el APK de QA para correr suites Maestro en Android.
+# Uso: se invoca antes de reactivecircus/android-emulator-runner en los workflows Android.
+# Nota: si APK_DOWNLOAD_URL esta vacio, falla con mensaje claro (origen del binario pendiente).
+name: "Android Maestro Setup"
+description: "Prepara Node, Maestro y descarga el APK de QA para correr suites Maestro en Android."
+
+inputs:
+  apk-download-url:
+    description: "URL de descarga del APK (secret APK_DOWNLOAD_URL). Si esta vacio, falla con mensaje claro."
+    required: true
+
+outputs:
+  apk-path:
+    description: "Ruta local del APK descargado."
+    value: ${{ steps.download-apk.outputs.apk-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Enable KVM
+      shell: bash
+      run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Install Maestro
+      shell: bash
+      run: curl -Ls "https://get.maestro.mobile.dev" | bash
+
+    - name: Add Maestro to PATH
+      shell: bash
+      run: echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+    - name: Validate Maestro version
+      shell: bash
+      run: maestro --version
+
+    - name: Install npm metadata
+      shell: bash
+      run: npm install
+
+    - name: Download APK
+      id: download-apk
+      shell: bash
+      env:
+        APK_DOWNLOAD_URL: ${{ inputs.apk-download-url }}
+      run: |
+        if [[ -z "${APK_DOWNLOAD_URL}" ]]; then
+          echo "::error::Falta el secret APK_DOWNLOAD_URL. Aun no esta definido el origen del binario (ver docs/ci-rollout.md). Configuralo para que el CI instale la app."
+          exit 1
+        fi
+        mkdir -p apps/android
+        apk_path="apps/android/app-qa.apk"
+        echo "Descargando APK de QA..."
+        curl -fSL "${APK_DOWNLOAD_URL}" -o "${apk_path}"
+        echo "apk-path=${apk_path}" >> "$GITHUB_OUTPUT"

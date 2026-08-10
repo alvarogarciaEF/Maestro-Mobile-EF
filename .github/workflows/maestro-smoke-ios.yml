@@ -31,6 +31,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Guard - prerequisitos iOS
+        run: |
+          if ! xcrun simctl list devices booted | grep -q "Booted"; then
+            echo "::error::No hay simulador iOS booteado con la app instalada. El CI de iOS es Fase 2: requiere runner macOS con simulador + binario. Ver docs/ci-rollout.md."
+            exit 1
+          fi
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
