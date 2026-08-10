@@ -3,7 +3,7 @@
 # Valida: errores por correo/contrasena vacios sin iniciar sesion.
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 env:
-  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
+  USER_EMAIL: ${USER_EMAIL}
   USER_DISPLAY_NAME: ${USER_DISPLAY_NAME || "QA Automation"}
 name: Regression - Login Empty Fields
 tags:

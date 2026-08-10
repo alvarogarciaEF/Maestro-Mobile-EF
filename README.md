@@ -331,19 +331,23 @@ Ejemplo:
 
 ## GitHub Actions
 
-Los workflows estan configurados para ejecucion manual con `workflow_dispatch` y permiten elegir `environment` (`qa` o `dev`). Configura estos secrets en GitHub:
+El gate estatico `validate.yml` corre automaticamente en cada **pull request** y push a `main` (sin device). Los workflows con device siguen siendo `workflow_dispatch` manual y permiten elegir `environment` (`qa` o `dev`). Configura estos secrets en GitHub:
 
 - `USER_EMAIL`
 - `USER_PASSWORD`
+- `APK_DOWNLOAD_URL` — URL de descarga del APK de QA; requerido para los jobs Android con emulador.
 
 Tambien puedes adaptar `APP_ID_ANDROID`, `DEFAULT_STATE`, `DEFAULT_CITY`, `PRODUCT_SEARCH_TERM`, `PRODUCT_NAME`, `CATEGORY_NAME` y `DEEPLINK_HOME` en los workflows o convertirlos en variables/secrets del repositorio.
 
 Workflows disponibles:
 
+- `validate.yml` (PR + push a `main`; gate estatico sin device)
 - `maestro-smoke-android.yml`
 - `maestro-smoke-ios.yml`
 - `maestro-regression-android.yml`
 - `maestro-regression-mobile-segmented.yml`
+
+Los workflows con device bootean emulador Android (`reactivecircus/android-emulator-runner` + composite `.github/actions/android-maestro`). Estado, limitaciones (login-Google, iOS Fase 2) y pendientes en [docs/ci-rollout.md](docs/ci-rollout.md).
 
 Todos publican resumen JUnit en `GITHUB_STEP_SUMMARY` y artifacts en `reports/`.
 

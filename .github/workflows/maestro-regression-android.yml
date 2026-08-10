@@ -34,25 +34,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Preparar Node, Maestro y APK
+        id: setup
+        uses: ./.github/actions/android-maestro
         with:
-          node-version: "20"
+          apk-download-url: ${{ secrets.APK_DOWNLOAD_URL }}
 
-      - name: Install Maestro
-        run: curl -Ls "https://get.maestro.mobile.dev" | bash
-
-      - name: Add Maestro to PATH
-        run: echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
-
-      - name: Validate Maestro version
-        run: maestro --version
-
-      - name: Install npm metadata
-        run: npm install
-
-      - name: Run regression Android
-        run: npm run maestro:regression:android
+      - name: Run regression Android (emulador)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            ./scripts/install-app.sh android "${{ steps.setup.outputs.apk-path }}"
+            npm run maestro:regression:android
 
       - name: Build JUnit summary
         if: always()

@@ -16,4 +16,4 @@ tags:
 - waitForAnimationToEnd:
     timeout: 25000
 - takeScreenshot:
-    path: "bines-payment-attempt-6msi-final-${BIN_NUMBER}"
+    path: "reports/bines-payment-attempt-6msi-final-${BIN_NUMBER}"

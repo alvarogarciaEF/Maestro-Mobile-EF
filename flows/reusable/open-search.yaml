@@ -12,6 +12,7 @@ name: Reusable - Open Search
 ---
 - tapOn:
     id: "toolbar_search"
+# wait-justification: espera la animacion de apertura del buscador tras tocar la lupa; sin estado de carga accesible.
 - waitForAnimationToEnd:
     timeout: 3000
 - runFlow:
@@ -31,6 +32,7 @@ name: Reusable - Open Search
             DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
       - tapOn:
           id: "toolbar_search"
+      # wait-justification: espera la animacion de apertura del buscador tras el relanzamiento y retap.
       - waitForAnimationToEnd:
           timeout: 3000
 - extendedWaitUntil:

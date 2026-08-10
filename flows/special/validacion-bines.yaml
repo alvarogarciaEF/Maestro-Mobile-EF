@@ -81,7 +81,7 @@ tags:
 - assertVisible:
     id: "add_card_month_year_edit_text"
 - takeScreenshot:
-    path: "bines-form-${BIN_NUMBER}"
+    path: "reports/bines-form-${BIN_NUMBER}"
 # Importante: no tocar "Usar esta tarjeta" ni confirmar pago desde este flow.
 - assertVisible:
     text: "Usar esta tarjeta"
@@ -90,4 +90,4 @@ tags:
 - eraseText
 - inputText: ${BIN_CARD_NUMBER}
 - takeScreenshot:
-    path: "bines-card-${BIN_NUMBER}"
+    path: "reports/bines-card-${BIN_NUMBER}"

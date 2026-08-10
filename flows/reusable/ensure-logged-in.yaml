@@ -8,8 +8,8 @@ env:
   RESET_STATE: ${RESET_STATE || "false"}
   DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
   DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
-  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
-  USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+  USER_EMAIL: ${USER_EMAIL}
+  USER_PASSWORD: ${USER_PASSWORD}
   GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
 name: Reusable - Ensure Logged In
 ---

@@ -89,7 +89,9 @@ depth = lambda do |node|
 end
 
 max_depth = flow_files.map { |file| depth.call(file) }.max || 0
-max_allowed_depth = 5
+# 6 contempla que los flows special/ viven un nivel por encima de regression y componen
+# reusables encadenados (p. ej. setup-cart -> add-product -> open-search -> ensure-home).
+max_allowed_depth = 6
 errors << "profundidad maxima #{max_depth}; limite #{max_allowed_depth}" if max_depth > max_allowed_depth
 
 unless errors.empty?

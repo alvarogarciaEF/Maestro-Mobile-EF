@@ -10,6 +10,10 @@ reports/*
 !reports/.gitkeep
 test-results/
 
+# Artefactos sueltos en la raiz (los screenshots van a reports/, no a la raiz)
+/*.png
+.account-run-results.txt
+
 # Dependencies
 node_modules/
 

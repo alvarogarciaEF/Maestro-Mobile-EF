@@ -4,8 +4,8 @@
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 env:
   APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
-  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
-  USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+  USER_EMAIL: ${USER_EMAIL}
+  USER_PASSWORD: ${USER_PASSWORD}
   GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
   DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
   DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
@@ -32,8 +32,8 @@ tags:
     file: ../../reusable/ensure-logged-in.yaml
     env:
       APP_ID_ANDROID: ${APP_ID_ANDROID || "com.enviaflores.android"}
-      USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
-      USER_PASSWORD: ${USER_PASSWORD || "Prueba1234."}
+      USER_EMAIL: ${USER_EMAIL}
+      USER_PASSWORD: ${USER_PASSWORD}
       GOOGLE_ACCOUNT_EMAIL: ${GOOGLE_ACCOUNT_EMAIL}
       DEFAULT_STATE: ${DEFAULT_STATE || "Nuevo León"}
       DEFAULT_CITY: ${DEFAULT_CITY || "Monterrey"}
