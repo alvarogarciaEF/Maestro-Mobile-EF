@@ -14,7 +14,7 @@ tags:
 - tapOn:
     text: ".*6 meses.*|.*6 MSI.*|.*6 mensualidades.*"
 - takeScreenshot:
-    path: "bines-payment-6msi-selected-${BIN_NUMBER}"
+    path: "reports/bines-payment-6msi-selected-${BIN_NUMBER}"
 - tapOn:
     text: "Confirmar"
 - runFlow: ../reusable/enter-card-security-if-needed.yaml
@@ -22,4 +22,4 @@ tags:
 - waitForAnimationToEnd:
     timeout: 15000
 - takeScreenshot:
-    path: "bines-payment-attempt-6msi-${BIN_NUMBER}"
+    path: "reports/bines-payment-attempt-6msi-${BIN_NUMBER}"

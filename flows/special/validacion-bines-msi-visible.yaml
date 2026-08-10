@@ -101,7 +101,7 @@ tags:
 - assertVisible:
     text: ".*6 meses.*|.*6 MSI.*|.*6 mensualidades.*"
 - takeScreenshot:
-    path: "bines-msi-visible-${BIN_NUMBER}"
+    path: "reports/bines-msi-visible-${BIN_NUMBER}"
 # Importante: no confirmar pago real desde flows automatizados.
 - assertVisible:
     id: "continueProcessBtn"

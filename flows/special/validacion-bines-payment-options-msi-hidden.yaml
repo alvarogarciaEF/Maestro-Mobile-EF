@@ -90,7 +90,7 @@ tags:
 - assertVisible:
     text: "12/30"
 - takeScreenshot:
-    path: "bines-card-complete-${BIN_NUMBER}"
+    path: "reports/bines-card-complete-${BIN_NUMBER}"
 - tapOn:
     text: "Usar esta tarjeta"
 - runFlow: ../reusable/enter-card-security-if-needed.yaml
@@ -108,7 +108,7 @@ tags:
 - assertNotVisible:
     text: ".*3 meses.*|.*3 MSI.*|.*3 mensualidades.*|.*6 meses.*|.*6 MSI.*|.*6 mensualidades.*"
 - takeScreenshot:
-    path: "bines-payment-options-${BIN_NUMBER}"
+    path: "reports/bines-payment-options-${BIN_NUMBER}"
 # Importante: no confirmar pago real para BINes exitosos; solo se valida seleccion de pago.
 - assertVisible:
     text: "Confirmar"
