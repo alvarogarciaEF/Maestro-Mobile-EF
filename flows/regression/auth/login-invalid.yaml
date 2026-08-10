@@ -3,8 +3,8 @@
 # Valida: login rechazado sin iniciar sesion.
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 env:
-  USER_EMAIL: ${USER_EMAIL || "enviafloresQA@mailinator.com"}
-  USER_INVALID_PASSWORD: ${USER_INVALID_PASSWORD || "PasswordIncorrecto123."}
+  USER_EMAIL: ${USER_EMAIL}
+  USER_INVALID_PASSWORD: ${USER_INVALID_PASSWORD}
   USER_DISPLAY_NAME: ${USER_DISPLAY_NAME || "QA Automation"}
 name: Regression - Login Invalid
 tags:

@@ -180,6 +180,15 @@ else
 fi
 
 echo
+echo "Validando credenciales embebidas"
+if scan_content '\|\| "(Prueba1234|PasswordIncorrecto|enviafloresQA)' flows >/tmp/qa-mobile-cred-scan.txt; then
+  cat /tmp/qa-mobile-cred-scan.txt
+  fail "Hay credenciales embebidas como fallback en flows. Usa solo \${VAR} y define el valor en .env/Secrets."
+else
+  pass "Sin credenciales embebidas en flows"
+fi
+
+echo
 echo "Validando scripts shell"
 if bash -n scripts/*.sh; then
   pass "Scripts shell validos"
