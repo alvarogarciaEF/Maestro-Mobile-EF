@@ -28,8 +28,7 @@ name: Reusable - Advance Checkout To OXXO Review
     when:
       visible: "Escoge un horario"
     commands:
-      - tapOn:
-          point: "93%,50%"
+      - runFlow: select-schedule-slot.yaml
       - tapOn:
           id: "continueProcessBtn"
       - extendedWaitUntil:

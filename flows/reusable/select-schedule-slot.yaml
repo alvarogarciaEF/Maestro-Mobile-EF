@@ -1,0 +1,9 @@
+# Proposito: seleccionar un horario de entrega en la pantalla "Escoge un horario".
+# Precondiciones: la pantalla "Escoge un horario" ya visible (el caller lo guarda con when).
+# Nota: usa coordenada (93%,50%) como fallback porque el control no expone un testID estable.
+#       PENDIENTE: pedir un testID al equipo mobile y reemplazar el tap SOLO aqui (un lugar).
+appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
+name: Reusable - Select Schedule Slot
+---
+- tapOn:
+    point: "93%,50%"
