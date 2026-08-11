@@ -41,6 +41,17 @@ Plan operativo para evolucionar de ejecucion manual a cobertura continua por niv
 - Objetivo: ejecutar solo el dominio impactado para reducir tiempo de feedback.
 - Criterio de adopcion: flaky rate < 5% por dominio durante 2 semanas.
 
+### Ejecucion en paralelo (matrix)
+
+- Workflow: `maestro-regression-matrix-android.yml` — corre los dominios core en **paralelo** via
+  `strategy.matrix` (auth, catalog, cart, location, account, deeplink; `fail-fast: false`), cada
+  uno en su propio emulador. Reduce el tiempo total de regresion vs la corrida secuencial.
+- `checkout` queda fuera del matrix por seguridad de pagos (igual que `regression-core`).
+- Requiere el secret `APK_DOWNLOAD_URL`: sin el, cada celda falla claro en el paso de descarga.
+- Alternativa futura: sharding de Maestro (`--shard-split`) dentro de un runner (requiere
+  multi-emulador por job). Optimizacion futura: bajar el APK una sola vez y compartirlo por artifact
+  en vez de por celda.
+
 ## Nivel 3 - Regression Completa
 
 - Android: `maestro-regression-android.yml`
