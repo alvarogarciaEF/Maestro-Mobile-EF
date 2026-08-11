@@ -67,6 +67,18 @@ Ejemplo aceptable:
     text: "Mi cuenta"
 ```
 
+### Pendientes de testID (backlog)
+
+Estos controles usan coordenadas por falta de un `id` estable. Pedir al equipo mobile un `testID` y reemplazar (idealmente en el reusable correspondiente, para hacerlo en un solo lugar):
+
+- **Horario de entrega** (`93%,50%`): ya centralizado en `flows/reusable/select-schedule-slot.yaml`.
+- **Volver desde PDP** (`50%,35%`): `flows/regression/catalog/pdp-back-navigation.yaml`.
+- **Sugerencia de autocompletado** (`40%,50%`): `flows/regression/catalog/search-autocomplete-navigation.yaml`.
+- **Segundo producto de categoria** (`50%,45%`): `flows/reusable/add-second-product-from-category.yaml`.
+- **Campo CVV de tarjeta** (`37%,49%`): `flows/reusable/enter-card-security-if-needed.yaml`.
+
+Candidatos a migrar de `tapOn` por texto a `id` (alto trafico; rompen con cambios de copy/i18n): login (email/contrasena) y checkout.
+
 ## Sincronizacion
 
 - Preferir `assertVisible` y `assertNotVisible`: ambos reintentan automaticamente hasta 7 segundos.
@@ -86,7 +98,7 @@ Ejemplo excepcional:
 
 - Usar un archivo reusable cuando encapsule una operacion de negocio compartida, no como alias de una sola llamada.
 - El llamador debe cumplir las precondiciones documentadas; el reusable no debe repetir navegacion que todos sus consumidores ya realizaron.
-- Mantener una profundidad maxima de cinco archivos y evitar ciclos.
+- Mantener una profundidad maxima de seis archivos y evitar ciclos.
 - Todo archivo en `flows/reusable/` debe tener al menos un consumidor.
 - `runFlow.when` puede usarse para condiciones locales y no cuenta como otra dependencia de archivo.
 - Revisar condiciones omitidas lentas con `npm run maestro:perf`; una condicion `SKIPPED` no necesariamente es gratuita.
