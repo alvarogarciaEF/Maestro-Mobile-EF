@@ -1,0 +1,78 @@
+# Proposito: correr la regresion Android en PARALELO por dominio (matrix) para feedback mas rapido.
+# Precondiciones: secrets USER_EMAIL/USER_PASSWORD y APK_DOWNLOAD_URL configurados.
+# Nota: cada celda del matrix bootea su emulador e instala el APK; sin APK_DOWNLOAD_URL falla claro en ese paso.
+name: Maestro Regression Matrix Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to run against"
+        required: true
+        default: "qa"
+        type: choice
+        options:
+          - qa
+          - dev
+
+jobs:
+  regression-matrix-android:
+    name: Regression Android ${{ matrix.domain }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    strategy:
+      fail-fast: false
+      matrix:
+        domain:
+          - auth
+          - catalog
+          - cart
+          - location
+          - account
+          - deeplink
+    env:
+      APP_ID_ANDROID: com.enviaflores.android
+      USER_EMAIL: ${{ secrets.USER_EMAIL }}
+      USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+      DEFAULT_STATE: Nuevo León
+      DEFAULT_CITY: Monterrey
+      PRODUCT_SEARCH_TERM: rosas
+      PRODUCT_NAME: Globo Esfera Magenta con Rosas
+      CATEGORY_NAME: Cumpleaños
+      DEEPLINK_HOME: enviaflores://
+      DEEPLINK_CATEGORY: https://www.enviaflores.com/florerias-nuevo-leon/monterrey/cumpleanos
+      DEEPLINK_PRODUCT: https://www.enviaflores.com/florerias-nuevo-leon/monterrey/001
+      DEEPLINK_CART: https://www.enviaflores.com/shoppingcart
+      DEEPLINK_FAQ: https://www.enviaflores.com/faq
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preparar Node, Maestro y APK
+        id: setup
+        uses: ./.github/actions/android-maestro
+        with:
+          apk-download-url: ${{ secrets.APK_DOWNLOAD_URL }}
+
+      - name: Run ${{ matrix.domain }} (emulador)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            ./scripts/install-app.sh android "${{ steps.setup.outputs.apk-path }}"
+            npm run maestro:${{ matrix.domain }}:android
+
+      - name: Build JUnit summary
+        if: always()
+        run: ./scripts/junit-summary.sh "reports/*.xml" "Android ${{ matrix.domain }} Summary" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-${{ matrix.domain }}-android-reports
+          path: reports/
