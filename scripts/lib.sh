@@ -315,3 +315,52 @@ run_maestro_regression_core() {
   maestro_cmd+=("${maestro_args[@]}" "${core_paths[@]}" --format junit --output "$report_path")
   "${maestro_cmd[@]}"
 }
+
+# Ejecuta flows por seleccion de tags (transversal a las carpetas).
+# Uso: run_maestro_tags "<include>" "<exclude>" "<report_path>" "<label>"
+# Seguridad de pagos: los flows con tag "special" (captura de tarjeta) se EXCLUYEN por
+# defecto; solo corren por sus scripts dedicados o con TAGS_INCLUDE_SPECIAL=1.
+run_maestro_tags() {
+  local include_tags="$1"
+  local exclude_tags="$2"
+  local report_path="$3"
+  local label="$4"
+  local maestro_args=()
+  local maestro_cmd=()
+  local output_args=()
+  local tag_args=()
+
+  mkdir -p reports
+  disable_emulator_stylus
+  echo "Ejecutando ${label}"
+  while IFS= read -r -d '' arg; do
+    maestro_args+=("$arg")
+  done < <(maestro_env_args)
+
+  if [[ -n "${MAESTRO_TEST_OUTPUT_DIR:-}" ]]; then
+    mkdir -p "$MAESTRO_TEST_OUTPUT_DIR"
+    output_args+=(--test-output-dir "$MAESTRO_TEST_OUTPUT_DIR")
+  fi
+
+  if [[ "${TAGS_INCLUDE_SPECIAL:-0}" != "1" ]]; then
+    if [[ -n "$exclude_tags" ]]; then
+      exclude_tags="special,${exclude_tags}"
+    else
+      exclude_tags="special"
+    fi
+  fi
+
+  if [[ -n "$include_tags" ]]; then
+    tag_args+=(--include-tags "$include_tags")
+  fi
+  if [[ -n "$exclude_tags" ]]; then
+    tag_args+=(--exclude-tags "$exclude_tags")
+  fi
+
+  maestro_cmd=(maestro test)
+  if [[ "${#output_args[@]}" -gt 0 ]]; then
+    maestro_cmd+=("${output_args[@]}")
+  fi
+  maestro_cmd+=("${maestro_args[@]}" "${tag_args[@]}" flows --format junit --output "$report_path")
+  "${maestro_cmd[@]}"
+}

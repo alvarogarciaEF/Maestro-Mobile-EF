@@ -56,6 +56,19 @@ case "$SUITE" in
     require_env_vars APP_ID_IOS USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY
     run_ios_suite "flows/regression/account" "reports/account-ios.xml" "account regression iOS para appId: ${APP_ID_IOS}"
     ;;
+  tags)
+    INCLUDE_TAGS="${2:-}"
+    EXCLUDE_TAGS="${3:-}"
+    if [[ -z "$INCLUDE_TAGS" && -z "$EXCLUDE_TAGS" ]]; then
+      echo "Uso: ./scripts/run-ios-suite.sh tags \"<include>\" [\"<exclude>\"]"
+      echo "Ejemplo: ./scripts/run-ios-suite.sh tags web-parity"
+      exit 1
+    fi
+    require_env_vars APP_ID_IOS USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME CATEGORY_NAME DEEPLINK_HOME
+    SAFE_TAGS="${INCLUDE_TAGS//,/-}"
+    SAFE_TAGS="${SAFE_TAGS:-all}"
+    APP_ID_ANDROID="${APP_ID_IOS}" run_maestro_tags "$INCLUDE_TAGS" "$EXCLUDE_TAGS" "reports/tags-${SAFE_TAGS}-ios.xml" "tags iOS (include: ${INCLUDE_TAGS:-*}, exclude: ${EXCLUDE_TAGS:-none}) para appId: ${APP_ID_IOS}"
+    ;;
   flow)
     if [[ -z "$FLOW_PATH" ]]; then
       echo "Uso: ./scripts/run-ios-suite.sh flow <ruta-flow.yaml>"
@@ -72,7 +85,8 @@ case "$SUITE" in
     run_ios_suite "$FLOW_PATH" "reports/${SAFE_NAME}-ios.xml" "flow iOS: ${FLOW_PATH}"
     ;;
   *)
-    echo "Uso: ./scripts/run-ios-suite.sh <smoke|regression|regression-full|auth|catalog|cart|checkout|account|deeplink|flow> [ruta-flow.yaml]"
+    echo "Uso: ./scripts/run-ios-suite.sh <smoke|regression|regression-full|auth|catalog|cart|checkout|account|deeplink|flow|tags> [args]"
+    echo "  tags <include> [exclude]: corre flows por tags (transversal). Ej: tags web-parity"
     exit 1
     ;;
 esac

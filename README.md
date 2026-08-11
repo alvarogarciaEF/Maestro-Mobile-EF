@@ -166,6 +166,26 @@ Ejecuta un flow individual Android:
 npm run maestro:flow:android -- flows/smoke/home.yaml
 ```
 
+### Ejecución por tags (transversal)
+
+Además de las suites por carpeta, puedes correr flows por **tags** del encabezado, lo que permite cortes transversales a los dominios (p. ej. todos los `web-parity`, o regresión sin pagos):
+
+```bash
+# Genérico: include [exclude]
+npm run maestro:tags:android -- web-parity
+npm run maestro:tags:android -- regression negative
+npm run maestro:tags:android -- "" checkout,payments   # todo excepto pagos
+
+# Presets
+npm run maestro:web-parity:android          # paridad con el framework web
+npm run maestro:negative:android            # casos negativos
+npm run maestro:regression:nopay:android    # regresión sin captura/confirmación de pago
+```
+
+**Seguridad de pagos:** las corridas por tag **excluyen `special` por defecto** (los flows que capturan tarjeta solo corren por `maestro:bines:*`). Para incluirlos explícitamente: `TAGS_INCLUDE_SPECIAL=1 npm run maestro:tags:android -- bines`.
+
+iOS usa `maestro:tags:ios` con la misma sintaxis. Las suites por carpeta (`smoke`, `regression`, `cart`, …) siguen funcionando igual.
+
 Primer paquete regression:
 
 ```text
