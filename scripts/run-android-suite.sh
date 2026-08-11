@@ -53,6 +53,20 @@ case "$SUITE" in
     require_env_vars APP_ID_ANDROID DEEPLINK_CATEGORY DEEPLINK_PRODUCT DEEPLINK_CART DEEPLINK_FAQ PRODUCT_SEARCH_TERM PRODUCT_NAME DEFAULT_STATE DEFAULT_CITY
     run_maestro_suite "flows/regression/deeplink" "reports/deeplink-android.xml" "deeplink regression Android para appId: ${APP_ID_ANDROID}"
     ;;
+  tags)
+    INCLUDE_TAGS="${2:-}"
+    EXCLUDE_TAGS="${3:-}"
+    if [[ -z "$INCLUDE_TAGS" && -z "$EXCLUDE_TAGS" ]]; then
+      echo "Uso: ./scripts/run-android-suite.sh tags \"<include>\" [\"<exclude>\"]"
+      echo "Ejemplo: ./scripts/run-android-suite.sh tags web-parity"
+      echo "Ejemplo: ./scripts/run-android-suite.sh tags regression checkout,payment,payments,oxxo"
+      exit 1
+    fi
+    require_env_vars APP_ID_ANDROID USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME CATEGORY_NAME DEEPLINK_HOME
+    SAFE_TAGS="${INCLUDE_TAGS//,/-}"
+    SAFE_TAGS="${SAFE_TAGS:-all}"
+    run_maestro_tags "$INCLUDE_TAGS" "$EXCLUDE_TAGS" "reports/tags-${SAFE_TAGS}-android.xml" "tags Android (include: ${INCLUDE_TAGS:-*}, exclude: ${EXCLUDE_TAGS:-none}) para appId: ${APP_ID_ANDROID}"
+    ;;
   flow)
     if [[ -z "$FLOW_PATH" ]]; then
       echo "Uso: ./scripts/run-android-suite.sh flow <ruta-flow.yaml>"
@@ -69,7 +83,8 @@ case "$SUITE" in
     run_maestro_suite "$FLOW_PATH" "reports/${SAFE_NAME}-android.xml" "flow Android: ${FLOW_PATH}"
     ;;
   *)
-    echo "Uso: ./scripts/run-android-suite.sh <smoke|regression|regression-full|auth|catalog|cart|checkout|account|deeplink|location|flow> [ruta-flow.yaml]"
+    echo "Uso: ./scripts/run-android-suite.sh <smoke|regression|regression-full|auth|catalog|cart|checkout|account|deeplink|location|flow|tags> [args]"
+    echo "  tags <include> [exclude]: corre flows por tags (transversal). Ej: tags web-parity"
     exit 1
     ;;
 esac

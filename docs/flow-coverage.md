@@ -2,6 +2,10 @@
 
 Mapa de cobertura actual para saber que valida cada flow, que tan estable deberia ser y que datos necesita antes de ejecutarlo.
 
+## Ejecucion por tags
+
+Ademas de correr por carpeta, los flows se pueden seleccionar por sus `tags` (transversal a los dominios): `npm run maestro:tags:android -- <include> [exclude]`. Util para cortes que no siguen la estructura de carpetas, p. ej. `web-parity` (paridad con web), `negative`, o regresion sin pagos (`maestro:regression:nopay:android`). Por seguridad, las corridas por tag excluyen `special` (captura de tarjeta) por defecto. Detalle en el README.
+
 ## Smoke
 
 | Flow | Cobertura | Datos requeridos | Riesgo |
