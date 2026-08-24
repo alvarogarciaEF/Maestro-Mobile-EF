@@ -1,7 +1,7 @@
-# Proposito: validar apertura del flujo de cancelacion de pedido sin confirmar.
+# Proposito: cancelar un pedido y validar estatus "Cancelado" en Mis pedidos.
 # Web parity: tests/regression/orders/order-cancel-contract.spec.js (parcial)
-# Precondiciones: pedido cancelable visible en detalle.
-# Valida: dialogo "Cancelar pedido" y cierre sin cancelar.
+# Precondiciones: pedido con "Pago pendiente" cancelable en historial.
+# Valida: confirmacion real de cancelacion y estatus cancelado para el pedido.
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 name: Regression - Order Cancel Dialog
 tags:
@@ -27,15 +27,62 @@ tags:
     text: "Cancelar pedido|Cancel order"
 - extendedWaitUntil:
     visible:
-      text: "Cancelar pedido|Cancel order"
+      id: "tv_title"
     timeout: 15000
 - assertVisible:
-    id: "iv_close"
+    id: "tv_title"
+- assertVisible:
+    id: "tv_question_title"
+- copyTextFrom:
+    id: "tv_title"
+- evalScript: ${output.cancelOrderModalTitle = maestro.copiedText}
+- evalScript: ${output.canceledOrderId = (output.cancelOrderModalTitle.match(/[0-9]+/) || [""])[0]}
+- assertTrue:
+    condition: ${output.canceledOrderId != ""}
+    label: Se obtuvo el numero del pedido a cancelar
 - tapOn:
-    id: "iv_close"
+    id: "ll_reason_cancellation"
+    index: 0
+- tapOn:
+    id: "btn_save_cl"
+# wait-justification: el modal dispara una solicitud de cancelacion y puede conservarse sin exponer estado intermedio estable.
+- waitForAnimationToEnd:
+    timeout: 4000
+- runFlow:
+    when:
+      visible:
+        text: "Cancelar pedido [0-9]+|Cancel order [0-9]+"
+    commands:
+      - assertVisible:
+          id: "iv_close"
+      - tapOn:
+          id: "iv_close"
+      # wait-justification: cierre defensivo del modal cuando la cancelacion no avanza a estado final inmediatamente.
+      - waitForAnimationToEnd:
+          timeout: 4000
+- extendedWaitUntil:
+    notVisible:
+      text: "Cancelar pedido [0-9]+|Cancel order [0-9]+"
+    timeout: 30000
+- runFlow: ../../reusable/navigate-account-tab.yaml
+- scrollUntilVisible:
+    element:
+      text: "Mis pedidos"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "Mis pedidos"
 - extendedWaitUntil:
     visible:
-      text: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Número de pedido|Pedido"
-    timeout: 15000
+      id: "my_orders_fragment_compose_view"
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      text: "Pedido: ${output.canceledOrderId}"
+    direction: DOWN
+    timeout: 60000
 - assertVisible:
-    text: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Número de pedido|Pedido"
+    text: "Pedido: ${output.canceledOrderId}"
+- assertVisible:
+    text: "Cancelado|Cancelled"
+    below: "Pedido: ${output.canceledOrderId}"

@@ -36,12 +36,12 @@ if [[ "$PLATFORM" == "ios" ]]; then
   require_non_placeholder APP_ID_IOS
 fi
 
-if [[ "$SUITE" == "smoke" || "$SUITE" == "regression" || "$SUITE" == "checkout" || "$SUITE" == "account" ]]; then
+if [[ "$SUITE" == "smoke" || "$SUITE" == "regression" || "$SUITE" == "checkout" || "$SUITE" == "purchase" || "$SUITE" == "account" ]]; then
   require_non_placeholder USER_EMAIL
   require_non_placeholder USER_PASSWORD
 fi
 
-if [[ "$SUITE" == "regression" || "$SUITE" == "catalog" || "$SUITE" == "cart" || "$SUITE" == "checkout" || "$SUITE" == "location" ]]; then
+if [[ "$SUITE" == "regression" || "$SUITE" == "catalog" || "$SUITE" == "cart" || "$SUITE" == "checkout" || "$SUITE" == "purchase" || "$SUITE" == "location" ]]; then
   require_non_placeholder PRODUCT_SEARCH_TERM
   require_non_placeholder PRODUCT_NAME
 fi

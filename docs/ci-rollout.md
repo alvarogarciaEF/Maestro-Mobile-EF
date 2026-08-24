@@ -37,6 +37,7 @@ Plan operativo para evolucionar de ejecucion manual a cobertura continua por niv
   - `catalog`
   - `cart`
   - `checkout`
+  - `purchase`
   - `account`
 - Objetivo: ejecutar solo el dominio impactado para reducir tiempo de feedback.
 - Criterio de adopcion: flaky rate < 5% por dominio durante 2 semanas.
@@ -46,18 +47,19 @@ Plan operativo para evolucionar de ejecucion manual a cobertura continua por niv
 - Workflow: `maestro-regression-matrix-android.yml` — corre los dominios core en **paralelo** via
   `strategy.matrix` (auth, catalog, cart, location, account, deeplink; `fail-fast: false`), cada
   uno en su propio emulador. Reduce el tiempo total de regresion vs la corrida secuencial.
-- `checkout` queda fuera del matrix por seguridad de pagos (igual que `regression-core`).
+- `checkout`/`purchase` quedan fuera del matrix; para staging sandbox usar el workflow segmentado
+  o la regression completa.
 - Requiere el secret `APK_DOWNLOAD_URL`: sin el, cada celda falla claro en el paso de descarga.
 - Alternativa futura: sharding de Maestro (`--shard-split`) dentro de un runner (requiere
   multi-emulador por job). Optimizacion futura: bajar el APK una sola vez y compartirlo por artifact
   en vez de por celda.
 
-## Nivel 3 - Regression Completa
+## Nivel 3 - Regression Completa Sandbox
 
 - Android: `maestro-regression-android.yml`
 - iOS: `maestro-regression-mobile-segmented.yml` con suite `regression`
-- Objetivo: corrida completa nocturna o pre-release.
-- Criterio de adopcion: 0 bloqueos de pago real y estabilidad mantenida en checkout.
+- Objetivo: corrida completa nocturna o pre-release en staging sandbox.
+- Criterio de adopcion: checkout/purchase concluye solo con `TARGET_ENV=staging` y `CHECKOUT_PURCHASE_MODE=sandbox`, con estabilidad mantenida en checkout.
 
 ## Metricas Minimas
 

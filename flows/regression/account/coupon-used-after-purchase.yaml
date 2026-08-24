@@ -40,7 +40,8 @@ tags:
 - assertVisible:
     text: ${VALID_COUPON_CODE}
 - assertVisible:
-    text: "-\\$[0-9,]+"
+    text: "-?\\$\\s*[0-9,]+|[0-9,]+\\s*mxn"
+    below: "Cupón"
 - runFlow: ../../reusable/complete-oxxo-purchase.yaml
 - assertVisible:
     id: "reference_oxxo"

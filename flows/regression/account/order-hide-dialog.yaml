@@ -1,7 +1,7 @@
-# Proposito: validar contrato del dialogo de ocultar pedido sin ocultarlo.
+# Proposito: ocultar un pedido desde el modal y verificar que deje de listarse en Mis pedidos.
 # Web parity: tests/regression/orders/order-hide-contract.spec.js (parcial)
 # Precondiciones: pedido con accion "Ocultar pedido" visible en detalle.
-# Valida: modal de confirmacion y cancelacion sin alterar el listado.
+# Valida: confirmacion de ocultado y ausencia del pedido ocultado en el listado.
 appId: ${APP_ID_ANDROID || "com.enviaflores.android"}
 name: Regression - Order Hide Dialog
 tags:
@@ -34,12 +34,31 @@ tags:
 - assertVisible:
     id: "tv_message"
 - assertVisible:
-    text: "Cancelar|Cancel"
+    text: "Ocultar|Hide"
+- copyTextFrom:
+    id: "tv_title"
+- evalScript: ${output.hideOrderModalTitle = maestro.copiedText}
+- evalScript: ${output.hiddenOrderId = (output.hideOrderModalTitle.match(/[0-9]+/) || [""])[0]}
+- assertTrue:
+    condition: ${output.hiddenOrderId != ""}
+    label: Se obtuvo el numero de pedido del modal de ocultar
 - tapOn:
-    text: "Cancelar|Cancel"
+    text: "Ocultar|Hide"
+- extendedWaitUntil:
+    notVisible:
+      id: "tv_title"
+    timeout: 15000
+- runFlow: ../../reusable/navigate-account-tab.yaml
+- scrollUntilVisible:
+    element:
+      text: "Mis pedidos"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "Mis pedidos"
 - extendedWaitUntil:
     visible:
-      text: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Número de pedido|Pedido"
+      id: "my_orders_fragment_compose_view"
     timeout: 15000
-- assertVisible:
-    text: "Detalle del pedido|Detalles del pedido|Pedido #[0-9]+|Número de pedido|Pedido"
+- assertNotVisible:
+    text: "Pedido: ${output.hiddenOrderId}"

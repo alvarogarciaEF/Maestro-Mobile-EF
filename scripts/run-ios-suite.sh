@@ -26,11 +26,11 @@ case "$SUITE" in
     ;;
   regression)
     require_env_vars APP_ID_IOS USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME CATEGORY_NAME DEEPLINK_HOME DEEPLINK_CATEGORY DEEPLINK_PRODUCT DEEPLINK_CART DEEPLINK_FAQ RECOVERY_UNKNOWN_EMAIL USER_INVALID_PASSWORD INVALID_COUPON_CODE SEARCH_NO_RESULTS_TERM
-    APP_ID_ANDROID="${APP_ID_IOS}" run_maestro_regression_core "reports/regression-core-ios.xml" "regression core iOS (sin checkout) para appId: ${APP_ID_IOS}" "ios"
+    APP_ID_ANDROID="${APP_ID_IOS}" run_maestro_regression_core "reports/regression-core-ios.xml" "regression iOS para appId: ${APP_ID_IOS} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})" "ios"
     ;;
   regression-full)
     require_env_vars APP_ID_IOS USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME CATEGORY_NAME DEEPLINK_HOME
-    APP_ID_ANDROID="${APP_ID_IOS}" run_maestro_suite "flows/regression" "reports/regression-full-ios.xml" "regression completa iOS para appId: ${APP_ID_IOS}"
+    APP_ID_ANDROID="${APP_ID_IOS}" run_maestro_regression_full "reports/regression-full-ios.xml" "regression completa iOS para appId: ${APP_ID_IOS} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})"
     ;;
   auth)
     require_env_vars APP_ID_IOS USER_EMAIL USER_PASSWORD USER_INVALID_PASSWORD RECOVERY_UNKNOWN_EMAIL
@@ -50,11 +50,18 @@ case "$SUITE" in
     ;;
   checkout)
     require_env_vars APP_ID_IOS USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME
-    run_ios_suite "flows/regression/checkout" "reports/checkout-ios.xml" "checkout regression iOS para appId: ${APP_ID_IOS}"
+    APP_ID_ANDROID="${APP_ID_IOS}" run_maestro_checkout_regression "reports/checkout-ios.xml" "checkout regression iOS para appId: ${APP_ID_IOS} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})"
+    ;;
+  purchase)
+    require_env_vars APP_ID_IOS USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME
+    APP_ID_ANDROID="${APP_ID_IOS}" run_maestro_purchase_regression "reports/purchase-ios.xml" "purchase regression iOS para appId: ${APP_ID_IOS} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})"
     ;;
   account)
     require_env_vars APP_ID_IOS USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY
-    run_ios_suite "flows/regression/account" "reports/account-ios.xml" "account regression iOS para appId: ${APP_ID_IOS}"
+    if sandbox_purchases_enabled; then
+      require_env_vars PRODUCT_SEARCH_TERM PRODUCT_NAME
+    fi
+    APP_ID_ANDROID="${APP_ID_IOS}" run_maestro_account_regression "reports/account-ios.xml" "account regression iOS para appId: ${APP_ID_IOS} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})"
     ;;
   tags)
     INCLUDE_TAGS="${2:-}"
@@ -85,7 +92,7 @@ case "$SUITE" in
     run_ios_suite "$FLOW_PATH" "reports/${SAFE_NAME}-ios.xml" "flow iOS: ${FLOW_PATH}"
     ;;
   *)
-    echo "Uso: ./scripts/run-ios-suite.sh <smoke|regression|regression-full|auth|catalog|cart|checkout|account|deeplink|flow|tags> [args]"
+    echo "Uso: ./scripts/run-ios-suite.sh <smoke|regression|regression-full|auth|catalog|cart|checkout|purchase|account|deeplink|flow|tags> [args]"
     echo "  tags <include> [exclude]: corre flows por tags (transversal). Ej: tags web-parity"
     exit 1
     ;;

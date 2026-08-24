@@ -1,6 +1,6 @@
 # Proposito: ejecutar manualmente regression Android desde GitHub Actions.
 # Precondiciones: secrets USER_EMAIL/USER_PASSWORD configurados y datos de catalogo vigentes.
-# Nota: checkout no debe confirmar pagos reales; mantener ambiente sandbox.
+# Nota: staging apunta a gateways sandbox; checkout/purchase puede concluir compra solo en modo sandbox.
 name: Maestro Regression Android
 
 on:
@@ -9,9 +9,10 @@ on:
       environment:
         description: "Environment to run against"
         required: true
-        default: "qa"
+        default: "staging"
         type: choice
         options:
+          - staging
           - qa
           - dev
 
@@ -22,6 +23,10 @@ jobs:
     environment: ${{ inputs.environment }}
     env:
       APP_ID_ANDROID: com.enviaflores.android
+      TARGET_ENV: ${{ inputs.environment }}
+      CHECKOUT_PURCHASE_MODE: sandbox
+      ALLOW_SANDBOX_PURCHASES: auto
+      INCLUDE_CHECKOUT_IN_REGRESSION: auto
       USER_EMAIL: ${{ secrets.USER_EMAIL }}
       USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
       DEFAULT_STATE: Nuevo León

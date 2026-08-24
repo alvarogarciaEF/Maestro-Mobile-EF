@@ -88,11 +88,24 @@ depth = lambda do |node|
   depth_cache[node] = children.empty? ? 0 : 1 + children.map { |child| depth.call(child) }.max
 end
 
+regular_files = flow_files.reject do |file|
+  Pathname.new(file).relative_path_from(root).to_s.start_with?("flows/special/")
+end
+special_files = flow_files.select do |file|
+  Pathname.new(file).relative_path_from(root).to_s.start_with?("flows/special/")
+end
+
 max_depth = flow_files.map { |file| depth.call(file) }.max || 0
-# 6 contempla que los flows special/ viven un nivel por encima de regression y componen
-# reusables encadenados (p. ej. setup-cart -> add-product -> open-search -> ensure-home).
-max_allowed_depth = 6
-errors << "profundidad maxima #{max_depth}; limite #{max_allowed_depth}" if max_depth > max_allowed_depth
+regular_max_depth = regular_files.map { |file| depth.call(file) }.max || 0
+special_max_depth = special_files.map { |file| depth.call(file) }.max || 0
+max_allowed_depth = 5
+max_allowed_special_depth = 6
+if regular_max_depth > max_allowed_depth
+  errors << "profundidad maxima #{regular_max_depth}; limite #{max_allowed_depth}"
+end
+if special_max_depth > max_allowed_special_depth
+  errors << "profundidad special maxima #{special_max_depth}; limite #{max_allowed_special_depth}"
+end
 
 unless errors.empty?
   warn errors.join("\n")
@@ -100,4 +113,4 @@ unless errors.empty?
 end
 
 call_count = edges.values.map(&:length).inject(0, :+)
-puts "#{call_count} llamadas; profundidad maxima #{max_depth}; sin referencias rotas, ciclos ni reusables huerfanos"
+puts "#{call_count} llamadas; profundidad maxima #{max_depth} (regular #{regular_max_depth}, special #{special_max_depth}); sin referencias rotas, ciclos ni reusables huerfanos"
