@@ -138,16 +138,22 @@ flows/smoke/empty-cart.yaml
 flows/smoke/deeplink-home.yaml
 ```
 
-Ejecuta regression Android (core, sin checkout):
+Ejecuta regression Android. En staging, checkout/purchase se ejecuta contra sandbox y puede concluir compra:
 
 ```bash
 npm run maestro:regression:android
 ```
 
-Ejecuta regression completa Android (incluye checkout pausado):
+Ejecuta regression completa Android:
 
 ```bash
 npm run maestro:regression:full:android
+```
+
+Si necesitas conservar el set core sin checkout, usa:
+
+```bash
+npm run maestro:regression:core:android
 ```
 
 Ejecuta suites parciales Android:
@@ -156,6 +162,7 @@ Ejecuta suites parciales Android:
 npm run maestro:catalog:android
 npm run maestro:cart:android
 npm run maestro:checkout:android
+npm run maestro:purchase:android
 npm run maestro:account:android
 npm run maestro:deeplink:android
 ```
@@ -270,7 +277,7 @@ npm run maestro:login
 
 - `.env` creado desde `.env.example`.
 - Usuario QA valido en `USER_EMAIL` y `USER_PASSWORD`.
-- Usuario QA con direccion guardada si vas a correr checkout hasta metodo de pago.
+- Usuario QA con direccion guardada si vas a correr checkout/purchase sandbox.
 - `DEFAULT_STATE` y `DEFAULT_CITY` disponibles en el ambiente probado.
 - `PRODUCT_NAME` corresponde a un producto activo para `PRODUCT_SEARCH_TERM` en esa ciudad.
 - Primera corrida sugerida:
@@ -314,7 +321,7 @@ Adapta ese script si tu pipeline descarga builds desde un artifact store.
 - Consulta `docs/web-mobile-parity.md` para mapeo de paridad con el framework web Playwright.
 - Consulta `docs/coverage-matrix.md` para seguimiento por estado `Cubierto/Parcial/No cubierto`.
 - Consulta `docs/high-risk-gap-backlog.md` para calendarizacion de escenarios faltantes.
-- Consulta `docs/regression-core.md` para regresion sin checkout (pausado hasta sandbox dev).
+- Consulta `docs/regression-core.md` para regression staging con checkout sandbox y modo core sin checkout.
 - Consulta `docs/smoke-cross-platform.md` para corrida smoke Android+iOS.
 - Consulta `docs/deeplinks-android.md` para patrones de URL y variables de deeplink.
 - Agrega comentarios iniciales claros en cada YAML:
@@ -342,7 +349,7 @@ Ejemplo:
 ## Buenas Practicas
 
 - Prefiere `testID`/accessibility ids estables sobre texto visible.
-- No automatices pagos reales; usa ambientes sandbox y tarjetas dummy.
+- No automatices pagos reales. Staging apunta a sandbox; fuera de staging/sandbox conserva los guardrails de compra.
 - Mantén datos sensibles en `.env` local o GitHub Secrets.
 - Haz que los smoke tests sean rapidos, deterministas y pequenos.
 - Revisa reportes en `reports/` despues de cada corrida.

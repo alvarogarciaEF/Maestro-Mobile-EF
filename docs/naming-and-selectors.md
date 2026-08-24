@@ -124,7 +124,8 @@ PRODUCT_NAME="Clásico Amor con 24 Rosas Rojas"
 
 - No usar `tapOn` sobre acciones finales de pago.
 - Es aceptable usar `assertVisible` para validar que se llego a pantalla de pago.
-- Todo flow de checkout debe incluir comentario de punto de corte si se acerca al pago.
+- Todo flow de checkout que no concluya compra debe incluir comentario de punto de corte si se acerca al pago.
+- Los flows que si concluyen compra deben vivir en rutas purchase/OXXO cubiertas por los scripts sandbox y documentar que staging apunta a sandbox.
 
 Ejemplo aceptable:
 

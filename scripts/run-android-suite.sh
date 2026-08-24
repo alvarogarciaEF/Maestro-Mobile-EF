@@ -19,11 +19,11 @@ case "$SUITE" in
     ;;
   regression)
     require_env_vars APP_ID_ANDROID USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME CATEGORY_NAME DEEPLINK_HOME DEEPLINK_CATEGORY DEEPLINK_PRODUCT DEEPLINK_CART DEEPLINK_FAQ RECOVERY_UNKNOWN_EMAIL USER_INVALID_PASSWORD INVALID_COUPON_CODE SEARCH_NO_RESULTS_TERM
-    run_maestro_regression_core "reports/regression-core-android.xml" "regression core Android (sin checkout) para appId: ${APP_ID_ANDROID}" "android"
+    run_maestro_regression_core "reports/regression-core-android.xml" "regression Android para appId: ${APP_ID_ANDROID} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})" "android"
     ;;
   regression-full)
     require_env_vars APP_ID_ANDROID USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME CATEGORY_NAME DEEPLINK_HOME
-    run_maestro_suite "flows/regression" "reports/regression-full-android.xml" "regression completa Android (incluye checkout) para appId: ${APP_ID_ANDROID}"
+    run_maestro_regression_full "reports/regression-full-android.xml" "regression completa Android para appId: ${APP_ID_ANDROID} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})"
     ;;
   auth)
     require_env_vars APP_ID_ANDROID USER_EMAIL USER_PASSWORD USER_INVALID_PASSWORD RECOVERY_UNKNOWN_EMAIL
@@ -43,11 +43,18 @@ case "$SUITE" in
     ;;
   checkout)
     require_env_vars APP_ID_ANDROID USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME SANDBOX_DECLINE_CARD_NUMBER SANDBOX_DECLINE_CARD_EXPIRY REMINDER_TITLE
-    run_maestro_suite "flows/regression/checkout" "reports/checkout-android.xml" "checkout regression Android para appId: ${APP_ID_ANDROID}"
+    run_maestro_checkout_regression "reports/checkout-android.xml" "checkout regression Android para appId: ${APP_ID_ANDROID} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})"
+    ;;
+  purchase)
+    require_env_vars APP_ID_ANDROID USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY PRODUCT_SEARCH_TERM PRODUCT_NAME
+    run_maestro_purchase_regression "reports/purchase-android.xml" "purchase regression Android para appId: ${APP_ID_ANDROID} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})"
     ;;
   account)
     require_env_vars APP_ID_ANDROID USER_EMAIL USER_PASSWORD DEFAULT_STATE DEFAULT_CITY REMINDER_TITLE
-    run_maestro_suite "flows/regression/account" "reports/account-android.xml" "account regression Android para appId: ${APP_ID_ANDROID}"
+    if sandbox_purchases_enabled; then
+      require_env_vars PRODUCT_SEARCH_TERM PRODUCT_NAME
+    fi
+    run_maestro_account_regression "reports/account-android.xml" "account regression Android para appId: ${APP_ID_ANDROID} (${TARGET_ENV}/${CHECKOUT_PURCHASE_MODE})"
     ;;
   deeplink)
     require_env_vars APP_ID_ANDROID DEEPLINK_CATEGORY DEEPLINK_PRODUCT DEEPLINK_CART DEEPLINK_FAQ PRODUCT_SEARCH_TERM PRODUCT_NAME DEFAULT_STATE DEFAULT_CITY
@@ -83,7 +90,7 @@ case "$SUITE" in
     run_maestro_suite "$FLOW_PATH" "reports/${SAFE_NAME}-android.xml" "flow Android: ${FLOW_PATH}"
     ;;
   *)
-    echo "Uso: ./scripts/run-android-suite.sh <smoke|regression|regression-full|auth|catalog|cart|checkout|account|deeplink|location|flow|tags> [args]"
+    echo "Uso: ./scripts/run-android-suite.sh <smoke|regression|regression-full|auth|catalog|cart|checkout|purchase|account|deeplink|location|flow|tags> [args]"
     echo "  tags <include> [exclude]: corre flows por tags (transversal). Ej: tags web-parity"
     exit 1
     ;;

@@ -8,6 +8,10 @@ load_env() {
     APP_ID_ANDROID
     APP_ID_IOS
     RESET_STATE
+    TARGET_ENV
+    CHECKOUT_PURCHASE_MODE
+    ALLOW_SANDBOX_PURCHASES
+    INCLUDE_CHECKOUT_IN_REGRESSION
     USER_EMAIL
     USER_PASSWORD
     USER_INVALID_PASSWORD
@@ -24,6 +28,7 @@ load_env() {
     PRODUCT_UNAVAILABLE_SEARCH_TERM
     PRODUCT_UNAVAILABLE_NAME
     INVALID_COUPON_CODE
+    COUPON_CODE
     VALID_COUPON_CODE
     COUPON_DISCOUNT_PERCENT
     SANDBOX_DECLINE_CARD_NUMBER
@@ -80,6 +85,10 @@ load_env() {
 
   USER_DISPLAY_NAME="${USER_DISPLAY_NAME:-Prueba!}"
   RESET_STATE="${RESET_STATE:-false}"
+  TARGET_ENV="${TARGET_ENV:-staging}"
+  CHECKOUT_PURCHASE_MODE="${CHECKOUT_PURCHASE_MODE:-sandbox}"
+  ALLOW_SANDBOX_PURCHASES="${ALLOW_SANDBOX_PURCHASES:-auto}"
+  INCLUDE_CHECKOUT_IN_REGRESSION="${INCLUDE_CHECKOUT_IN_REGRESSION:-auto}"
   GOOGLE_ACCOUNT_EMAIL="${GOOGLE_ACCOUNT_EMAIL:-$USER_EMAIL}"
   USER_INVALID_PASSWORD="${USER_INVALID_PASSWORD:-wrong-password-qa}"
   SEARCH_NO_RESULTS_TERM="${SEARCH_NO_RESULTS_TERM:-qxzwkjvbmptzz}"
@@ -89,6 +98,7 @@ load_env() {
   SECOND_CATEGORY_NAME="${SECOND_CATEGORY_NAME:-Globos}"
   INVALID_COUPON_CODE="${INVALID_COUPON_CODE:-QA-CUPON-INVALIDO}"
   VALID_COUPON_CODE="${VALID_COUPON_CODE:-}"
+  COUPON_CODE="${COUPON_CODE:-$VALID_COUPON_CODE}"
   COUPON_DISCOUNT_PERCENT="${COUPON_DISCOUNT_PERCENT:-15}"
   SANDBOX_DECLINE_CARD_NUMBER="${SANDBOX_DECLINE_CARD_NUMBER:-4000000000000002}"
   SANDBOX_DECLINE_CARD_EXPIRY="${SANDBOX_DECLINE_CARD_EXPIRY:-1230}"
@@ -148,6 +158,10 @@ maestro_env_args() {
     APP_ID_ANDROID
     APP_ID_IOS
     RESET_STATE
+    TARGET_ENV
+    CHECKOUT_PURCHASE_MODE
+    ALLOW_SANDBOX_PURCHASES
+    INCLUDE_CHECKOUT_IN_REGRESSION
     USER_EMAIL
     USER_PASSWORD
     USER_INVALID_PASSWORD
@@ -164,6 +178,7 @@ maestro_env_args() {
     PRODUCT_UNAVAILABLE_SEARCH_TERM
     PRODUCT_UNAVAILABLE_NAME
     INVALID_COUPON_CODE
+    COUPON_CODE
     VALID_COUPON_CODE
     COUPON_DISCOUNT_PERCENT
     SANDBOX_DECLINE_CARD_NUMBER
@@ -209,6 +224,60 @@ maestro_env_args() {
       printf '%s\0%s\0' "-e" "${var_name}=${!var_name}"
     fi
   done
+}
+
+is_truthy() {
+  case "${1:-}" in
+    1|true|TRUE|True|yes|YES|Yes|y|Y)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+sandbox_purchases_enabled() {
+  local target_env
+  local purchase_mode
+
+  case "${ALLOW_SANDBOX_PURCHASES:-auto}" in
+    1|true|TRUE|True|yes|YES|Yes|y|Y)
+      return 0
+      ;;
+    0|false|FALSE|False|no|NO|No|n|N)
+      return 1
+      ;;
+  esac
+
+  target_env="$(printf '%s' "${TARGET_ENV:-}" | tr '[:upper:]' '[:lower:]')"
+  purchase_mode="$(printf '%s' "${CHECKOUT_PURCHASE_MODE:-}" | tr '[:upper:]' '[:lower:]')"
+
+  [[ "$purchase_mode" == "sandbox" && "$target_env" == "staging" ]]
+}
+
+checkout_in_regression_enabled() {
+  case "${INCLUDE_CHECKOUT_IN_REGRESSION:-auto}" in
+    1|true|TRUE|True|yes|YES|Yes|y|Y)
+      return 0
+      ;;
+    0|false|FALSE|False|no|NO|No|n|N)
+      return 1
+      ;;
+    *)
+      sandbox_purchases_enabled
+      ;;
+  esac
+}
+
+require_sandbox_purchases() {
+  if sandbox_purchases_enabled; then
+    return 0
+  fi
+
+  echo "Error: este suite concluye compra y requiere ambiente sandbox."
+  echo "Configura TARGET_ENV=staging y CHECKOUT_PURCHASE_MODE=sandbox, o ALLOW_SANDBOX_PURCHASES=true si el ambiente esta confirmado como sandbox."
+  exit 1
 }
 
 run_maestro_suite() {
@@ -260,6 +329,65 @@ cart_regression_paths() {
   printf '%s\n' "${paths[@]}"
 }
 
+checkout_safe_regression_paths() {
+  local paths=(
+    flows/regression/checkout/checkout-address.yaml
+    flows/regression/checkout/checkout-after-cart-date-change.yaml
+    flows/regression/checkout/checkout-basic.yaml
+    flows/regression/checkout/checkout-payment-entry.yaml
+    flows/regression/checkout/checkout-payment-method-switch.yaml
+    flows/regression/checkout/checkout-phone-validation.yaml
+    flows/regression/checkout/dedicatoria.yaml
+    flows/regression/checkout/payment-sandbox-error.yaml
+  )
+
+  printf '%s\n' "${paths[@]}"
+}
+
+purchase_regression_paths() {
+  local paths=(
+    flows/regression/checkout/oxxo-confirmation-contract.yaml
+    flows/regression/checkout/oxxo-no-double-purchase.yaml
+    flows/regression/account/coupon-used-after-purchase.yaml
+  )
+
+  printf '%s\n' "${paths[@]}"
+}
+
+checkout_regression_paths() {
+  checkout_safe_regression_paths
+
+  if sandbox_purchases_enabled; then
+    printf '%s\n' \
+      flows/regression/checkout/oxxo-confirmation-contract.yaml \
+      flows/regression/checkout/oxxo-no-double-purchase.yaml
+  fi
+}
+
+account_regression_paths() {
+  local path
+
+  while IFS= read -r path; do
+    if [[ "$path" == "flows/regression/account/coupon-used-after-purchase.yaml" ]]; then
+      sandbox_purchases_enabled && printf '%s\n' "$path"
+    else
+      printf '%s\n' "$path"
+    fi
+  done < <(find flows/regression/account -maxdepth 1 -name "*.yaml" | sort)
+}
+
+account_core_regression_paths() {
+  local path
+
+  while IFS= read -r path; do
+    if [[ "$path" == "flows/regression/account/coupon-used-after-purchase.yaml" ]]; then
+      checkout_in_regression_enabled && printf '%s\n' "$path"
+    else
+      printf '%s\n' "$path"
+    fi
+  done < <(find flows/regression/account -maxdepth 1 -name "*.yaml" | sort)
+}
+
 run_maestro_cart_regression() {
   local report_path="$1"
   local label="$2"
@@ -272,15 +400,71 @@ run_maestro_cart_regression() {
   run_maestro_suite "" "$report_path" "$label" "${cart_paths[@]}"
 }
 
+run_maestro_checkout_regression() {
+  local report_path="$1"
+  local label="$2"
+  local checkout_paths=()
+
+  while IFS= read -r path; do
+    checkout_paths+=("$path")
+  done < <(checkout_regression_paths)
+
+  run_maestro_suite "" "$report_path" "$label" "${checkout_paths[@]}"
+}
+
+run_maestro_account_regression() {
+  local report_path="$1"
+  local label="$2"
+  local account_paths=()
+
+  while IFS= read -r path; do
+    account_paths+=("$path")
+  done < <(account_regression_paths)
+
+  run_maestro_suite "" "$report_path" "$label" "${account_paths[@]}"
+}
+
+run_maestro_purchase_regression() {
+  local report_path="$1"
+  local label="$2"
+  local purchase_paths=()
+
+  require_sandbox_purchases
+
+  while IFS= read -r path; do
+    purchase_paths+=("$path")
+  done < <(purchase_regression_paths)
+
+  run_maestro_suite "" "$report_path" "$label" "${purchase_paths[@]}"
+}
+
 regression_core_paths() {
   printf '%s\n' \
     "flows/regression/auth" \
     "flows/regression/catalog"
   cart_regression_paths
   printf '%s\n' \
-    "flows/regression/location" \
-    "flows/regression/account" \
+    "flows/regression/location"
+  account_core_regression_paths
+  printf '%s\n' \
     "flows/regression/deeplink"
+
+  if checkout_in_regression_enabled; then
+    checkout_regression_paths
+  fi
+}
+
+regression_full_paths() {
+  printf '%s\n' \
+    "flows/regression/auth" \
+    "flows/regression/catalog"
+  cart_regression_paths
+  printf '%s\n' \
+    "flows/regression/location"
+  account_regression_paths
+  printf '%s\n' \
+    "flows/regression/deeplink"
+  checkout_regression_paths
 }
 
 run_maestro_regression_core() {
@@ -362,5 +546,37 @@ run_maestro_tags() {
     maestro_cmd+=("${output_args[@]}")
   fi
   maestro_cmd+=("${maestro_args[@]}" "${tag_args[@]}" flows --format junit --output "$report_path")
+  "${maestro_cmd[@]}"
+}
+
+run_maestro_regression_full() {
+  local report_path="$1"
+  local label="$2"
+  local maestro_args=()
+  local maestro_cmd=()
+  local output_args=()
+  local paths=()
+
+  mkdir -p reports
+  disable_emulator_stylus
+  echo "Ejecutando ${label}"
+  while IFS= read -r -d '' arg; do
+    maestro_args+=("$arg")
+  done < <(maestro_env_args)
+
+  if [[ -n "${MAESTRO_TEST_OUTPUT_DIR:-}" ]]; then
+    mkdir -p "$MAESTRO_TEST_OUTPUT_DIR"
+    output_args+=(--test-output-dir "$MAESTRO_TEST_OUTPUT_DIR")
+  fi
+
+  while IFS= read -r path; do
+    paths+=("$path")
+  done < <(regression_full_paths)
+
+  maestro_cmd=(maestro test)
+  if [[ "${#output_args[@]}" -gt 0 ]]; then
+    maestro_cmd+=("${output_args[@]}")
+  fi
+  maestro_cmd+=("${maestro_args[@]}" "${paths[@]}" --format junit --output "$report_path")
   "${maestro_cmd[@]}"
 }
